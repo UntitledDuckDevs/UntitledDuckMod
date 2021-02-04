@@ -1,35 +1,30 @@
 modLoader = "javafml"
 loaderVersion = "[35,)"
 #issueTrackerURL = ""
-license = "Insert License Here"
+license = "MIT"
 
 [[mods]]
-modId = "examplemod"
+modId = "untitledduckmod"
 version = "${version}"
-displayName = "Example Mod"
-authors = "Me!"
+displayName = "Untitled Duck Mod"
+authors = "Paspartout, ArtistMonster24"
+logoFile = "logo.png"
+credits = "Thanks to geckolib!"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Ducks for Forge and Fabric! Powered by Geckolib.
 '''
-#logoFile = ""
 
-[[dependencies.examplemod]]
+[[dependencies.untitledduckmod]]
 modId = "forge"
 mandatory = true
 versionRange = "[35,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.untitledduckmod]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.16.2,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
-modId = "architectury"
-mandatory = true
-versionRange = "[1.1.55,)"
-ordering = "AFTER"
-side = "BOTH"
