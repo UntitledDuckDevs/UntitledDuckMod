@@ -6,6 +6,10 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'src/**'
+      - '*.gradle'
+      - 'gradle.properties'
   pull_request:
     branches: [ master ]
 
@@ -29,4 +33,6 @@ jobs:
       if: ${{ always() }}
       with:
         name: modjars
-        path: forge/build/libs/*-forge.jar fabric/build/libs/*-fabric.jar
+        path: |
+          forge/build/libs/*-forge.jar
+          fabric/build/libs/*-fabric.jar
