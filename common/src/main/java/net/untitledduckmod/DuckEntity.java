@@ -9,11 +9,18 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class DuckEntity extends AnimalEntity {
+public class DuckEntity extends AnimalEntity implements IAnimatable {
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
     }
+    private final AnimationFactory factory = new AnimationFactory(this);
 
     public static DefaultAttributeContainer.Builder getDefaultAttributes() {
         return MobEntity.createMobAttributes()
@@ -26,5 +33,19 @@ public class DuckEntity extends AnimalEntity {
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         // TODO
         return null;
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+    }
+
+    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> pAnimationEvent) {
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
     }
 }

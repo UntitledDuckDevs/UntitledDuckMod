@@ -1,17 +1,18 @@
 package net.untitledduckmod.forge;
 
-import net.untitledduckmod.DuckEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.util.Identifier;
+import net.untitledduckmod.DuckEntity;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
-public class DuckRenderer extends EntityRenderer<DuckEntity> {
+public class DuckRenderer extends GeoEntityRenderer<DuckEntity> {
     public DuckRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+        super(dispatcher, new DuckModel());
+        this.shadowRadius = 0.3f;
     }
 
     @Override
     public Identifier getTexture(DuckEntity entity) {
-        return null;
+        return getTextureLocation(entity);
     }
 }

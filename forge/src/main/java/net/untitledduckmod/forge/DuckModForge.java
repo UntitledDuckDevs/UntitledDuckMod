@@ -26,19 +26,16 @@ public class DuckModForge {
         public static final RegistryObject<EntityType<net.untitledduckmod.DuckEntity>> DUCK = RegistryObject.of(new Identifier(DuckMod.MOD_ID + ":" + "duck"), ForgeRegistries.ENTITIES);
         @SubscribeEvent
         public static void entityRegistry(RegistryEvent.Register<EntityType<?>> event) {
-            System.out.println("EntityType Registration");
             EntityType<?> entityType = EntityTypeBuilders.DUCK.get();
             event.getRegistry().register(entityType.setRegistryName(DuckMod.MOD_ID, "duck"));
         }
 
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event) {
-            System.out.println("Common Setup");
             DefaultAttributeRegistry.put(DUCK.get(), DuckEntity.getDefaultAttributes().build());
         }
         @SubscribeEvent
         public static void clientSetup(FMLClientSetupEvent event) {
-            System.out.println("Client Setup");
             RenderingRegistry.registerEntityRenderingHandler(DUCK.get(), DuckRenderer::new);
         }
     }

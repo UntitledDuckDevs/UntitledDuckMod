@@ -1,3 +1,7 @@
+repositories {
+    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
+}
+
 dependencies {
     // Remove the next line if you don't want to depend on the API
     modCompile "me.shedaniel:architectury:${rootProject.architectury_version}"
@@ -5,6 +9,8 @@ dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations
     // Do NOT use other classes from fabric loader
     modCompile "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+
+    modImplementation 'software.bernie.geckolib:geckolib-fabric-1.16.5:3.0.15:dev'
 }
 
 architectury {
