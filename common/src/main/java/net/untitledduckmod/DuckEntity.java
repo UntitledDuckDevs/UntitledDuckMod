@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -28,9 +29,13 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle");
     private static final AnimationBuilder SWIM_ANIM = new AnimationBuilder().addAnimation("swim");
     private static final AnimationBuilder SWIM_IDLE_ANIM = new AnimationBuilder().addAnimation("idle_swim");
+    private static final int MIN_EGG_LAY_TIME = 6000;
+    private static final int MAX_EGG_LAY_TIME = 12000;
+    private int eggLayTime = MIN_EGG_LAY_TIME;
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
+        eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME-MIN_EGG_LAY_TIME);
     }
     private final AnimationFactory factory = new AnimationFactory(this);
 
@@ -54,6 +59,17 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
 
     public boolean isBreedingItem(ItemStack stack) {
         return BREEDING_INGREDIENT.test(stack);
+    }
+
+    @Override
+    public void tickMovement() {
+        super.tickMovement();
+        if (!world.isClient && isAlive() && !isBaby() && --eggLayTime <= 0) {
+            this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            // TODO: Exchange with duck egg
+            this.dropItem(Items.EGG);
+            this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME-MIN_EGG_LAY_TIME);
+        }
     }
 
     @Nullable
