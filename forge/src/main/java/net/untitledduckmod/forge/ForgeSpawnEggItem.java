@@ -35,7 +35,6 @@ public class ForgeSpawnEggItem extends SpawnEggItem {
         ItemDispenserBehavior dispenserBehavior = new ItemDispenserBehavior() {
             @Override
             protected ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
-                // TODO: Figure out why this is needed
                 Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
                 EntityType<?> entityType  = ((SpawnEggItem) stack.getItem()).getEntityType(stack.getTag());
                 entityType.spawnFromItemStack(pointer.getWorld(), stack, null, pointer.getBlockPos().offset(direction), SpawnReason.DISPENSER, direction != Direction.UP, false);

@@ -21,4 +21,9 @@ public class ModItems {
     public static Item getDuckSpawnEgg() {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static Item getDuckEgg() {
+        throw new AssertionError();
+    }
 }

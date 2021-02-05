@@ -66,8 +66,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         super.tickMovement();
         if (!world.isClient && isAlive() && !isBaby() && --eggLayTime <= 0) {
             this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-            // TODO: Exchange with duck egg
-            this.dropItem(Items.EGG);
+            this.dropItem(ModItems.getDuckEgg());
             this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME-MIN_EGG_LAY_TIME);
         }
     }
