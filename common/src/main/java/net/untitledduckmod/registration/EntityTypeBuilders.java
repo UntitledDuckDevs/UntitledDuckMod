@@ -13,6 +13,5 @@ public class EntityTypeBuilders {
         return builder.build(prefixedId);
     }
 
-    // TODO: Should use supplier like Forge RegistryObject?
     public final static Supplier<EntityType<?>> DUCK = () -> build("duck", EntityType.Builder.create(DuckEntity::new, SpawnGroup.MISC).setDimensions(0.6f, 0.6f));
 }

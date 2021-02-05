@@ -31,7 +31,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final AnimationBuilder SWIM_IDLE_ANIM = new AnimationBuilder().addAnimation("idle_swim");
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
-    private int eggLayTime = MIN_EGG_LAY_TIME;
+    private int eggLayTime;
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -76,12 +76,12 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         // TODO: Add abstract way to query/get entity type for both loaders
-        return null;
+        return EntityTypes.getDuck().create(world);
     }
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+        data.addAnimationController(new AnimationController(this, "controller", 10, this::predicate));
     }
 
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
