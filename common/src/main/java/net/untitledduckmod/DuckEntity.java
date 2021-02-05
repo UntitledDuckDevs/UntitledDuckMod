@@ -75,7 +75,6 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        // TODO: Add abstract way to query/get entity type for both loaders
         return EntityTypes.getDuck().create(world);
     }
 
