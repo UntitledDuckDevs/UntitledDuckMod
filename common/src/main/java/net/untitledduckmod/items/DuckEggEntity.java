@@ -5,12 +5,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.thrown.EggEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.network.Packet;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.EntityHitResult;
@@ -21,10 +18,11 @@ import net.untitledduckmod.EntityTypes;
 import net.untitledduckmod.ModItems;
 
 public class DuckEggEntity extends ThrownItemEntity {
-    public DuckEggEntity(EntityType<? extends EggEntity> entityType, World world) {
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
     }
 
+    // TODO: Spawn DuckEggEntities once spawning implemented properly in both fabric and forge
     public DuckEggEntity(World world, LivingEntity owner) {
         super(EntityType.EGG, owner, world);
     }
@@ -42,6 +40,11 @@ public class DuckEggEntity extends ThrownItemEntity {
             }
         }
 
+    }
+
+    @Override
+    public Packet<?> createSpawnPacket() {
+        return super.createSpawnPacket();
     }
 
     protected void onEntityHit(EntityHitResult entityHitResult) {

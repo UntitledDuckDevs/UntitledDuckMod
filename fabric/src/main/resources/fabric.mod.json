@@ -20,7 +20,7 @@
       "net.untitledduckmod.fabric.DuckModFabric"
     ],
     "client": [
-      "net.untitledduckmod.fabric.DuckModClientSetup"
+      "net.untitledduckmod.fabric.DuckModFabricClientSetup"
     ]
   },
   "depends": {

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "untitledduckmod:item/duck_egg"
+    "layer0": "untitledduckmod:item/raw_duck"
   }
 }

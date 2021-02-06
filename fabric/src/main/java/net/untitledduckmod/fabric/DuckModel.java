@@ -37,9 +37,12 @@ public class DuckModel extends AnimatedGeoModel<DuckEntity> {
 
         if (entity.isBaby()) {
             IBone root = this.getAnimationProcessor().getBone("root");
-            root.setScaleX(0.7f);
-            root.setScaleY(0.7f);
-            root.setScaleZ(0.7f);
+            // Why are these checks needed in fabric?
+            if (root != null) {
+                root.setScaleX(0.7f);
+                root.setScaleY(0.7f);
+                root.setScaleZ(0.7f);
+            }
         }
         currentTexture = entity.isBaby() ? DUCKLING_TEXTURE : NORMAL_TEXTURE;
 

@@ -2,6 +2,7 @@ package net.untitledduckmod;
 
 import me.shedaniel.architectury.annotations.ExpectPlatform;
 import net.minecraft.entity.EntityType;
+import net.untitledduckmod.items.DuckEggEntity;
 
 public class EntityTypes {
     @ExpectPlatform
@@ -16,4 +17,9 @@ public class EntityTypes {
     public static EntityType<DuckEntity> getDuck() {
         throw new AssertionError();
     }
+    @ExpectPlatform
+    public static EntityType<DuckEggEntity> getDuckEgg() {
+        throw new AssertionError();
+    }
+
 }

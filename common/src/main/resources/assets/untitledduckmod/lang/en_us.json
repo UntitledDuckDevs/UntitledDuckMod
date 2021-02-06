@@ -1,5 +1,8 @@
 {
   "entity.untitledduckmod.duck": "Duck",
   "item.untitledduckmod.duck_spawn_egg": "Duck Spawn Egg",
-  "item.untitledduckmod.duck_egg": "Duck Egg"
+  "item.untitledduckmod.duck_egg": "Duck Egg",
+  "item.untitledduckmod.raw_duck": "Raw Duck",
+  "item.untitledduckmod.cooked_duck": "Cooked Duck",
+  "item.untitledduckmod.duck_feather": "Duck Feather"
 }

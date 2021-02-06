@@ -1,5 +1,7 @@
 package net.untitledduckmod.forge;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.item.Item;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.untitledduckmod.DuckMod;
@@ -38,6 +40,8 @@ public class DuckModForge {
         @SubscribeEvent
         public static void clientSetup(FMLClientSetupEvent event) {
             RenderingRegistry.registerEntityRenderingHandler(EntityTypes.getDuck(), DuckRenderer::new);
+            RenderingRegistry.registerEntityRenderingHandler(EntityTypes.getDuckEgg(),
+                    erd -> new FlyingItemEntityRenderer<>(erd, MinecraftClient.getInstance().getItemRenderer()));
         }
     }
 }

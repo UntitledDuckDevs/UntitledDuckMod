@@ -21,6 +21,9 @@ public class ModItemsImpl {
 
         registry.register(new ForgeSpawnEggItem(EntityTypes::getDuck, ModItems.DUCK_PRIMARY_COLOR, ModItems.DUCK_SECONDARY_COLOR, new Item.Settings().group(ItemGroup.MISC)).setRegistryName(ItemSuppliers.DUCK_SPAWN_EGG_ID));
         registry.register(ItemSuppliers.DUCK_EGG.get().setRegistryName(ItemSuppliers.DUCK_EGG_ID));
+        registry.register(ItemSuppliers.RAW_DUCK.get().setRegistryName(ItemSuppliers.RAW_DUCK_ID));
+        registry.register(ItemSuppliers.COOKED_DUCK.get().setRegistryName(ItemSuppliers.COOKED_DUCK_ID));
+        registry.register(ItemSuppliers.DUCK_FEATHER.get().setRegistryName(ItemSuppliers.DUCK_FEATHER_ID));
     }
 
     public static void setup(Object optionalEvent) {
