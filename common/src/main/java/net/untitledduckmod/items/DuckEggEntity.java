@@ -22,13 +22,12 @@ public class DuckEggEntity extends ThrownItemEntity {
         super(entityType, world);
     }
 
-    // TODO: Spawn DuckEggEntities once spawning implemented properly in both fabric and forge
     public DuckEggEntity(World world, LivingEntity owner) {
-        super(EntityType.EGG, owner, world);
+        super(EntityTypes.getDuckEgg(), owner, world);
     }
 
     public DuckEggEntity(World world, double x, double y, double z) {
-        super(EntityType.EGG, x, y, z, world);
+        super(EntityTypes.getDuckEgg(), x, y, z, world);
     }
 
     @Environment(EnvType.CLIENT)
@@ -40,11 +39,6 @@ public class DuckEggEntity extends ThrownItemEntity {
             }
         }
 
-    }
-
-    @Override
-    public Packet<?> createSpawnPacket() {
-        return super.createSpawnPacket();
     }
 
     protected void onEntityHit(EntityHitResult entityHitResult) {

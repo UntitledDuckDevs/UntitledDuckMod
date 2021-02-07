@@ -11,7 +11,8 @@ architectury {
 }
 
 loom {
-     useFabricMixin = true
+    useFabricMixin = true
+    mixinConfig "untitledduckmod.mixins.json"
 }
 
 repositories {
