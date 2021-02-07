@@ -14,6 +14,11 @@ public class EntityTypes {
         throw new AssertionError();
     }
     @ExpectPlatform
+    public static void setupSpawning() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static EntityType<DuckEntity> getDuck() {
         throw new AssertionError();
     }

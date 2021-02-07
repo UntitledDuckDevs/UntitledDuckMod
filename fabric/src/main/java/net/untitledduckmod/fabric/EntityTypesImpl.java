@@ -1,11 +1,19 @@
 package net.untitledduckmod.fabric;
 
-import net.minecraft.util.Identifier;
-import net.untitledduckmod.DuckMod;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.mixin.object.builder.SpawnRestrictionAccessor;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.Heightmap;
 import net.untitledduckmod.DuckEntity;
+import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.EntityTypes;
+import net.untitledduckmod.SpawningSettings;
 import net.untitledduckmod.items.DuckEggEntity;
 import net.untitledduckmod.registration.EntityTypeBuilders;
 
@@ -22,6 +30,10 @@ public class EntityTypesImpl {
         FabricDefaultAttributeRegistry.register(EntityTypesImpl.DUCK, net.untitledduckmod.DuckEntity.getDefaultAttributes());
     }
 
+    public static void setupSpawning() {
+        SpawnRestrictionAccessor.callRegister(DUCK, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
+        BiomeModifications.addSpawn(context -> true, SpawnGroup.CREATURE, EntityTypes.getDuck(), SpawningSettings.WEIGHT, SpawningSettings.MIN_GROUP, SpawningSettings.MAX_GROUP);
+    }
 
     public static EntityType<DuckEntity> getDuck() {
         return DUCK;

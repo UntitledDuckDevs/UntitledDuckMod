@@ -35,6 +35,7 @@ public class DuckModForge {
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event) {
             EntityTypes.registerAttributes();
+            EntityTypesImpl.setupSpawning();
             ModItems.setup(event); // This setups the spawn eggs for forge
         }
         @SubscribeEvent

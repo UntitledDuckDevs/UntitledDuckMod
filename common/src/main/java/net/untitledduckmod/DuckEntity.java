@@ -29,7 +29,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class DuckEntity extends AnimalEntity implements IAnimatable {
-    private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);;
+    private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk");
     private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle");
     private static final AnimationBuilder SWIM_ANIM = new AnimationBuilder().addAnimation("swim");
@@ -38,7 +38,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final int MAX_EGG_LAY_TIME = 12000;
     private int eggLayTime;
     public static final String EGG_LAY_TIME_TAG = "duckEggLayTime";
-    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);;
+    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     public static final String VARIANT_TAG = "duckVariant";
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
@@ -120,6 +120,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         data.addAnimationController(new AnimationController(this, "controller", 10, this::predicate));
     }
 
+    @SuppressWarnings("rawtypes")
     private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         float limbSwingAmount = event.getLimbSwingAmount();
         boolean isMoving = !(limbSwingAmount > -0.05F && limbSwingAmount < 0.05F);
