@@ -4,12 +4,17 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -32,11 +37,44 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
     private int eggLayTime;
+    public static final String EGG_LAY_TIME_TAG = "duckEggLayTime";
+    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);;
+    public static final String VARIANT_TAG = "duckVariant";
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
         eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME-MIN_EGG_LAY_TIME);
     }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        byte variant = (byte) random.nextInt(2); // Chooses between 0 and 1 randomly
+        this.dataTracker.startTracking(VARIANT, variant);
+    }
+
+    public void writeCustomDataToTag(CompoundTag tag) {
+        super.writeCustomDataToTag(tag);
+        tag.putByte(VARIANT_TAG, getVariant());
+        tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
+    }
+
+    public void readCustomDataFromTag(CompoundTag tag) {
+        super.readCustomDataFromTag(tag);
+        setVariant(tag.getByte(VARIANT_TAG));
+        if (tag.contains(EGG_LAY_TIME_TAG)) {
+            this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
+        }
+    }
+
+    public void setVariant(byte variant) {
+        dataTracker.set(VARIANT, variant);
+    }
+
+    public byte getVariant() {
+        return dataTracker.get(VARIANT);
+    }
+
     private final AnimationFactory factory = new AnimationFactory(this);
 
     public static DefaultAttributeContainer.Builder getDefaultAttributes() {
