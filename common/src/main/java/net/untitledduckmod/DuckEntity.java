@@ -2,6 +2,7 @@ package net.untitledduckmod;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
@@ -44,6 +45,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
         eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME-MIN_EGG_LAY_TIME);
+        this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
     }
 
     @Override
@@ -85,12 +87,12 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(0, new SwimGoal(this));
+        this.goalSelector.add(0, new DuckSwimGoal(this));
         this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4D));
         this.goalSelector.add(2, new AnimalMateGoal(this, 1.0D));
         this.goalSelector.add(3, new TemptGoal(this, 1.0D, false, BREEDING_INGREDIENT));
         this.goalSelector.add(4, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0D));
+        this.goalSelector.add(5, new WanderAroundGoal(this, 1.0D));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(7, new LookAroundGoal(this));
     }
@@ -106,6 +108,9 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
             this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             this.dropItem(ModItems.getDuckEgg());
             this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME-MIN_EGG_LAY_TIME);
+        }
+
+        if (isTouchingWater()) {
         }
     }
 
