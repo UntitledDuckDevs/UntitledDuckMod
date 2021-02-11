@@ -1,7 +1,7 @@
 package net.untitledduckmod.fabric;
 
-import net.untitledduckmod.DuckEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.untitledduckmod.DuckEntity;
 import software.bernie.geckolib3.renderer.geo.GeoEntityRenderer;
 
 public class DuckRenderer extends GeoEntityRenderer<DuckEntity> {

@@ -19,7 +19,6 @@ import net.untitledduckmod.SpawningSettings;
 import net.untitledduckmod.items.DuckEggEntity;
 import net.untitledduckmod.registration.EntityTypeBuilders;
 
-import javax.swing.*;
 import java.util.List;
 
 public class EntityTypesImpl {
@@ -56,6 +55,7 @@ public class EntityTypesImpl {
     public static EntityType<DuckEntity> getDuck() {
         return DUCK.get();
     }
+
     public static EntityType<DuckEggEntity> getDuckEgg() {
         return DUCK_EGG.get();
     }

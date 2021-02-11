@@ -30,6 +30,9 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class DuckEntity extends AnimalEntity implements IAnimatable {
+    public static final String EGG_LAY_TIME_TAG = "duckEggLayTime";
+    public static final String VARIANT_TAG = "duckVariant";
+    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk");
     private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle");
@@ -37,15 +40,19 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final AnimationBuilder SWIM_IDLE_ANIM = new AnimationBuilder().addAnimation("idle_swim");
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
+    private final AnimationFactory factory = new AnimationFactory(this);
     private int eggLayTime;
-    public static final String EGG_LAY_TIME_TAG = "duckEggLayTime";
-    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
-    public static final String VARIANT_TAG = "duckVariant";
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
-        eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME-MIN_EGG_LAY_TIME);
+        eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
+    }
+
+    public static DefaultAttributeContainer.Builder getDefaultAttributes() {
+        return MobEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 7.0D)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.15D);
     }
 
     @Override
@@ -69,20 +76,12 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         }
     }
 
-    public void setVariant(byte variant) {
-        dataTracker.set(VARIANT, variant);
-    }
-
     public byte getVariant() {
         return dataTracker.get(VARIANT);
     }
 
-    private final AnimationFactory factory = new AnimationFactory(this);
-
-    public static DefaultAttributeContainer.Builder getDefaultAttributes() {
-        return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 7.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.15D);
+    public void setVariant(byte variant) {
+        dataTracker.set(VARIANT, variant);
     }
 
     @Override
@@ -107,10 +106,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         if (!world.isClient && isAlive() && !isBaby() && --eggLayTime <= 0) {
             this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             this.dropItem(ModItems.getDuckEgg());
-            this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME-MIN_EGG_LAY_TIME);
-        }
-
-        if (isTouchingWater()) {
+            this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
         }
     }
 

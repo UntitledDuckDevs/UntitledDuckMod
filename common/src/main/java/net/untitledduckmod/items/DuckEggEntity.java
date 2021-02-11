@@ -7,7 +7,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
-import net.minecraft.network.Packet;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.EntityHitResult;
@@ -34,8 +33,8 @@ public class DuckEggEntity extends ThrownItemEntity {
     public void handleStatus(byte status) {
         if (status == 3) {
             double d = 0.08D;
-            for(int i = 0; i < 8; ++i) {
-                this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, this.getStack()), this.getX(), this.getY(), this.getZ(), ((double)this.random.nextFloat() - 0.5D) * 0.08D, ((double)this.random.nextFloat() - 0.5D) * 0.08D, ((double)this.random.nextFloat() - 0.5D) * 0.08D);
+            for (int i = 0; i < 8; ++i) {
+                this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, this.getStack()), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
             }
         }
 
@@ -55,7 +54,7 @@ public class DuckEggEntity extends ThrownItemEntity {
                     i = 4;
                 }
 
-                for(int j = 0; j < i; ++j) {
+                for (int j = 0; j < i; ++j) {
                     DuckEntity duckEntity = EntityTypes.getDuck().create(this.world);
                     duckEntity.setBreedingAge(-24000);
                     duckEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.yaw, 0.0F);
@@ -63,7 +62,7 @@ public class DuckEggEntity extends ThrownItemEntity {
                 }
             }
 
-            this.world.sendEntityStatus(this, (byte)3);
+            this.world.sendEntityStatus(this, (byte) 3);
             this.remove();
         }
     }

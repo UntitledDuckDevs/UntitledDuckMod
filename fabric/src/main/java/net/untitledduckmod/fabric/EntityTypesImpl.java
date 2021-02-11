@@ -38,6 +38,7 @@ public class EntityTypesImpl {
     public static EntityType<DuckEntity> getDuck() {
         return DUCK;
     }
+
     public static EntityType<DuckEggEntity> getDuckEgg() {
         return DUCK_EGG;
     }
