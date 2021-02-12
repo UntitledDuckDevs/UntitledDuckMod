@@ -29,9 +29,6 @@
     "minecraft": ">=1.16.4",
     "geckolib3": ">=3.0.18"
   },
-  "suggests": {
-    "flamingo": "*"
-  },
   "mixins": [
     "untitledduckmod.mixins.json"
   ]

@@ -4,6 +4,7 @@
   "package": "net.untitledduckmod.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "SwimSpeedMixin"
   ],
   "client": [
     "DuckEggSpawnMixin"
