@@ -16,7 +16,7 @@ public class DuckSwimGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        return duck.isTouchingWater() && duck.getFluidHeight(FluidTags.WATER) > 0.2d || duck.isInLava();
+        return duck.isTouchingWater() && duck.getFluidHeight(FluidTags.WATER) > (duck.isBaby() ? 0.1D : 0.2D) || duck.isInLava();
     }
 
     public void tick() {
