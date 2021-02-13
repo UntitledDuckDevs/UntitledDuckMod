@@ -1,5 +1,7 @@
 package net.untitledduckmod;
 
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -19,6 +21,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -39,18 +42,20 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     protected static final byte ANIMATION_CLEAN = 1;
     protected static final byte ANIMATION_SIT = 2;
     private final AnimationFactory factory = new AnimationFactory(this);
-    private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk");
-    private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle");
-    private static final AnimationBuilder SWIM_ANIM = new AnimationBuilder().addAnimation("swim");
-    private static final AnimationBuilder SWIM_IDLE_ANIM = new AnimationBuilder().addAnimation("idle_swim");
+    private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk", true);
+    private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle", true);
+    private static final AnimationBuilder SWIM_ANIM = new AnimationBuilder().addAnimation("swim", true);
+    private static final AnimationBuilder SWIM_IDLE_ANIM = new AnimationBuilder().addAnimation("idle_swim", true);
     private static final AnimationBuilder CLEAN_ANIM = new AnimationBuilder().addAnimation("clean");
     private static final AnimationBuilder SWIM_CLEAN_ANIM = new AnimationBuilder().addAnimation("clean_swim");
-    private static final AnimationBuilder SIT_ANIM = new AnimationBuilder().addAnimation("sit");
+    private static final AnimationBuilder SIT_ANIM = new AnimationBuilder().addAnimation("sit", true);
+    private static final AnimationBuilder FLY_ANIM = new AnimationBuilder().addAnimation("fly", true);
 
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
     private int eggLayTime;
+    private boolean isFlapping;
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -62,6 +67,11 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 7.0D)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2D);
+    }
+
+    @Override
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier) {
+        return false;
     }
 
     @Override
@@ -127,6 +137,20 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
             this.dropItem(ModItems.getDuckEgg());
             this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
         }
+
+        // Play flapping/fly animation when falling
+        //System.out.printf("client: %s water: %s, onGround: %s, velocity: %s\n", world.isClient, isTouchingWater(), onGround, velocity);
+        if(world.isClient && !isTouchingWater() && !this.onGround) {
+            isFlapping = true;
+        } else {
+            isFlapping = false;
+        }
+
+        // Slow fall speed
+        Vec3d velocity = this.getVelocity();
+        if (!world.isClient && !this.onGround && velocity.y < 0.0D) {
+            this.setVelocity(velocity.multiply(1.0D, 0.6D, 1.0D));
+        }
     }
 
     @Nullable
@@ -150,6 +174,10 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         boolean isMoving = !(limbSwingAmount > -0.05F && limbSwingAmount < 0.05F);
         boolean inWater = isTouchingWater();
         AnimationController controller = event.getController();
+        if (isFlapping) {
+            controller.setAnimation(FLY_ANIM);
+            return PlayState.CONTINUE;
+        }
         if (getAnimation() == ANIMATION_CLEAN) {
             controller.setAnimation(inWater ? SWIM_CLEAN_ANIM : CLEAN_ANIM);
             return PlayState.CONTINUE;
