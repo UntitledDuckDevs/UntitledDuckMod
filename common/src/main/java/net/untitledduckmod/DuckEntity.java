@@ -196,6 +196,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     public void playAmbientSound() {
         if (isBaby()) {
             this.playSound(ModSoundEvents.getDucklingAmbientSound(), 0.3f, getSoundPitch());
+            return;
         }
         this.playSound(ModSoundEvents.getDuckAmbientSound(), 0.10f, getSoundPitch());
     }
