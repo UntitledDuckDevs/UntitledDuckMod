@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
-import net.untitledduckmod.EntityTypes;
+import net.untitledduckmod.ModEntityTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -17,7 +17,7 @@ public abstract class SwimSpeedMixin extends Entity {
 
     @ModifyVariable(method = "travel", at=@At(value="INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getDepthStrider(Lnet/minecraft/entity/LivingEntity;)I", ordinal = 0), ordinal = 1)
     public float mixin(float speed) {
-        if (getType() == EntityTypes.getDuck()) {
+        if (getType() == ModEntityTypes.getDuck()) {
             return speed * 3.0f;
         }
         return speed;

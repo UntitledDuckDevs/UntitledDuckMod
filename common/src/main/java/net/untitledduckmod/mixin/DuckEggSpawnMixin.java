@@ -4,7 +4,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.untitledduckmod.EntityTypes;
+import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.items.DuckEggEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +20,7 @@ public class DuckEggSpawnMixin {
     @Inject(method = "onEntitySpawn", at = @At("TAIL"))
     public void spawnDuckEgg(EntitySpawnS2CPacket packet, CallbackInfo info) {
         EntityType<?> entityType = packet.getEntityTypeId();
-        if (entityType == EntityTypes.getDuckEgg()) {
+        if (entityType == ModEntityTypes.getDuckEgg()) {
             double x = packet.getX();
             double y = packet.getY();
             double z = packet.getZ();

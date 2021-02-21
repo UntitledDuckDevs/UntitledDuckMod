@@ -1,0 +1,34 @@
+{
+  "duck_ambient": {
+    "category": "neutral",
+    "sounds": [
+      "untitledduckmod:duck_ambient_1",
+      "untitledduckmod:duck_ambient_2",
+      "untitledduckmod:duck_ambient_3"
+    ],
+    "subtitle": "untitledduckmod.subtitle.duck_ambient"
+  },
+  "duckling_ambient": {
+    "category": "neutral",
+    "sounds": [
+      "untitledduckmod:duckling_ambient_1",
+      "untitledduckmod:duckling_ambient_2"
+    ],
+    "subtitle": "untitledduckmod.subtitle.duckling_ambient"
+  },
+  "duck_lay_egg": {
+    "category": "neutral",
+    "sounds": [
+      "minecraft:mob/chicken/plop"
+    ],
+    "subtitle": "untitledduckmod.subtitle.duck_lay_egg"
+  },
+  "duck_step": {
+    "category": "neutral",
+    "sounds": [
+      "minecraft:mob/chicken/step1",
+      "minecraft:mob/chicken/step2"
+    ],
+    "subtitle": "subtitles.block.generic.footsteps"
+  }
+}

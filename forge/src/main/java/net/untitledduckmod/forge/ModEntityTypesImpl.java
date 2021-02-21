@@ -21,7 +21,7 @@ import net.untitledduckmod.registration.EntityTypeBuilders;
 
 import java.util.List;
 
-public class EntityTypesImpl {
+public class ModEntityTypesImpl {
     public static final RegistryObject<EntityType<DuckEntity>> DUCK = RegistryObject.of(new Identifier(DuckMod.MOD_ID, "duck"), ForgeRegistries.ENTITIES);
     public static final RegistryObject<EntityType<DuckEggEntity>> DUCK_EGG = RegistryObject.of(new Identifier(DuckMod.MOD_ID, "duck_egg"), ForgeRegistries.ENTITIES);
 
@@ -39,7 +39,7 @@ public class EntityTypesImpl {
 
     public static void setupSpawning() {
         SpawnRestriction.register(DUCK.get(), SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
-        MinecraftForge.EVENT_BUS.addListener(EntityTypesImpl::onBiomeLoading);
+        MinecraftForge.EVENT_BUS.addListener(ModEntityTypesImpl::onBiomeLoading);
     }
 
     private static void onBiomeLoading(BiomeLoadingEvent event) {

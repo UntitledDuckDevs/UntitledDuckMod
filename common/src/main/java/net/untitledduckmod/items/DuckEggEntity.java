@@ -13,7 +13,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.untitledduckmod.DuckEntity;
-import net.untitledduckmod.EntityTypes;
+import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
 
 public class DuckEggEntity extends ThrownItemEntity {
@@ -22,11 +22,11 @@ public class DuckEggEntity extends ThrownItemEntity {
     }
 
     public DuckEggEntity(World world, LivingEntity owner) {
-        super(EntityTypes.getDuckEgg(), owner, world);
+        super(ModEntityTypes.getDuckEgg(), owner, world);
     }
 
     public DuckEggEntity(World world, double x, double y, double z) {
-        super(EntityTypes.getDuckEgg(), x, y, z, world);
+        super(ModEntityTypes.getDuckEgg(), x, y, z, world);
     }
 
     @Environment(EnvType.CLIENT)
@@ -55,7 +55,7 @@ public class DuckEggEntity extends ThrownItemEntity {
                 }
 
                 for (int j = 0; j < i; ++j) {
-                    DuckEntity duckEntity = EntityTypes.getDuck().create(this.world);
+                    DuckEntity duckEntity = ModEntityTypes.getDuck().create(this.world);
                     duckEntity.setBreedingAge(-24000);
                     duckEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.yaw, 0.0F);
                     this.world.spawnEntity(duckEntity);

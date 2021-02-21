@@ -6,7 +6,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.untitledduckmod.EntityTypes;
+import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
 import net.untitledduckmod.registration.ItemSuppliers;
 
@@ -19,7 +19,7 @@ public class ModItemsImpl {
         RegistryEvent.Register<Item> event = (RegistryEvent.Register<Item>) optionalEvent;
         IForgeRegistry<Item> registry = event.getRegistry();
 
-        registry.register(new ForgeSpawnEggItem(EntityTypes::getDuck, ModItems.DUCK_PRIMARY_COLOR, ModItems.DUCK_SECONDARY_COLOR, new Item.Settings().group(ItemGroup.MISC)).setRegistryName(ItemSuppliers.DUCK_SPAWN_EGG_ID));
+        registry.register(new ForgeSpawnEggItem(ModEntityTypes::getDuck, ModItems.DUCK_PRIMARY_COLOR, ModItems.DUCK_SECONDARY_COLOR, new Item.Settings().group(ItemGroup.MISC)).setRegistryName(ItemSuppliers.DUCK_SPAWN_EGG_ID));
         registry.register(ItemSuppliers.DUCK_EGG.get().setRegistryName(ItemSuppliers.DUCK_EGG_ID));
         registry.register(ItemSuppliers.RAW_DUCK.get().setRegistryName(ItemSuppliers.RAW_DUCK_ID));
         registry.register(ItemSuppliers.COOKED_DUCK.get().setRegistryName(ItemSuppliers.COOKED_DUCK_ID));

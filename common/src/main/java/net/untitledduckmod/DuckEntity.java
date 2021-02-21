@@ -1,7 +1,6 @@
 package net.untitledduckmod;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -20,7 +19,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,10 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final byte ANIMATION_IDLE = 0;
     protected static final byte ANIMATION_CLEAN = 1;
-    protected static final byte ANIMATION_SIT = 2;
+    // TODO: Implement animations
+    // protected static final byte ANIMATION_SIT = 2;
+    // protected static final byte ANIMATION_DIVE = 3;
+
     private final AnimationFactory factory = new AnimationFactory(this);
     private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk", true);
     private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle", true);
@@ -133,18 +135,13 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     public void tickMovement() {
         super.tickMovement();
         if (!world.isClient && isAlive() && !isBaby() && --eggLayTime <= 0) {
-            this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+            this.playSound(ModSoundEvents.getDuckEggSound(), 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
             this.dropItem(ModItems.getDuckEgg());
             this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
         }
 
         // Play flapping/fly animation when falling
-        //System.out.printf("client: %s water: %s, onGround: %s, velocity: %s\n", world.isClient, isTouchingWater(), onGround, velocity);
-        if(world.isClient && !isTouchingWater() && !this.onGround) {
-            isFlapping = true;
-        } else {
-            isFlapping = false;
-        }
+        isFlapping = world.isClient && !isTouchingWater() && !this.onGround;
 
         // Slow fall speed
         Vec3d velocity = this.getVelocity();
@@ -156,7 +153,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return EntityTypes.getDuck().create(world);
+        return ModEntityTypes.getDuck().create(world);
     }
 
     @Override
@@ -193,5 +190,18 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    @Override
+    public void playAmbientSound() {
+        if (isBaby()) {
+            this.playSound(ModSoundEvents.getDucklingAmbientSound(), 0.3f, getSoundPitch());
+        }
+        this.playSound(ModSoundEvents.getDuckAmbientSound(), 0.10f, getSoundPitch());
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        this.playSound(ModSoundEvents.getDuckStepSound(), 0.15F, 1.0F);
     }
 }

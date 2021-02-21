@@ -4,7 +4,7 @@ import me.shedaniel.architectury.annotations.ExpectPlatform;
 import net.minecraft.entity.EntityType;
 import net.untitledduckmod.items.DuckEggEntity;
 
-public class EntityTypes {
+public class ModEntityTypes {
     @ExpectPlatform
     public static void register(Object optionalEvent) {
         throw new AssertionError();
