@@ -19,7 +19,7 @@ public class DuckCleaningGoal extends Goal {
     @Override
     public boolean canStart() {
         // Don't clean if not near player
-        if (nextCleanTime > duck.age || duck.getDespawnCounter() >= 100) {
+        if (nextCleanTime > duck.age || duck.getDespawnCounter() >= 100 || duck.getAnimation() != DuckEntity.ANIMATION_IDLE) {
             return false;
         }
         return duck.getRandom().nextInt(40) == 0;

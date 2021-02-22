@@ -39,9 +39,8 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final byte ANIMATION_IDLE = 0;
     protected static final byte ANIMATION_CLEAN = 1;
-    // TODO: Implement animations
-    // protected static final byte ANIMATION_SIT = 2;
-    // protected static final byte ANIMATION_DIVE = 3;
+    protected static final byte ANIMATION_DIVE = 2;
+    protected static final byte ANIMATION_DANCE = 3;
 
     private final AnimationFactory factory = new AnimationFactory(this);
     private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk", true);
@@ -50,7 +49,8 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final AnimationBuilder SWIM_IDLE_ANIM = new AnimationBuilder().addAnimation("idle_swim", true);
     private static final AnimationBuilder CLEAN_ANIM = new AnimationBuilder().addAnimation("clean");
     private static final AnimationBuilder SWIM_CLEAN_ANIM = new AnimationBuilder().addAnimation("clean_swim");
-    private static final AnimationBuilder SIT_ANIM = new AnimationBuilder().addAnimation("sit", true);
+    private static final AnimationBuilder DIVE_ANIM = new AnimationBuilder().addAnimation("dive");
+    private static final AnimationBuilder DANCE_ANIM = new AnimationBuilder().addAnimation("dance", true);
     private static final AnimationBuilder FLY_ANIM = new AnimationBuilder().addAnimation("fly", true);
 
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
@@ -58,6 +58,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final int MAX_EGG_LAY_TIME = 12000;
     private int eggLayTime;
     private boolean isFlapping;
+    private boolean wasSongPlaying = false;
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -115,6 +116,19 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     }
 
     @Override
+    public void setNearbySongPlaying(BlockPos songPosition, boolean playing) {
+        if (playing && !wasSongPlaying) {
+            System.out.println("Groovy!");
+            setAnimation(ANIMATION_DANCE);
+            wasSongPlaying = true;
+        } else if(!playing && wasSongPlaying) {
+            System.out.println("Quiet");
+            setAnimation(ANIMATION_IDLE);
+            wasSongPlaying = false;
+        }
+    }
+
+    @Override
     protected void initGoals() {
         this.goalSelector.add(0, new DuckSwimGoal(this));
         this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4D));
@@ -123,6 +137,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         this.goalSelector.add(4, new FollowParentGoal(this, 1.1D));
         this.goalSelector.add(5, new WanderAroundGoal(this, 1.0D));
         this.goalSelector.add(5, new DuckCleaningGoal(this));
+        this.goalSelector.add(5, new DuckDiveGoal(this));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(7, new LookAroundGoal(this));
     }
@@ -177,6 +192,12 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         }
         if (getAnimation() == ANIMATION_CLEAN) {
             controller.setAnimation(inWater ? SWIM_CLEAN_ANIM : CLEAN_ANIM);
+            return PlayState.CONTINUE;
+        } else if (getAnimation() == ANIMATION_DIVE) {
+            controller.setAnimation(DIVE_ANIM);
+            return PlayState.CONTINUE;
+        } else if (getAnimation() == ANIMATION_DANCE) {
+            controller.setAnimation(DANCE_ANIM);
             return PlayState.CONTINUE;
         }
         if (inWater) {
