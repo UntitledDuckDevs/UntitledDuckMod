@@ -41,6 +41,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     protected static final byte ANIMATION_CLEAN = 1;
     protected static final byte ANIMATION_DIVE = 2;
     protected static final byte ANIMATION_DANCE = 3;
+    protected static final byte ANIMATION_PANIC = 4;
 
     private final AnimationFactory factory = new AnimationFactory(this);
     private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk", true);
@@ -52,6 +53,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final AnimationBuilder DIVE_ANIM = new AnimationBuilder().addAnimation("dive");
     private static final AnimationBuilder DANCE_ANIM = new AnimationBuilder().addAnimation("dance", true);
     private static final AnimationBuilder FLY_ANIM = new AnimationBuilder().addAnimation("fly", true);
+    private static final AnimationBuilder PANIC_ANIM = new AnimationBuilder().addAnimation("panic", true);
 
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     private static final int MIN_EGG_LAY_TIME = 6000;
@@ -118,11 +120,9 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     @Override
     public void setNearbySongPlaying(BlockPos songPosition, boolean playing) {
         if (playing && !wasSongPlaying) {
-            System.out.println("Groovy!");
             setAnimation(ANIMATION_DANCE);
             wasSongPlaying = true;
         } else if(!playing && wasSongPlaying) {
-            System.out.println("Quiet");
             setAnimation(ANIMATION_IDLE);
             wasSongPlaying = false;
         }
@@ -131,7 +131,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new DuckSwimGoal(this));
-        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4D));
+        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.6D));
         this.goalSelector.add(2, new AnimalMateGoal(this, 1.0D));
         this.goalSelector.add(3, new TemptGoal(this, 1.0D, false, BREEDING_INGREDIENT));
         this.goalSelector.add(4, new FollowParentGoal(this, 1.1D));
@@ -149,20 +149,29 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     @Override
     public void tickMovement() {
         super.tickMovement();
-        if (!world.isClient && isAlive() && !isBaby() && --eggLayTime <= 0) {
-            this.playSound(ModSoundEvents.getDuckEggSound(), 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-            this.dropItem(ModItems.getDuckEgg());
-            this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+
+        if (!world.isClient) {
+            // Lay egg
+            if (isAlive() && !isBaby() && --eggLayTime <= 0) {
+                this.playSound(ModSoundEvents.getDuckEggSound(), 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                this.dropItem(ModItems.getDuckEgg());
+                this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+            }
+
+            // Slow fall speed when flapping
+            Vec3d velocity = this.getVelocity();
+            if (!this.onGround && velocity.y < 0.0D) {
+                this.setVelocity(velocity.multiply(1.0D, 0.6D, 1.0D));
+            }
+
+            // Trigger panic animation when being attacked or being on fire
+            if (getAttacker() != null || isOnFire()) {
+                setAnimation(ANIMATION_PANIC);
+            }
         }
 
         // Play flapping/fly animation when falling
         isFlapping = world.isClient && !isTouchingWater() && !this.onGround;
-
-        // Slow fall speed
-        Vec3d velocity = this.getVelocity();
-        if (!world.isClient && !this.onGround && velocity.y < 0.0D) {
-            this.setVelocity(velocity.multiply(1.0D, 0.6D, 1.0D));
-        }
     }
 
     @Nullable
@@ -190,21 +199,30 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
             controller.setAnimation(FLY_ANIM);
             return PlayState.CONTINUE;
         }
-        if (getAnimation() == ANIMATION_CLEAN) {
-            controller.setAnimation(inWater ? SWIM_CLEAN_ANIM : CLEAN_ANIM);
-            return PlayState.CONTINUE;
-        } else if (getAnimation() == ANIMATION_DIVE) {
-            controller.setAnimation(DIVE_ANIM);
-            return PlayState.CONTINUE;
-        } else if (getAnimation() == ANIMATION_DANCE) {
-            controller.setAnimation(DANCE_ANIM);
-            return PlayState.CONTINUE;
+
+        byte currentAnimation = getAnimation();
+        switch (currentAnimation) {
+            case ANIMATION_CLEAN:
+                controller.setAnimation(inWater ? SWIM_CLEAN_ANIM : CLEAN_ANIM);
+                break;
+            case ANIMATION_DIVE:
+                controller.setAnimation(DIVE_ANIM);
+                break;
+            case ANIMATION_DANCE:
+                controller.setAnimation(DANCE_ANIM);
+                break;
+            case ANIMATION_PANIC:
+                controller.setAnimation(PANIC_ANIM);
+                break;
+            default:
+                if (inWater) {
+                    controller.setAnimation(isMoving ? SWIM_ANIM : SWIM_IDLE_ANIM);
+                } else {
+                    controller.setAnimation(isMoving ? WALK_ANIM : IDLE_ANIM);
+                }
+                break;
         }
-        if (inWater) {
-            controller.setAnimation(isMoving ? SWIM_ANIM : SWIM_IDLE_ANIM);
-        } else {
-            controller.setAnimation(isMoving ? WALK_ANIM : IDLE_ANIM);
-        }
+
         return PlayState.CONTINUE;
     }
 
