@@ -11,11 +11,6 @@ architectury {
     fabric()
 }
 
-repositories {
-    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
-    maven { url "https://maven.shedaniel.me/" }
-}
-
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
@@ -23,13 +18,13 @@ dependencies {
     modImplementation 'software.bernie.geckolib:geckolib-fabric-1.16.5:3.0.19:dev'
     modImplementation 'me.shedaniel:RoughlyEnoughItems:5.9.172'
 
-    compileOnly(project(path: ":common")) {
+    implementation(project(path: ":common")) {
         transitive = false
     }
-    runtimeOnly(project(path: ":common", configuration: "transformDevelopmentFabric")) {
+    developmentFabric(project(path: ":common")) {
         transitive = false
     }
-    shadow(project(path: ":common", configuration: "transformProductionFabric")) {
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
         transitive = false
     }
 }

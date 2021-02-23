@@ -20,13 +20,13 @@ dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
     modImplementation 'software.bernie.geckolib:geckolib-forge-1.16.5:3.0.12'
 
-    compileOnly(project(path: ":common")) {
+    implementation(project(path: ":common")) {
         transitive = false
     }
-    runtimeOnly(project(path: ":common", configuration: "transformDevelopmentForge")) {
+    developmentForge(project(path: ":common")) {
         transitive = false
     }
-    shadow(project(path: ":common", configuration: "transformProductionForge")) {
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
         transitive = false
     }
 }
