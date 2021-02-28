@@ -3,7 +3,7 @@
   "id": "untitledduckmod",
   "version": "${version}",
   "name": "Untitled Duck Mod",
-  "description": "Ducks for Forge and Fabric! Powered by Geckolib.",
+  "description": "Ducks for Forge and Fabric! Powered by geckolib and architectury.",
   "authors": [
     "Paspartout",
     "ArtistMonster24"

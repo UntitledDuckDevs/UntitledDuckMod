@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[35,)"
-#issueTrackerURL = ""
+issueTrackerURL = ""
 license = "MIT"
 
 [[mods]]
@@ -11,7 +11,7 @@ authors = "Paspartout, ArtistMonster24"
 logoFile = "logo.png"
 credits = "Thanks to geckolib!"
 description = '''
-Ducks for Forge and Fabric! Powered by Geckolib.
+Ducks for Forge and Fabric! Powered by geckolib and architectury.
 '''
 
 [[dependencies.untitledduckmod]]
