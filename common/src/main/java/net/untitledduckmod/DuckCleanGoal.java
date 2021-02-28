@@ -5,8 +5,8 @@ import net.minecraft.entity.ai.goal.Goal;
 import java.util.EnumSet;
 
 public class DuckCleanGoal extends Goal {
-    private final DuckEntity duck;
     private static final int ANIMATION_LENGTH = 32;
+    private final DuckEntity duck;
     private int cleanTime;
     private int nextCleanTime;
 

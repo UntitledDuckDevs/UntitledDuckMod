@@ -6,6 +6,7 @@ import net.minecraft.util.registry.Registry;
 import net.untitledduckmod.items.DuckEggItem;
 import net.untitledduckmod.registration.ItemSuppliers;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class ModItemsImpl {
     private static SpawnEggItem DUCK_SPAWN_EGG;
     private static DuckEggItem DUCK_EGG;

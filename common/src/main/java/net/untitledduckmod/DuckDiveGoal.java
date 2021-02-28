@@ -6,8 +6,8 @@ import net.minecraft.sound.SoundEvents;
 import java.util.EnumSet;
 
 public class DuckDiveGoal extends Goal {
-    private final DuckEntity duck;
     private static final int ANIMATION_LENGTH = 32;
+    private final DuckEntity duck;
     private int diveTime;
     private int nextDiveTime;
 
@@ -48,7 +48,7 @@ public class DuckDiveGoal extends Goal {
     public void tick() {
         diveTime--;
         // Play splash sound 10 ticks = 0.5 seconds into the animation
-        if (diveTime == 32-10) {
+        if (diveTime == 32 - 10) {
             duck.playSound(SoundEvents.ENTITY_GENERIC_SPLASH, 1.0f, 1.0f);
         }
     }

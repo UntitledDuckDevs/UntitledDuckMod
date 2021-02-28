@@ -36,16 +36,14 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 public class DuckEntity extends AnimalEntity implements IAnimatable {
     public static final String EGG_LAY_TIME_TAG = "duckEggLayTime";
     public static final String VARIANT_TAG = "duckVariant";
+    public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
-
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final byte ANIMATION_IDLE = 0;
     protected static final byte ANIMATION_CLEAN = 1;
     protected static final byte ANIMATION_DIVE = 2;
     protected static final byte ANIMATION_DANCE = 3;
     protected static final byte ANIMATION_PANIC = 4;
-
-    private final AnimationFactory factory = new AnimationFactory(this);
     private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk", true);
     private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle", true);
     private static final AnimationBuilder SWIM_ANIM = new AnimationBuilder().addAnimation("swim", true);
@@ -60,7 +58,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
-    public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
+    private final AnimationFactory factory = new AnimationFactory(this);
     private int eggLayTime;
     private boolean isFlapping;
     private boolean wasSongPlaying = false;
@@ -112,12 +110,12 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         dataTracker.set(VARIANT, variant);
     }
 
-    public void setAnimation(byte animation) {
-        dataTracker.set(ANIMATION, animation);
-    }
-
     public byte getAnimation() {
         return dataTracker.get(ANIMATION);
+    }
+
+    public void setAnimation(byte animation) {
+        dataTracker.set(ANIMATION, animation);
     }
 
     @Override
@@ -125,7 +123,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         if (playing && !wasSongPlaying) {
             setAnimation(ANIMATION_DANCE);
             wasSongPlaying = true;
-        } else if(!playing && wasSongPlaying) {
+        } else if (!playing && wasSongPlaying) {
             setAnimation(ANIMATION_IDLE);
             wasSongPlaying = false;
         }
@@ -185,7 +183,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 2, this::predicate));
+        data.addAnimationController(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
     public boolean lookingAround() {
