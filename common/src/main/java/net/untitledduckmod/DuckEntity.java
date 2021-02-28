@@ -62,6 +62,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private int eggLayTime;
     private boolean isFlapping;
     private boolean wasSongPlaying = false;
+    private boolean panicked = false;
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -166,8 +167,12 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
             }
 
             // Trigger panic animation when being attacked or being on fire
-            if (getAttacker() != null || isOnFire()) {
+            if (!panicked && getAttacker() != null || isOnFire()) {
                 setAnimation(ANIMATION_PANIC);
+                panicked = true;
+            } else if (panicked && getAttacker() == null && !isOnFire()) {
+                setAnimation(ANIMATION_IDLE);
+                panicked = false;
             }
         }
 
