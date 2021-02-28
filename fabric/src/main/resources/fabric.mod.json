@@ -30,6 +30,7 @@
     "geckolib3": ">=3.0.18"
   },
   "mixins": [
-    "untitledduckmod.mixins.json"
+    "untitledduckmod.mixins.json",
+    "untitledduckmod_fabric.mixins.json"
   ]
 }

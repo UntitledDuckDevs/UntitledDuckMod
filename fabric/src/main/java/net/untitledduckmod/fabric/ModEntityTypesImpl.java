@@ -13,7 +13,7 @@ import net.minecraft.world.Heightmap;
 import net.untitledduckmod.DuckEntity;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.ModEntityTypes;
-import net.untitledduckmod.SpawningSettings;
+import net.untitledduckmod.ModSpawningSettings;
 import net.untitledduckmod.items.DuckEggEntity;
 import net.untitledduckmod.registration.EntityTypeBuilders;
 
@@ -32,7 +32,7 @@ public class ModEntityTypesImpl {
 
     public static void setupSpawning() {
         SpawnRestrictionAccessor.callRegister(DUCK, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
-        BiomeModifications.addSpawn(context -> true, SpawnGroup.CREATURE, ModEntityTypes.getDuck(), SpawningSettings.WEIGHT, SpawningSettings.MIN_GROUP, SpawningSettings.MAX_GROUP);
+        BiomeModifications.addSpawn(context -> true, SpawnGroup.CREATURE, ModEntityTypes.getDuck(), ModSpawningSettings.WEIGHT, ModSpawningSettings.MIN_GROUP, ModSpawningSettings.MAX_GROUP);
     }
 
     public static EntityType<DuckEntity> getDuck() {

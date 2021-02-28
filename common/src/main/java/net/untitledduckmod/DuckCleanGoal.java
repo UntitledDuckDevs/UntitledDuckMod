@@ -4,13 +4,13 @@ import net.minecraft.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-public class DuckCleaningGoal extends Goal {
+public class DuckCleanGoal extends Goal {
     private final DuckEntity duck;
     private static final int ANIMATION_LENGTH = 32;
     private int cleanTime;
     private int nextCleanTime;
 
-    public DuckCleaningGoal(DuckEntity duck) {
+    public DuckCleanGoal(DuckEntity duck) {
         this.duck = duck;
         this.setControls(EnumSet.of(Control.LOOK, Control.MOVE));
         nextCleanTime = duck.age + (10 * 20 + duck.getRandom().nextInt(10) * 20);

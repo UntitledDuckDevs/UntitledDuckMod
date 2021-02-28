@@ -37,7 +37,6 @@ public class DuckEggEntity extends ThrownItemEntity {
                 this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, this.getStack()), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
             }
         }
-
     }
 
     protected void onEntityHit(EntityHitResult entityHitResult) {

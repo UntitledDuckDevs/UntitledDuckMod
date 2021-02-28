@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.untitledduckmod.mixin",
+  "package": "net.untitledduckmod.fabric.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "SwimSpeedMixin"
   ],
   "client": [
-    "DuckEggSpawnMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -14,11 +14,13 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -58,6 +60,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
+    public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
     private int eggLayTime;
     private boolean isFlapping;
     private boolean wasSongPlaying = false;
@@ -136,7 +139,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         this.goalSelector.add(3, new TemptGoal(this, 1.0D, false, BREEDING_INGREDIENT));
         this.goalSelector.add(4, new FollowParentGoal(this, 1.1D));
         this.goalSelector.add(5, new WanderAroundGoal(this, 1.0D));
-        this.goalSelector.add(5, new DuckCleaningGoal(this));
+        this.goalSelector.add(5, new DuckCleanGoal(this));
         this.goalSelector.add(5, new DuckDiveGoal(this));
         this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(7, new LookAroundGoal(this));
@@ -243,5 +246,15 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(ModSoundEvents.getDuckStepSound(), 0.15F, 1.0F);
+    }
+
+    @Override
+    protected void swimUpward(Tag<Fluid> fluid) {
+        // This bypasses forge modifying jump depending on swim speed
+        if (this.getNavigation().canSwim()) {
+            this.setVelocity(this.getVelocity().add(0.0D, 0.03999999910593033D, 0.0D));
+        } else {
+            this.setVelocity(this.getVelocity().add(0.0D, 0.3D, 0.0D));
+        }
     }
 }

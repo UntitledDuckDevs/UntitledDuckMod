@@ -8,6 +8,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.SpawnSettings;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.untitledduckmod.DuckEntity;
 import net.untitledduckmod.DuckMod;
-import net.untitledduckmod.SpawningSettings;
+import net.untitledduckmod.ModSpawningSettings;
 import net.untitledduckmod.items.DuckEggEntity;
 import net.untitledduckmod.registration.EntityTypeBuilders;
 
@@ -34,7 +35,7 @@ public class ModEntityTypesImpl {
     }
 
     public static void registerAttributes() {
-        DefaultAttributeRegistry.put(DUCK.get(), DuckEntity.getDefaultAttributes().build());
+        DefaultAttributeRegistry.put(DUCK.get(), DuckEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), DuckEntity.SWIM_SPEED_MULTIPLIER).build());
     }
 
     public static void setupSpawning() {
@@ -49,7 +50,7 @@ public class ModEntityTypesImpl {
         if (event.getName() == null)
             return;
         List<SpawnSettings.SpawnEntry> spawner = event.getSpawns().getSpawner(SpawnGroup.CREATURE);
-        spawner.add(new SpawnSettings.SpawnEntry(DUCK.get(), SpawningSettings.WEIGHT, SpawningSettings.MIN_GROUP, SpawningSettings.MAX_GROUP));
+        spawner.add(new SpawnSettings.SpawnEntry(DUCK.get(), ModSpawningSettings.WEIGHT, ModSpawningSettings.MIN_GROUP, ModSpawningSettings.MAX_GROUP));
     }
 
     public static EntityType<DuckEntity> getDuck() {
