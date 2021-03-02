@@ -20,6 +20,26 @@ public class ModSoundEvents {
     }
 
     @ExpectPlatform
+    public static SoundEvent getDuckHurtSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getDucklingHurtSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getDuckDeathSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getDucklingDeathSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static SoundEvent getDuckStepSound() {
         throw new AssertionError();
     }

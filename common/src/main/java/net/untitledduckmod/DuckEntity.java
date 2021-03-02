@@ -6,6 +6,7 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -20,6 +21,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -244,6 +246,24 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
             return;
         }
         this.playSound(ModSoundEvents.getDuckAmbientSound(), 0.10f, getSoundPitch());
+    }
+
+    @Override
+    protected void playHurtSound(DamageSource source) {
+        if (isBaby()) {
+            this.playSound(ModSoundEvents.getDucklingHurtSound(), 0.3f, getSoundPitch() + 0.25F);
+            return;
+        }
+        this.playSound(ModSoundEvents.getDuckHurtSound(), 0.10f, getSoundPitch() + 0.5F);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        if (isBaby()) {
+            return ModSoundEvents.getDucklingDeathSound();
+        }
+        return ModSoundEvents.getDuckDeathSound();
     }
 
     @Override

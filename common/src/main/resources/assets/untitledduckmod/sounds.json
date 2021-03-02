@@ -16,6 +16,60 @@
     ],
     "subtitle": "untitledduckmod.subtitle.duckling_ambient"
   },
+  "duck_hurt": {
+    "category": "neutral",
+    "sounds": [
+      "untitledduckmod:duck_ambient_1",
+      "untitledduckmod:duck_ambient_2",
+      "untitledduckmod:duck_ambient_3"
+    ],
+    "subtitle": "untitledduckmod.subtitle.duck_hurt"
+  },
+  "duckling_hurt": {
+    "category": "neutral",
+    "sounds": [
+      "untitledduckmod:duckling_ambient_1",
+      "untitledduckmod:duckling_ambient_2"
+    ],
+    "subtitle": "untitledduckmod.subtitle.duckling_hurt"
+  },
+  "duck_death": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "untitledduckmod:duck_ambient_1",
+        "pitch": 1.5,
+        "volume": 0.2
+      },
+      {
+        "name": "untitledduckmod:duck_ambient_2",
+        "pitch": 1.5,
+        "volume": 0.2
+      },
+      {
+        "name": "untitledduckmod:duck_ambient_3",
+        "pitch": 1.5,
+        "volume": 0.2
+      }
+    ],
+    "subtitle": "untitledduckmod.subtitle.duck_death"
+  },
+  "duckling_death": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "untitledduckmod:duckling_ambient_1",
+        "pitch": 1.25,
+        "volume": 0.2
+      },
+      {
+        "name": "untitledduckmod:duckling_ambient_2",
+        "pitch": 1.25,
+        "volume": 0.2
+      }
+    ],
+    "subtitle": "untitledduckmod.subtitle.duckling_death"
+  },
   "duck_lay_egg": {
     "category": "neutral",
     "sounds": [
