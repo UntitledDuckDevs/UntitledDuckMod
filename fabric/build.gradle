@@ -70,7 +70,7 @@ if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKe
             id = "451766"
             releaseType = "beta"
             changelogType = 'text'
-            changelog = "Add hurt and death sounds, which are just higher pitched duck quacks at the moment"
+            changelog = "${rootProject.changelog}"
             addGameVersion("1.16.5")
             addGameVersion("Fabric")
             addGameVersion("Java 8")

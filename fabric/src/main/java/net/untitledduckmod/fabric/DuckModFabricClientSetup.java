@@ -6,7 +6,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.untitledduckmod.ModEntityTypes;
 
-// TODO: Maybe this can be moved?
 public class DuckModFabricClientSetup implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
