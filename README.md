@@ -1,8 +1,8 @@
 Untitled Duck Mod
 =================
 
-[![Download for Forge](https://cf.way2muchnoise.eu/title/untitled-duck-mod-forge.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-forge)
-[![Download for Fabric](https://cf.way2muchnoise.eu/title/untitled-duck-mod-fabric.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-fabric)
+[![Download for Forge](http://cf.way2muchnoise.eu/title/untitled-duck-mod-forge.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-forge)
+[![Download for Fabric](http://cf.way2muchnoise.eu/title/untitled-duck-mod-fabric.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-fabric)
 
 This mod simply adds ducks to minecraft.
 
