@@ -13,6 +13,7 @@ import net.untitledduckmod.registration.ItemSuppliers;
 public class ModItemsImpl {
     public static final RegistryObject<Item> DUCK_SPAWN_EGG = RegistryObject.of(ItemSuppliers.DUCK_SPAWN_EGG_ID, ForgeRegistries.ITEMS);
     public static final RegistryObject<Item> DUCK_EGG = RegistryObject.of(ItemSuppliers.DUCK_EGG_ID, ForgeRegistries.ITEMS);
+    public static final RegistryObject<Item> GOOSE_SPAWN_EGG = RegistryObject.of(ItemSuppliers.GOOSE_SPAWN_EGG_ID, ForgeRegistries.ITEMS);
 
     public static void register(Object optionalEvent) {
         assert optionalEvent != null;
@@ -24,6 +25,8 @@ public class ModItemsImpl {
         registry.register(ItemSuppliers.RAW_DUCK.get().setRegistryName(ItemSuppliers.RAW_DUCK_ID));
         registry.register(ItemSuppliers.COOKED_DUCK.get().setRegistryName(ItemSuppliers.COOKED_DUCK_ID));
         registry.register(ItemSuppliers.DUCK_FEATHER.get().setRegistryName(ItemSuppliers.DUCK_FEATHER_ID));
+
+        registry.register(new ForgeSpawnEggItem(ModEntityTypes::getGoose, ModItems.DUCK_PRIMARY_COLOR, ModItems.DUCK_SECONDARY_COLOR, new Item.Settings().group(ItemGroup.MISC)).setRegistryName(ItemSuppliers.GOOSE_SPAWN_EGG_ID));
     }
 
     public static void setup(Object optionalEvent) {
@@ -36,5 +39,9 @@ public class ModItemsImpl {
 
     public static Item getDuckEgg() {
         return DUCK_EGG.get();
+    }
+
+    public static Item getGooseSpawnEgg() {
+        return GOOSE_SPAWN_EGG.get();
     }
 }

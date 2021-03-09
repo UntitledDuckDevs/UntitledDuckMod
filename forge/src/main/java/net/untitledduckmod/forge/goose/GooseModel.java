@@ -1,7 +1,7 @@
-package net.untitledduckmod.fabric;
+package net.untitledduckmod.forge.goose;
 
 import net.minecraft.util.Identifier;
-import net.untitledduckmod.DuckEntity;
+import net.untitledduckmod.GooseEntity;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -9,26 +9,26 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import static net.untitledduckmod.DuckModelIdentifiers.*;
 
-public class DuckModel extends AnimatedGeoModel<DuckEntity> {
-    private Identifier currentTexture = NORMAL_TEXTURE;
+public class GooseModel extends AnimatedGeoModel<GooseEntity> {
+    private Identifier currentTexture = GOOSE_TEXTURE;
 
     @Override
-    public Identifier getModelLocation(DuckEntity object) {
-        return MODEL_LOCATION;
+    public Identifier getModelLocation(GooseEntity object) {
+        return GOOSE_MODEL_LOCATION;
     }
 
     @Override
-    public Identifier getTextureLocation(DuckEntity object) {
+    public Identifier getTextureLocation(GooseEntity object) {
         return currentTexture;
     }
 
     @Override
-    public Identifier getAnimationFileLocation(DuckEntity animatable) {
-        return ANIMATION_FILE_LOCATION;
+    public Identifier getAnimationFileLocation(GooseEntity animatable) {
+        return GOOSE_ANIMATION_FILE_LOCATION;
     }
 
     @Override
-    public void setLivingAnimations(DuckEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
+    public void setLivingAnimations(GooseEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
 
         if (entity.isBaby()) {
@@ -39,9 +39,9 @@ public class DuckModel extends AnimatedGeoModel<DuckEntity> {
                 root.setScaleY(0.7f);
                 root.setScaleZ(0.7f);
             }
-            currentTexture = DUCKLING_TEXTURE;
+            currentTexture = GOSLING_TEXTURE;
         } else {
-            currentTexture = entity.getVariant() == 0 ? NORMAL_TEXTURE : FEMALE_TEXTURE;
+            currentTexture = entity.getVariant() == 0 ? GOOSE_TEXTURE : CANADIAN_GOOSE_TEXTURE;
         }
 
         IBone head = this.getAnimationProcessor().getBone("head");

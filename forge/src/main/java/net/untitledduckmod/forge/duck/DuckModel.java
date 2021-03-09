@@ -1,4 +1,4 @@
-package net.untitledduckmod.forge;
+package net.untitledduckmod.forge.duck;
 
 import net.minecraft.util.Identifier;
 import net.untitledduckmod.DuckEntity;
@@ -16,7 +16,7 @@ public class DuckModel extends AnimatedGeoModel<DuckEntity> {
 
     @Override
     public Identifier getModelLocation(DuckEntity object) {
-        return DuckModelIdentifiers.MODEL_LOCATION;
+        return DuckModelIdentifiers.DUCK_MODEL_LOCATION;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class DuckModel extends AnimatedGeoModel<DuckEntity> {
 
     @Override
     public Identifier getAnimationFileLocation(DuckEntity animatable) {
-        return DuckModelIdentifiers.ANIMATION_FILE_LOCATION;
+        return DuckModelIdentifiers.DUCK_ANIMATION_FILE_LOCATION;
     }
 
     @Override

@@ -30,4 +30,9 @@ public class ModEntityTypes {
         throw new AssertionError();
     }
 
+    @ExpectPlatform
+    public static EntityType<GooseEntity> getGoose() {
+        throw new AssertionError();
+    }
+
 }

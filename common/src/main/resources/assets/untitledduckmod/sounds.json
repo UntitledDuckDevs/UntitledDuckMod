@@ -84,5 +84,14 @@
       "minecraft:mob/chicken/step2"
     ],
     "subtitle": "subtitles.block.generic.footsteps"
+  },
+  "goose_honk": {
+    "category": "neutral",
+    "sounds": [
+      "untitledduckmod:goose_honk_1",
+      "untitledduckmod:goose_honk_2",
+      "untitledduckmod:goose_honk_3"
+    ],
+    "subtitle": "untitledduckmod.subtitle.goose_honk"
   }
 }

@@ -1,8 +1,9 @@
-package net.untitledduckmod.forge;
+package net.untitledduckmod.forge.duck;
 
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.util.Identifier;
 import net.untitledduckmod.DuckEntity;
+import net.untitledduckmod.forge.GeoMobRenderer;
 
 public class DuckRenderer extends GeoMobRenderer<DuckEntity> {
     public DuckRenderer(EntityRenderDispatcher dispatcher) {

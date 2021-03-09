@@ -5,11 +5,14 @@
   "item.untitledduckmod.raw_duck": "Raw Duck",
   "item.untitledduckmod.cooked_duck": "Cooked Duck",
   "item.untitledduckmod.duck_feather": "Duck Feather",
+  "entity.untitledduckmod.goose": "Goose",
+  "item.untitledduckmod.goose_spawn_egg": "Goose Spawn Egg",
   "untitledduckmod.subtitle.duck_ambient": "Duck quacks",
   "untitledduckmod.subtitle.duckling_ambient": "Duckling chirps",
   "untitledduckmod.subtitle.duck_hurt": "Duck quacks in pain",
   "untitledduckmod.subtitle.duckling_hurt": "Duckling chirps for its life",
   "untitledduckmod.subtitle.duck_death": "Duck dies",
   "untitledduckmod.subtitle.duckling_death": "Duckling dies",
-  "untitledduckmod.subtitle.duck_lay_egg": "Duck egg plops"
+  "untitledduckmod.subtitle.duck_lay_egg": "Duck egg plops",
+  "untitledduckmod.subtitle.goose_honk": "Goose honks"
 }
