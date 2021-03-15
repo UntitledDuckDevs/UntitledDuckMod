@@ -5,6 +5,7 @@ name: Java CI with Gradle
 
 on:
   push:
+    branches: [ master, '0.2.0' ]
     paths:
       - 'common/**'
       - 'fabric/**'
@@ -12,7 +13,9 @@ on:
       - '*.gradle'
       - 'gradle.properties'
   pull_request:
-    branches: [ master ]
+    branches: [ master, '0.2.0' ]  
+  workflow_dispatch:
+      branches: [ master, '0.2.0' ]
 
 jobs:
   build:
