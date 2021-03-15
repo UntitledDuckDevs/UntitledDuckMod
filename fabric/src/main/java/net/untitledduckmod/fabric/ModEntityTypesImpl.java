@@ -18,11 +18,13 @@ public class ModEntityTypesImpl {
     public static EntityType<DuckEntity> DUCK;
     public static EntityType<DuckEggEntity> DUCK_EGG;
     public static EntityType<GooseEntity> GOOSE;
+    public static EntityType<DuckEggEntity> GOOSE_EGG;
 
     public static void register(Object optionalEvent) {
         DUCK = Registry.register(Registry.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "duck"), EntityTypeBuilders.DUCK.get());
         DUCK_EGG = Registry.register(Registry.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "duck_egg"), EntityTypeBuilders.DUCK_EGG.get());
         GOOSE = Registry.register(Registry.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "goose"), EntityTypeBuilders.GOOSE.get());
+        GOOSE_EGG = Registry.register(Registry.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "goose_egg"), EntityTypeBuilders.GOOSE_EGG.get());
     }
 
     public static void registerAttributes() {
@@ -54,5 +56,9 @@ public class ModEntityTypesImpl {
 
     public static EntityType<GooseEntity> getGoose() {
         return GOOSE;
+    }
+
+    public static EntityType<DuckEggEntity> getGooseEgg() {
+        return GOOSE_EGG;
     }
 }

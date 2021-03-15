@@ -33,4 +33,9 @@ public class ModItems {
     public static Item getGooseSpawnEgg() {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static Item getGooseEgg() {
+        throw new AssertionError();
+    }
 }

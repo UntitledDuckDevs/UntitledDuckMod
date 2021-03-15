@@ -3,18 +3,21 @@ package net.untitledduckmod.fabric;
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.registry.Registry;
-import net.untitledduckmod.items.DuckEggItem;
 import net.untitledduckmod.registration.ItemSuppliers;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ModItemsImpl {
     private static SpawnEggItem DUCK_SPAWN_EGG;
-    private static DuckEggItem DUCK_EGG;
+    private static Item DUCK_EGG;
     private static Item RAW_DUCK;
     private static Item COOKED_DUCK;
     private static Item DUCK_FEATHER;
 
     private static SpawnEggItem GOOSE_SPAWN_EGG;
+    private static Item GOOSE_EGG;
+    private static Item RAW_GOOSE;
+    private static Item COOKED_GOOSE;
+    private static Item GOOSE_FOOT;
 
     public static void register(Object optionalEvent) {
         DUCK_SPAWN_EGG = Registry.register(Registry.ITEM, ItemSuppliers.DUCK_SPAWN_EGG_ID, ItemSuppliers.DUCK_SPAWN_EGG.get());
@@ -24,6 +27,10 @@ public class ModItemsImpl {
         DUCK_FEATHER = Registry.register(Registry.ITEM, ItemSuppliers.DUCK_FEATHER_ID, ItemSuppliers.DUCK_FEATHER.get());
 
         GOOSE_SPAWN_EGG = Registry.register(Registry.ITEM, ItemSuppliers.GOOSE_SPAWN_EGG_ID, ItemSuppliers.GOOSE_SPAWN_EGG.get());
+        GOOSE_EGG = Registry.register(Registry.ITEM, ItemSuppliers.GOOSE_EGG_ID, ItemSuppliers.GOOSE_EGG.get());
+        RAW_GOOSE = Registry.register(Registry.ITEM, ItemSuppliers.RAW_GOOSE_ID, ItemSuppliers.RAW_GOOSE.get());
+        COOKED_GOOSE = Registry.register(Registry.ITEM, ItemSuppliers.COOKED_GOOSE_ID, ItemSuppliers.COOKED_GOOSE.get());
+        GOOSE_FOOT = Registry.register(Registry.ITEM, ItemSuppliers.GOOSE_FOOT_ID, ItemSuppliers.GOOSE_FOOT.get());
     }
 
     public static void setup(Object optionalEvent) {
@@ -39,5 +46,9 @@ public class ModItemsImpl {
 
     public static Item getGooseSpawnEgg() {
         return GOOSE_SPAWN_EGG;
+    }
+
+    public static Item getGooseEgg() {
+        return GOOSE_EGG;
     }
 }

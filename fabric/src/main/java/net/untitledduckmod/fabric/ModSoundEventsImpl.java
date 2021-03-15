@@ -14,6 +14,7 @@ public class ModSoundEventsImpl {
     public static final SoundEvent DUCKLING_DEATH = new SoundEvent(SoundIdentifier.DUCKLING_DEATH);
     public static final SoundEvent DUCK_STEP = new SoundEvent(SoundIdentifier.DUCK_STEP);
     public static final SoundEvent DUCK_LAY_EGG = new SoundEvent(SoundIdentifier.DUCK_LAY_EGG);
+    public static final SoundEvent GOOSE_LAY_EGG = new SoundEvent(SoundIdentifier.GOOSE_LAY_EGG);
 
     public static final SoundEvent GOOSE_HONK = new SoundEvent(SoundIdentifier.GOOSE_HONK);
 
@@ -61,5 +62,9 @@ public class ModSoundEventsImpl {
 
     public static SoundEvent getGooseHonkSound() {
         return GOOSE_HONK;
+    }
+
+    public static SoundEvent getGooseEggSound() {
+        return GOOSE_LAY_EGG;
     }
 }

@@ -196,8 +196,8 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         if (!world.isClient) {
             // Lay egg
             if (isAlive() && !isBaby() && --eggLayTime <= 0) {
-                this.playSound(ModSoundEvents.getDuckEggSound(), 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-                this.dropItem(ModItems.getDuckEgg());
+                this.playSound(ModSoundEvents.getGooseEggSound(), 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+                this.dropItem(ModItems.getGooseEgg());
                 this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
             }
 

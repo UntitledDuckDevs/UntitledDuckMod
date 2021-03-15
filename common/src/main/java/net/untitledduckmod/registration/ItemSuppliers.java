@@ -9,26 +9,52 @@ import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
 import net.untitledduckmod.items.DuckEggItem;
+import software.bernie.shadowed.eliotlash.mclib.math.functions.classic.Mod;
 
 import java.util.function.Supplier;
 
 public class ItemSuppliers {
-    public static final Identifier DUCK_SPAWN_EGG_ID = new Identifier(DuckMod.MOD_ID, "duck_spawn_egg");
+    // Duck
+    public static final String DUCK_SPAWN_EGG_NAME = "duck_spawn_egg";
+    public static final Identifier DUCK_SPAWN_EGG_ID = new Identifier(DuckMod.MOD_ID, DUCK_SPAWN_EGG_NAME);
     public static final Supplier<SpawnEggItem> DUCK_SPAWN_EGG = () -> new SpawnEggItem(ModEntityTypes.getDuck(),
             ModItems.DUCK_PRIMARY_COLOR, ModItems.DUCK_SECONDARY_COLOR, new Item.Settings().group(ItemGroup.MISC));
-    public static final Identifier GOOSE_SPAWN_EGG_ID = new Identifier(DuckMod.MOD_ID, "goose_spawn_egg");
+
+    public static final String DUCK_EGG_NAME = "duck_egg";
+    public static final Identifier DUCK_EGG_ID = new Identifier(DuckMod.MOD_ID, DUCK_EGG_NAME);
+    public static final Supplier<DuckEggItem> DUCK_EGG = () -> new DuckEggItem(new Item.Settings().maxCount(16).group(ItemGroup.MATERIALS), ModEntityTypes::getDuckEgg, ModEntityTypes::getDuck);
+
+    public static final String RAW_DUCK_NAME = "raw_duck";
+    public static final Identifier RAW_DUCK_ID = new Identifier(DuckMod.MOD_ID, RAW_DUCK_NAME);
+    public static final Supplier<Item> RAW_DUCK = () -> new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.4F).meat().build()).group(ItemGroup.FOOD));
+
+    public static final String COOKED_DUCK_NAME = "cooked_duck";
+    public static final Identifier COOKED_DUCK_ID = new Identifier(DuckMod.MOD_ID, COOKED_DUCK_NAME);
+    public static final Supplier<Item> COOKED_DUCK = () -> new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.8F).meat().build()).group(ItemGroup.FOOD));
+
+    public static final String DUCK_FEATHER_NAME = "duck_feather";
+    public static final Identifier DUCK_FEATHER_ID = new Identifier(DuckMod.MOD_ID, DUCK_FEATHER_NAME);
+    public static final Supplier<Item> DUCK_FEATHER = () -> new Item(new Item.Settings().group(ItemGroup.MATERIALS));
+
+    // Goose
+    public static final String GOOSE_SPAWN_EGG_NAME = "goose_spawn_egg";
+    public static final Identifier GOOSE_SPAWN_EGG_ID = new Identifier(DuckMod.MOD_ID, GOOSE_SPAWN_EGG_NAME);
     public static final Supplier<SpawnEggItem> GOOSE_SPAWN_EGG = () -> new SpawnEggItem(ModEntityTypes.getGoose(),
             ModItems.GOOSE_PRIMARY_COLOR, ModItems.GOOSE_SECONDARY_COLOR, new Item.Settings().group(ItemGroup.MISC));
 
-    public static final Identifier DUCK_EGG_ID = new Identifier(DuckMod.MOD_ID, "duck_egg");
-    public static final Supplier<DuckEggItem> DUCK_EGG = () -> new DuckEggItem(new Item.Settings().maxCount(16).group(ItemGroup.MATERIALS));
+    public static final String GOOSE_EGG_NAME = "goose_egg";
+    public static final Identifier GOOSE_EGG_ID = new Identifier(DuckMod.MOD_ID, GOOSE_EGG_NAME);
+    public static final Supplier<DuckEggItem> GOOSE_EGG = () -> new DuckEggItem(new Item.Settings().maxCount(16).group(ItemGroup.MATERIALS), ModEntityTypes::getGooseEgg, ModEntityTypes::getGoose);
 
-    public static final Identifier RAW_DUCK_ID = new Identifier(DuckMod.MOD_ID, "raw_duck");
-    public static final Supplier<Item> RAW_DUCK = () -> new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.4F).meat().build()).group(ItemGroup.FOOD));
+    public static final String RAW_GOOSE_NAME = "raw_goose";
+    public static final Identifier RAW_GOOSE_ID = new Identifier(DuckMod.MOD_ID, RAW_GOOSE_NAME);
+    public static final Supplier<Item> RAW_GOOSE = () -> new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.6F).meat().build()).group(ItemGroup.FOOD));
 
-    public static final Identifier COOKED_DUCK_ID = new Identifier(DuckMod.MOD_ID, "cooked_duck");
-    public static final Supplier<Item> COOKED_DUCK = () -> new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.8F).meat().build()).group(ItemGroup.FOOD));
+    public static final String COOKED_GOOSE_NAME = "cooked_goose";
+    public static final Identifier COOKED_GOOSE_ID = new Identifier(DuckMod.MOD_ID, COOKED_GOOSE_NAME);
+    public static final Supplier<Item> COOKED_GOOSE = () -> new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(1.0F).meat().build()).group(ItemGroup.FOOD));
 
-    public static final Identifier DUCK_FEATHER_ID = new Identifier(DuckMod.MOD_ID, "duck_feather");
-    public static final Supplier<Item> DUCK_FEATHER = () -> new Item(new Item.Settings().group(ItemGroup.MATERIALS));
+    public static final String GOOSE_FOOT_NAME = "goose_foot";
+    public static final Identifier GOOSE_FOOT_ID = new Identifier(DuckMod.MOD_ID, GOOSE_FOOT_NAME);
+    public static final Supplier<Item> GOOSE_FOOT = () -> new Item(new Item.Settings().group(ItemGroup.MATERIALS));
 }

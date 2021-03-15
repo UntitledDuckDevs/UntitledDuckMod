@@ -14,5 +14,11 @@
   "untitledduckmod.subtitle.duck_death": "Duck dies",
   "untitledduckmod.subtitle.duckling_death": "Duckling dies",
   "untitledduckmod.subtitle.duck_lay_egg": "Duck egg plops",
-  "untitledduckmod.subtitle.goose_honk": "Goose honks"
+
+  "untitledduckmod.subtitle.goose_honk": "Goose honks",
+  "item.untitledduckmod.goose_egg": "Goose Egg",
+  "item.untitledduckmod.raw_goose": "Raw Goose",
+  "item.untitledduckmod.cooked_goose": "Cooked Goose",
+  "item.untitledduckmod.goose_foot": "Goose Foot",
+  "untitledduckmod.subtitle.goose_lay_egg": "Goose egg plops"
 }

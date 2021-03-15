@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.particle.ItemStackParticleEffect;
@@ -17,22 +18,27 @@ import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
 
 public class DuckEggEntity extends ThrownItemEntity {
+    private final EntityType<? extends PassiveEntity> mobEntityType;
+
     public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
+        this.mobEntityType = ModEntityTypes.getDuck();
     }
 
-    public DuckEggEntity(World world, LivingEntity owner) {
-        super(ModEntityTypes.getDuckEgg(), owner, world);
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, EntityType<? extends PassiveEntity> mobEntityType) {
+        // This is the only constructor used on server side that matters
+        super(entityType, owner, world);
+        this.mobEntityType = mobEntityType;
     }
 
-    public DuckEggEntity(World world, double x, double y, double z) {
-        super(ModEntityTypes.getDuckEgg(), x, y, z, world);
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z) {
+        super(entityType, x, y, z, world);
+        this.mobEntityType = ModEntityTypes.getDuck();
     }
 
     @Environment(EnvType.CLIENT)
     public void handleStatus(byte status) {
         if (status == 3) {
-            double d = 0.08D;
             for (int i = 0; i < 8; ++i) {
                 this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, this.getStack()), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
             }
@@ -54,7 +60,7 @@ public class DuckEggEntity extends ThrownItemEntity {
                 }
 
                 for (int j = 0; j < i; ++j) {
-                    DuckEntity duckEntity = ModEntityTypes.getDuck().create(this.world);
+                    PassiveEntity duckEntity = mobEntityType.create(this.world);
                     duckEntity.setBreedingAge(-24000);
                     duckEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.yaw, 0.0F);
                     this.world.spawnEntity(duckEntity);

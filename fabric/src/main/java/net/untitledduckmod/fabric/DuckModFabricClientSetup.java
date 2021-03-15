@@ -14,5 +14,6 @@ public class DuckModFabricClientSetup implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(ModEntityTypes.getDuck(), (entityRenderDispatcher, context) -> new DuckRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(ModEntityTypes.getDuckEgg(), (entityRenderDispatcher, context) -> new FlyingItemEntityRenderer<>(entityRenderDispatcher, MinecraftClient.getInstance().getItemRenderer()));
         EntityRendererRegistry.INSTANCE.register(ModEntityTypes.getGoose(), (entityRenderDispatcher, context) -> new GooseRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(ModEntityTypes.getGooseEgg(), (entityRenderDispatcher, context) -> new FlyingItemEntityRenderer<>(entityRenderDispatcher, MinecraftClient.getInstance().getItemRenderer()));
     }
 }

@@ -13,5 +13,7 @@ public class DuckModForgeClientSetup {
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.getDuckEgg(),
                 erd -> new FlyingItemEntityRenderer<>(erd, MinecraftClient.getInstance().getItemRenderer()));
         RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.getGoose(), GooseRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.getGooseEgg(),
+                erd -> new FlyingItemEntityRenderer<>(erd, MinecraftClient.getInstance().getItemRenderer()));
     }
 }

@@ -14,4 +14,5 @@ public class SoundIdentifier {
     public static final Identifier DUCKLING_DEATH = new Identifier(DuckMod.MOD_ID, "duckling_death");
 
     public static final Identifier GOOSE_HONK = new Identifier(DuckMod.MOD_ID, "goose_honk");
+    public static final Identifier GOOSE_LAY_EGG = new Identifier(DuckMod.MOD_ID, "goose_lay_egg");
 }
