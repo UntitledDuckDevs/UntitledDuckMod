@@ -10,6 +10,15 @@ public class GooseRevengeGoal extends RevengeGoal {
         this.goose = goose;
     }
 
+
+    @Override
+    public boolean canStart() {
+        if (goose.isBaby()) {
+            return false;
+        }
+        return super.canStart();
+    }
+
     @Override
     public boolean shouldContinue() {
         return goose.getTarget() != null && super.shouldContinue();

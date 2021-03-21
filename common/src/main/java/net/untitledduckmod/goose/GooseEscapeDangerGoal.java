@@ -13,6 +13,6 @@ public class GooseEscapeDangerGoal extends EscapeDangerGoal {
 
     @Override
     public boolean canStart() {
-        return mob.getHealth() < mob.getMaxHealth()/2 && super.canStart();
+        return ((mob.getHealth() < mob.getMaxHealth()/2) || mob.isBaby()) && super.canStart();
     }
 }

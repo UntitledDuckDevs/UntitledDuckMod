@@ -3,7 +3,10 @@ package net.untitledduckmod.goose;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -35,10 +38,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.IntRange;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.untitledduckmod.duck.DuckSwimGoal;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
 import net.untitledduckmod.ModSoundEvents;
+import net.untitledduckmod.duck.DuckSwimGoal;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -327,6 +330,12 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
     private boolean isAngry() {
         return getTarget() != null;
+    }
+
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        this.setSitting(false);
+        return super.damage(source, amount);
     }
 
     @Override
