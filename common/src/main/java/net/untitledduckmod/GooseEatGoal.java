@@ -14,12 +14,16 @@ public class GooseEatGoal extends Goal {
     private int delayTime;
 
     public GooseEatGoal(GooseEntity goose) {
-        this.goose = goose;
         this.setControls(EnumSet.of(Control.LOOK, Control.MOVE));
+        this.goose = goose;
     }
 
     @Override
     public boolean canStart() {
+        // TODO: Should throttle this?
+        if (!goose.isHungry()) {
+            return false;
+        }
         ItemStack stack = goose.getMainHandStack();
         if (stack == null || stack.isEmpty()) {
             return false;
@@ -29,6 +33,7 @@ public class GooseEatGoal extends Goal {
 
     @Override
     public void start() {
+        goose.getNavigation().stop();
         animationTime = ANIMATION_LENGTH;
         delayTime = STARTING_DELAY;
     }

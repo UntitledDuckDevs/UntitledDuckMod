@@ -3,10 +3,7 @@ package net.untitledduckmod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.util.math.Vector3d;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -17,7 +14,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,18 +23,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ItemStackParticleEffect;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.IntRange;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -171,41 +165,67 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     @Environment(EnvType.CLIENT)
     @Override
     public void handleStatus(byte status) {
-        System.out.printf("Status: %02d\n", status);
+        if (status == 100) {
+            ParticleEffect particleEffect = ParticleTypes.HAPPY_VILLAGER;
+            for(int i = 0; i < 7; ++i) {
+                double d = this.random.nextGaussian() * 0.02D;
+                double e = this.random.nextGaussian() * 0.02D;
+                double f = this.random.nextGaussian() * 0.02D;
+                this.world.addParticle(particleEffect, this.getParticleX(1.0D), this.getRandomBodyY() + 0.5D, this.getParticleZ(1.0D), d, e, f);
+            }
+        }
         super.handleStatus(status);
     }
 
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new DuckSwimGoal(this));
-        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.6D));
+        this.goalSelector.add(1, new GooseEscapeDangerGoal(this, 1.7D));
         this.goalSelector.add(2, new SitGoal(this));
-
 
         this.goalSelector.add(3, new AnimalMateGoal(this, 1.0D));
         this.goalSelector.add(3, new GooseEatGoal(this));
 
-        this.goalSelector.add(4, new TemptGoal(this, 1.0D, false, BREEDING_INGREDIENT));
-        this.goalSelector.add(5, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.add(4, new GooseStealItemGoal(this));
 
+        this.goalSelector.add(5, new GoosePickupFoodGoal(this));
         this.goalSelector.add(6, new GooseMeleeAttackGoal(this, 1.5D, true));
-        this.goalSelector.add(7, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
+
+        this.goalSelector.add(7, new TemptGoal(this, 1.0D, false, BREEDING_INGREDIENT));
+        this.goalSelector.add(8, new FollowParentGoal(this, 1.1D));
+
+        this.goalSelector.add(9, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
 
         // Idle behaviour when there is nothing too urgent
         this.goalSelector.add(9, new GooseCleanGoal(this));
+
         this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(10, new WanderAroundGoal(this, 1.0D));
         this.goalSelector.add(10, new LookAroundGoal(this));
-        this.goalSelector.add(11, new GoosePickupItemGoal(this));
 
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(2, new AttackWithOwnerGoal(this));
-        this.targetSelector.add(3, (new RevengeGoal(this, new Class[0])).setGroupRevenge());
-        this.targetSelector.add(8, new UniversalAngerGoal<>(this, true));
+        this.targetSelector.add(3, new GooseRevengeGoal(this));
     }
 
     public boolean isBreedingItem(ItemStack stack) {
-        return BREEDING_INGREDIENT.test(stack);
+        return !isAngry() && BREEDING_INGREDIENT.test(stack);
+    }
+
+    @Override
+    protected void onEquipStack(ItemStack stack) {
+        if (world.isClient) {
+            return;
+        }
+        Entity holder = stack.getHolder();
+        if (isAngry() && holder instanceof ItemEntity) {
+            ItemEntity ie = (ItemEntity) holder;
+            UUID thrower = ie.getThrower();
+            if (thrower != null) {
+               stopAnger();
+            }
+        }
+        super.onEquipStack(stack);
     }
 
     @Override
@@ -267,24 +287,83 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                 }
                 return super.interactMob(player, hand);
             } else {
-                if (item == TAMING_ITEM && !hasAngerTime()) {
-                    if (!player.abilities.creativeMode) {
-                        itemStack.decrement(1);
+                if (isAngry()) {
+                    if (FOOD.test(itemStack)) {
+                        ItemStack newStack = itemStack.copy();
+                        newStack.setCount(1);
+                        if (!player.abilities.creativeMode) {
+                            itemStack.decrement(1);
+                        }
+                        if (tryEquip(newStack)) {
+                            stopAnger();
+                        }
                     }
-                    if (this.random.nextInt(3) == 0) {
-                        this.setOwner(player);
-                        this.navigation.stop();
-                        this.setTarget(null);
-                        this.setSitting(true);
-                        this.world.sendEntityStatus(this, (byte) 7);
-                    } else {
-                        this.world.sendEntityStatus(this, (byte) 6);
+                    return ActionResult.CONSUME;
+                } else {
+                    if (item == TAMING_ITEM) {
+                        if (!player.abilities.creativeMode) {
+                            itemStack.decrement(1);
+                        }
+                        if (this.random.nextInt(3) == 0) {
+                            this.setOwner(player);
+                            this.navigation.stop();
+                            this.setTarget(null);
+                            this.setSitting(true);
+                            this.world.sendEntityStatus(this, (byte) 7);
+                        } else {
+                            this.world.sendEntityStatus(this, (byte) 6);
+                        }
+                        return ActionResult.SUCCESS;
                     }
-                    return ActionResult.SUCCESS;
                 }
             }
         }
         return super.interactMob(player, hand);
+    }
+
+    private boolean isAngry() {
+        return getTarget() != null;
+    }
+
+    @Override
+    protected void loot(ItemEntity item) {
+        // Don't pickup throwed/spitted items
+        if (item.getThrower() == this.getUuid()) {
+            return;
+        }
+        super.loot(item);
+    }
+
+    @Override
+    public void stopAnger() {
+        this.setAttacker(null);
+        this.setAngryAt(null);
+        this.setTarget(null);
+        this.setAngerTime(0);
+        world.sendEntityStatus(this, (byte)100);
+    }
+
+    @Override
+    public boolean tryEquip(ItemStack equipment) {
+        EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
+        ItemStack itemStack = getMainHandStack();
+        if (FOOD.test(equipment) || this.canPickupItem(equipment)) {
+            if (!itemStack.isEmpty()) {
+                this.dropStack(itemStack).setPickupDelay(60);
+            }
+
+            this.equipLootStack(equipmentSlot, equipment);
+            this.onEquipStack(equipment);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean canPickupItem(ItemStack stack) {
+        ItemStack mainHandStack = getMainHandStack();
+        return (!FOOD.test(mainHandStack) && FOOD.test(stack)) || mainHandStack.isEmpty();
     }
 
     @Nullable
@@ -357,13 +436,15 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     public void tryEating() {
+        assert !world.isClient();
+
         ItemStack stack = getMainHandStack();
         stack.decrement(1);
         playSound(getEatSound(stack), 0.5F + 0.5F * (float)this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
         if (stack.isEmpty()) {
             setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         }
-        if (getHealth() < getMaxHealth()) {
+        if (isHungry()) {
             heal(0.5f);
         }
     }
@@ -377,6 +458,17 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         if (hasAngerTime()) {
             this.playSound(ModSoundEvents.getGooseHonkSound(), 0.6f, getSoundPitch());
         }
+    }
+
+    @Nullable
+    @Override
+    public ItemEntity dropStack(ItemStack stack, float yOffset) {
+        ItemEntity droppedStack = super.dropStack(stack, yOffset);
+        if (droppedStack == null) {
+            return null;
+        }
+        droppedStack.setThrower(this.getUuid());
+        return droppedStack;
     }
 
     @Override
@@ -454,10 +546,13 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
             this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z,
                     vel.x, vel.y + 0.05D, vel.z);
         }
-        setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
     }
 
     public boolean wantsToPickupItem() {
         return !isSitting();
+    }
+
+    public boolean isHungry() {
+        return isAngry() || getHealth() <= getMaxHealth() - 0.5f;
     }
 }

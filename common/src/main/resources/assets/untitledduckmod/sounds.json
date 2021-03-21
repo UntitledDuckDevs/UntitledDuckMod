@@ -93,5 +93,12 @@
       "untitledduckmod:goose_honk_3"
     ],
     "subtitle": "untitledduckmod.subtitle.goose_honk"
+  },
+  "goose_lay_egg": {
+    "category": "neutral",
+    "sounds": [
+      "minecraft:mob/chicken/plop"
+    ],
+    "subtitle": "untitledduckmod.subtitle.goose_lay_egg"
   }
 }
