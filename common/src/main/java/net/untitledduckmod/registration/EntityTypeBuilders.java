@@ -2,9 +2,9 @@ package net.untitledduckmod.registration;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.untitledduckmod.DuckEntity;
+import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.DuckMod;
-import net.untitledduckmod.GooseEntity;
+import net.untitledduckmod.goose.GooseEntity;
 import net.untitledduckmod.items.DuckEggEntity;
 
 import java.util.function.Supplier;

@@ -11,6 +11,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.untitledduckmod.*;
+import net.untitledduckmod.duck.DuckEntity;
+import net.untitledduckmod.goose.GooseEntity;
 import net.untitledduckmod.items.DuckEggEntity;
 import net.untitledduckmod.registration.EntityTypeBuilders;
 

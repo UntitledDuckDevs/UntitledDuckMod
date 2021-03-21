@@ -1,4 +1,4 @@
-package net.untitledduckmod;
+package net.untitledduckmod.duck;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -26,6 +26,9 @@ import net.minecraft.tag.Tag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.untitledduckmod.ModEntityTypes;
+import net.untitledduckmod.ModItems;
+import net.untitledduckmod.ModSoundEvents;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;

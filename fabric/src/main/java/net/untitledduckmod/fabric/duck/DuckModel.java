@@ -1,13 +1,13 @@
 package net.untitledduckmod.fabric.duck;
 
 import net.minecraft.util.Identifier;
-import net.untitledduckmod.DuckEntity;
+import net.untitledduckmod.duck.DuckEntity;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-import static net.untitledduckmod.DuckModelIdentifiers.*;
+import static net.untitledduckmod.duck.DuckModelIdentifiers.*;
 
 public class DuckModel extends AnimatedGeoModel<DuckEntity> {
     private Identifier currentTexture = NORMAL_TEXTURE;

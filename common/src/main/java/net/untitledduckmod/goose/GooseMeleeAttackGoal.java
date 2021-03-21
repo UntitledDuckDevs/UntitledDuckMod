@@ -1,7 +1,8 @@
-package net.untitledduckmod;
+package net.untitledduckmod.goose;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.untitledduckmod.ModSoundEvents;
 
 public class GooseMeleeAttackGoal extends MeleeAttackGoal {
     private final GooseEntity goose;

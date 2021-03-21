@@ -1,13 +1,13 @@
 package net.untitledduckmod.fabric.goose;
 
 import net.minecraft.util.Identifier;
-import net.untitledduckmod.GooseEntity;
+import net.untitledduckmod.goose.GooseEntity;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-import static net.untitledduckmod.DuckModelIdentifiers.*;
+import static net.untitledduckmod.duck.DuckModelIdentifiers.*;
 
 public class GooseModel extends AnimatedGeoModel<GooseEntity> {
     private Identifier currentTexture = GOOSE_TEXTURE;

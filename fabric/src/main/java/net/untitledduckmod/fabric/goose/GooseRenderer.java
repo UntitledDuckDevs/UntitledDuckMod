@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
-import net.untitledduckmod.GooseEntity;
+import net.untitledduckmod.goose.GooseEntity;
 import net.untitledduckmod.fabric.GeoMobRenderer;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 

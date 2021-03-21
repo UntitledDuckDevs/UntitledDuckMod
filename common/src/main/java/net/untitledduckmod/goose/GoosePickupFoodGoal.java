@@ -1,4 +1,4 @@
-package net.untitledduckmod;
+package net.untitledduckmod.goose;
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;

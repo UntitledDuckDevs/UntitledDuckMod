@@ -1,6 +1,7 @@
-package net.untitledduckmod;
+package net.untitledduckmod.duck;
 
 import net.minecraft.util.Identifier;
+import net.untitledduckmod.DuckMod;
 
 public class DuckModelIdentifiers {
     public static final Identifier DUCK_MODEL_LOCATION = new Identifier(DuckMod.MOD_ID, "geo/duck.geo.json");

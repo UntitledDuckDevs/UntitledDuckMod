@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
-import net.untitledduckmod.DuckEntity;
+import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.fabric.ModEntityTypesImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
