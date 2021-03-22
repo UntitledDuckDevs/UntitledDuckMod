@@ -16,6 +16,11 @@ public class GooseMeleeAttackGoal extends MeleeAttackGoal {
     private int animationTimer = 0;
 
     @Override
+    public boolean canStart() {
+        return !goose.isBaby() && super.canStart();
+    }
+
+    @Override
     protected void attack(LivingEntity target, double squaredDistance) {
         double d = this.getSquaredMaxAttackDistance(target);
         if (squaredDistance <= d && animationTimer <= 0) {
