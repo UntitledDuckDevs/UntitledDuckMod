@@ -46,7 +46,6 @@ public class GooseIntimidateMobsGoal extends Goal {
 
         originalLocation = goose.getPos();
         goose.getNavigation().startMovingTo(targetEntity, 1.2);
-        System.out.println("START");
     }
 
     @Override
@@ -55,7 +54,6 @@ public class GooseIntimidateMobsGoal extends Goal {
         goose.getNavigation().startMovingTo(originalLocation.x, originalLocation.y, originalLocation.z, 1.2);
         cooldown = 20;
         targetEntity = null;
-        System.out.println("STOP");
     }
 
     @Override

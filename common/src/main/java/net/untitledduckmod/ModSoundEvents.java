@@ -60,7 +60,27 @@ public class ModSoundEvents {
     }
 
     @ExpectPlatform
+    public static SoundEvent getGooseDeathSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getGoslingDeathSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getGoslingAmbientSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static SoundEvent getDuckSackUse() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getGoslingHurtSound() {
         throw new AssertionError();
     }
 }

@@ -495,7 +495,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     @Override
     protected void playHurtSound(DamageSource source) {
         if (isBaby()) {
-            this.playSound(ModSoundEvents.getDucklingHurtSound(), 0.3f, getSoundPitch() + 0.25F);
+            this.playSound(ModSoundEvents.getGoslingHurtSound(), 0.3f, getSoundPitch() + 0.25F);
             return;
         }
         this.playSound(ModSoundEvents.getGooseHonkSound(), 0.7f, getSoundPitch());
@@ -505,9 +505,9 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     @Override
     protected SoundEvent getDeathSound() {
         if (isBaby()) {
-            return ModSoundEvents.getDucklingDeathSound();
+            return ModSoundEvents.getGoslingDeathSound();
         }
-        return ModSoundEvents.getDuckDeathSound();
+        return ModSoundEvents.getGooseDeathSound();
     }
 
     @Override

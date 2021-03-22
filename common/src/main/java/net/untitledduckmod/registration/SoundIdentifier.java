@@ -16,4 +16,8 @@ public class SoundIdentifier {
 
     public static final Identifier GOOSE_HONK = new Identifier(DuckMod.MOD_ID, "goose_honk");
     public static final Identifier GOOSE_LAY_EGG = new Identifier(DuckMod.MOD_ID, "goose_lay_egg");
+    public static final Identifier GOOSE_DEATH = new Identifier(DuckMod.MOD_ID, "goose_death");
+    public static final Identifier GOSLING_DEATH = new Identifier(DuckMod.MOD_ID, "gosling_death");
+    public static final Identifier GOSLING_AMBIENT = new Identifier(DuckMod.MOD_ID, "gosling_ambient");
+    public static final Identifier GOSLING_HURT = new Identifier(DuckMod.MOD_ID, "gosling_hurt");
 }
