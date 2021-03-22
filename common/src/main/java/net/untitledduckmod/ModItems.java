@@ -43,4 +43,14 @@ public class ModItems {
     public static Item getGooseFoot() {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static Item getDuckSack() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static Item getEmptyDuckSack() {
+        throw new AssertionError();
+    }
 }

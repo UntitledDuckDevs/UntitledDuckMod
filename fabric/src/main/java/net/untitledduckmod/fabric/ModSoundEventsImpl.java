@@ -14,8 +14,9 @@ public class ModSoundEventsImpl {
     public static final SoundEvent DUCKLING_DEATH = new SoundEvent(SoundIdentifier.DUCKLING_DEATH);
     public static final SoundEvent DUCK_STEP = new SoundEvent(SoundIdentifier.DUCK_STEP);
     public static final SoundEvent DUCK_LAY_EGG = new SoundEvent(SoundIdentifier.DUCK_LAY_EGG);
-    public static final SoundEvent GOOSE_LAY_EGG = new SoundEvent(SoundIdentifier.GOOSE_LAY_EGG);
+    public static final SoundEvent DUCK_SACK_USE = new SoundEvent(SoundIdentifier.DUCK_SACK_USE);
 
+    public static final SoundEvent GOOSE_LAY_EGG = new SoundEvent(SoundIdentifier.GOOSE_LAY_EGG);
     public static final SoundEvent GOOSE_HONK = new SoundEvent(SoundIdentifier.GOOSE_HONK);
 
     public static void register(Object optionalEvent) {
@@ -25,6 +26,9 @@ public class ModSoundEventsImpl {
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCKLING_HURT, DUCKLING_HURT);
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCK_STEP, DUCK_STEP);
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCK_LAY_EGG, DUCK_LAY_EGG);
+        Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCK_SACK_USE, DUCK_SACK_USE);
+
+        Registry.register(Registry.SOUND_EVENT, SoundIdentifier.GOOSE_LAY_EGG, GOOSE_LAY_EGG);
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.GOOSE_HONK, GOOSE_HONK);
     }
 
@@ -66,5 +70,9 @@ public class ModSoundEventsImpl {
 
     public static SoundEvent getGooseEggSound() {
         return GOOSE_LAY_EGG;
+    }
+
+    public static SoundEvent getDuckSackUse() {
+        return DUCK_SACK_USE;
     }
 }

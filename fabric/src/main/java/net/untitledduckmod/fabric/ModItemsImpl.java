@@ -12,6 +12,8 @@ public class ModItemsImpl {
     public static Item RAW_DUCK;
     public static Item COOKED_DUCK;
     public static Item DUCK_FEATHER;
+    public static Item DUCK_SACK;
+    public static Item EMPTY_DUCK_SACK;
 
     public static SpawnEggItem GOOSE_SPAWN_EGG;
     public static Item GOOSE_EGG;
@@ -25,6 +27,8 @@ public class ModItemsImpl {
         RAW_DUCK = Registry.register(Registry.ITEM, ItemSuppliers.RAW_DUCK_ID, ItemSuppliers.RAW_DUCK.get());
         COOKED_DUCK = Registry.register(Registry.ITEM, ItemSuppliers.COOKED_DUCK_ID, ItemSuppliers.COOKED_DUCK.get());
         DUCK_FEATHER = Registry.register(Registry.ITEM, ItemSuppliers.DUCK_FEATHER_ID, ItemSuppliers.DUCK_FEATHER.get());
+        DUCK_SACK = Registry.register(Registry.ITEM, ItemSuppliers.DUCK_SACK_ID, ItemSuppliers.DUCK_SACK.get());
+        EMPTY_DUCK_SACK = Registry.register(Registry.ITEM, ItemSuppliers.EMPTY_DUCK_SACK_ID, ItemSuppliers.EMPTY_DUCK_SACK.get());
 
         GOOSE_SPAWN_EGG = Registry.register(Registry.ITEM, ItemSuppliers.GOOSE_SPAWN_EGG_ID, ItemSuppliers.GOOSE_SPAWN_EGG.get());
         GOOSE_EGG = Registry.register(Registry.ITEM, ItemSuppliers.GOOSE_EGG_ID, ItemSuppliers.GOOSE_EGG.get());
@@ -54,5 +58,13 @@ public class ModItemsImpl {
 
     public static Item getGooseFoot() {
         return GOOSE_FOOT;
+    }
+
+    public static Item getDuckSack() {
+        return DUCK_SACK;
+    }
+
+    public static Item getEmptyDuckSack() {
+        return EMPTY_DUCK_SACK;
     }
 }

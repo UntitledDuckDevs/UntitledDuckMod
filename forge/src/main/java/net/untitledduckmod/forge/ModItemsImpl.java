@@ -2,13 +2,11 @@ package net.untitledduckmod.forge;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
@@ -23,6 +21,8 @@ public class ModItemsImpl {
     public static final RegistryObject<Item> RAW_DUCK = ITEMS.register(ItemSuppliers.RAW_DUCK_NAME, ItemSuppliers.RAW_DUCK);
     public static final RegistryObject<Item> COOKED_DUCK = ITEMS.register(ItemSuppliers.COOKED_DUCK_NAME, ItemSuppliers.COOKED_DUCK);
     public static final RegistryObject<Item> DUCK_FEATHER = ITEMS.register(ItemSuppliers.DUCK_FEATHER_NAME, ItemSuppliers.DUCK_FEATHER);
+    public static final RegistryObject<Item> DUCK_SACK = ITEMS.register(ItemSuppliers.DUCK_SACK_NAME, ItemSuppliers.DUCK_SACK);
+    public static final RegistryObject<Item> EMPTY_DUCK_SACK = ITEMS.register(ItemSuppliers.EMPTY_DUCK_SACK_NAME, ItemSuppliers.EMPTY_DUCK_SACK);
 
     public static final RegistryObject<Item> GOOSE_SPAWN_EGG = ITEMS.register(ItemSuppliers.GOOSE_SPAWN_EGG_NAME,
             () -> new ForgeSpawnEggItem(ModEntityTypes::getGoose, ModItems.GOOSE_PRIMARY_COLOR, ModItems.GOOSE_SECONDARY_COLOR, new Item.Settings().group(ItemGroup.MISC)));
@@ -58,5 +58,13 @@ public class ModItemsImpl {
 
     public static Item getGooseFoot() {
         return GOOSE_FOOT.get();
+    }
+
+    public static Item getDuckSack() {
+        return DUCK_SACK.get();
+    }
+
+    public static Item getEmptyDuckSack() {
+        return EMPTY_DUCK_SACK.get();
     }
 }

@@ -217,7 +217,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(2, new AttackWithOwnerGoal(this));
-        this.targetSelector.add(3, new GooseRevengeGoal(this));
+        this.targetSelector.add(3, new GooseRevengeGoal(this).setGroupRevenge());
     }
 
     public boolean isBreedingItem(ItemStack stack) {

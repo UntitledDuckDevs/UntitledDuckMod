@@ -58,4 +58,9 @@ public class ModSoundEvents {
     public static SoundEvent getGooseHonkSound() {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static SoundEvent getDuckSackUse() {
+        throw new AssertionError();
+    }
 }

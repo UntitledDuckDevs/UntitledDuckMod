@@ -18,6 +18,7 @@ public class ModSoundEventsImpl {
 
     public static final SoundEvent GOOSE_HONK = new SoundEvent(SoundIdentifier.GOOSE_HONK);
     public static final SoundEvent GOOSE_LAY_EGG = new SoundEvent(SoundIdentifier.GOOSE_LAY_EGG);
+    public static final SoundEvent DUCK_SACK_USE = new SoundEvent(SoundIdentifier.DUCK_SACK_USE);
 
     public static void register(Object optionalEvent) {
         assert optionalEvent != null;
@@ -33,6 +34,7 @@ public class ModSoundEventsImpl {
         registry.register(DUCK_LAY_EGG.setRegistryName(SoundIdentifier.DUCK_LAY_EGG));
         registry.register(GOOSE_HONK.setRegistryName(SoundIdentifier.GOOSE_HONK));
         registry.register(GOOSE_LAY_EGG.setRegistryName(SoundIdentifier.GOOSE_LAY_EGG));
+        registry.register(DUCK_SACK_USE.setRegistryName(SoundIdentifier.DUCK_SACK_USE));
     }
 
     public static SoundEvent getDuckAmbientSound() {
@@ -73,5 +75,9 @@ public class ModSoundEventsImpl {
 
     public static SoundEvent getGooseEggSound() {
         return GOOSE_LAY_EGG;
+    }
+
+    public static SoundEvent getDuckSackUse() {
+        return DUCK_SACK_USE;
     }
 }

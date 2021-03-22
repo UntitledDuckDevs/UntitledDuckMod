@@ -9,7 +9,7 @@ import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
 import net.untitledduckmod.items.DuckEggItem;
-import software.bernie.shadowed.eliotlash.mclib.math.functions.classic.Mod;
+import net.untitledduckmod.items.DuckSackItem;
 
 import java.util.function.Supplier;
 
@@ -35,6 +35,14 @@ public class ItemSuppliers {
     public static final String DUCK_FEATHER_NAME = "duck_feather";
     public static final Identifier DUCK_FEATHER_ID = new Identifier(DuckMod.MOD_ID, DUCK_FEATHER_NAME);
     public static final Supplier<Item> DUCK_FEATHER = () -> new Item(new Item.Settings().group(ItemGroup.MATERIALS));
+
+    public static final String DUCK_SACK_NAME = "duck_sack";
+    public static final Identifier DUCK_SACK_ID = new Identifier(DuckMod.MOD_ID, DUCK_SACK_NAME);
+    public static final Supplier<Item> DUCK_SACK = () -> new DuckSackItem(new Item.Settings().group(ItemGroup.MISC));
+
+    public static final String EMPTY_DUCK_SACK_NAME = "empty_duck_sack";
+    public static final Identifier EMPTY_DUCK_SACK_ID = new Identifier(DuckMod.MOD_ID, EMPTY_DUCK_SACK_NAME);
+    public static final Supplier<Item> EMPTY_DUCK_SACK = () -> new Item(new Item.Settings().group(ItemGroup.MISC));
 
     // Goose
     public static final String GOOSE_SPAWN_EGG_NAME = "goose_spawn_egg";

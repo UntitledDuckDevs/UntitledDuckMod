@@ -100,5 +100,17 @@
       "minecraft:mob/chicken/plop"
     ],
     "subtitle": "untitledduckmod.subtitle.goose_lay_egg"
+  },
+  "duck_sack_use": {
+    "category": "neutral",
+    "sounds": [
+      "minecraft:item/armor/equip_generic1",
+      "minecraft:item/armor/equip_generic2",
+      "minecraft:item/armor/equip_generic3",
+      "minecraft:item/armor/equip_generic4",
+      "minecraft:item/armor/equip_generic5",
+      "minecraft:item/armor/equip_generic6"
+    ],
+    "subtitle": "untitledduckmod.subtitle.duck_sack_use"
   }
 }

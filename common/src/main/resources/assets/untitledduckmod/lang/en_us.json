@@ -14,6 +14,10 @@
   "untitledduckmod.subtitle.duck_death": "Duck dies",
   "untitledduckmod.subtitle.duckling_death": "Duckling dies",
   "untitledduckmod.subtitle.duck_lay_egg": "Duck egg plops",
+  "untitledduckmod.subtitle.duck_sack_use": "Used duck sack",
+  "item.untitledduckmod.duck_sack": "Duck Sack",
+  "item.untitledduckmod.empty_duck_sack": "Empty Duck Sack",
+  "item.untitledduckmod.duck_sack.named": "Duck Sack with %s",
 
   "untitledduckmod.subtitle.goose_honk": "Goose honks",
   "item.untitledduckmod.goose_egg": "Goose Egg",
