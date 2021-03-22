@@ -7,17 +7,17 @@ import net.untitledduckmod.registration.ItemSuppliers;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ModItemsImpl {
-    private static SpawnEggItem DUCK_SPAWN_EGG;
-    private static Item DUCK_EGG;
-    private static Item RAW_DUCK;
-    private static Item COOKED_DUCK;
-    private static Item DUCK_FEATHER;
+    public static SpawnEggItem DUCK_SPAWN_EGG;
+    public static Item DUCK_EGG;
+    public static Item RAW_DUCK;
+    public static Item COOKED_DUCK;
+    public static Item DUCK_FEATHER;
 
-    private static SpawnEggItem GOOSE_SPAWN_EGG;
-    private static Item GOOSE_EGG;
-    private static Item RAW_GOOSE;
-    private static Item COOKED_GOOSE;
-    private static Item GOOSE_FOOT;
+    public static SpawnEggItem GOOSE_SPAWN_EGG;
+    public static Item GOOSE_EGG;
+    public static Item RAW_GOOSE;
+    public static Item COOKED_GOOSE;
+    public static Item GOOSE_FOOT;
 
     public static void register(Object optionalEvent) {
         DUCK_SPAWN_EGG = Registry.register(Registry.ITEM, ItemSuppliers.DUCK_SPAWN_EGG_ID, ItemSuppliers.DUCK_SPAWN_EGG.get());
@@ -50,5 +50,9 @@ public class ModItemsImpl {
 
     public static Item getGooseEgg() {
         return GOOSE_EGG;
+    }
+
+    public static Item getGooseFoot() {
+        return GOOSE_FOOT;
     }
 }

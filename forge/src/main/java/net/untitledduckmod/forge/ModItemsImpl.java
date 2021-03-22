@@ -55,4 +55,8 @@ public class ModItemsImpl {
     public static Item getGooseEgg() {
         return GOOSE_EGG.get();
     }
+
+    public static Item getGooseFoot() {
+        return GOOSE_FOOT.get();
+    }
 }

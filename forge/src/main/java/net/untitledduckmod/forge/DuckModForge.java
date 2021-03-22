@@ -1,6 +1,7 @@
 package net.untitledduckmod.forge;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.potion.Potion;
 import net.minecraft.sound.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -8,10 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.untitledduckmod.DuckMod;
-import net.untitledduckmod.ModEntityTypes;
-import net.untitledduckmod.ModItems;
-import net.untitledduckmod.ModSoundEvents;
+import net.untitledduckmod.*;
 
 @Mod(DuckMod.MOD_ID)
 public class DuckModForge {
@@ -19,6 +17,8 @@ public class DuckModForge {
         DuckMod.init();
         ModItems.register(null);
         ModEntityTypes.register(null);
+        ModStatusEffects.register();
+        ModPotions.register();
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -37,6 +37,11 @@ public class DuckModForge {
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onPostRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
             ForgeSpawnEggItem.addModdedEggs();
+        }
+
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onPostRegisterPotions(final RegistryEvent.Register<Potion> event) {
+            ModPotions.registerBrewing();
         }
 
         @SubscribeEvent

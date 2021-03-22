@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.fabric.ModEntityTypesImpl;
+import net.untitledduckmod.goose.GooseEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -20,6 +21,9 @@ public abstract class SwimSpeedMixin extends Entity {
     public float mixin(float speed) {
         if (getType() == ModEntityTypesImpl.DUCK) {
             return speed * DuckEntity.SWIM_SPEED_MULTIPLIER;
+        }
+        if (getType() == ModEntityTypesImpl.GOOSE) {
+            return speed * GooseEntity.SWIM_SPEED_MULTIPLIER;
         }
         return speed;
     }

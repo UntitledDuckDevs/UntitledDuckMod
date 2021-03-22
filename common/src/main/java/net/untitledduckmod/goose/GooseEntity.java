@@ -72,6 +72,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     public static final byte ANIMATION_DANCE = 3;
     public static final byte ANIMATION_PANIC = 4;
     public static final byte ANIMATION_EAT = 5;
+    public static final byte ANIMATION_INTIMIDATE = 6;
 
     private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk", true);
     private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle", true);
@@ -82,6 +83,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
     private static final AnimationBuilder CLEAN_ANIM = new AnimationBuilder().addAnimation("clean");
     private static final AnimationBuilder EAT_ANIM = new AnimationBuilder().addAnimation("eat", true);
+    private static final AnimationBuilder INTIMIDATE_ANIM = new AnimationBuilder().addAnimation("intimidate", true);
 
     private static final AnimationBuilder HONK_ANIM = new AnimationBuilder().addAnimation("honk", true);
     private static final AnimationBuilder BITE_ANIM = new AnimationBuilder().addAnimation("bite", true);
@@ -188,9 +190,12 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     protected void initGoals() {
         this.goalSelector.add(0, new DuckSwimGoal(this));
         this.goalSelector.add(1, new GooseEscapeDangerGoal(this, 1.7D));
-        this.goalSelector.add(2, new SitGoal(this));
+
+        this.goalSelector.add(2, new GooseIntimidateMobsGoal(this));
 
         this.goalSelector.add(3, new AnimalMateGoal(this, 1.0D));
+        this.goalSelector.add(4, new SitGoal(this));
+
         this.goalSelector.add(3, new GooseEatGoal(this));
 
         this.goalSelector.add(4, new GooseStealItemGoal(this));
@@ -418,6 +423,9 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
             case ANIMATION_BITE:
                 controller.setAnimation(BITE_ANIM);
                 animationTimer = ANIMATION_BITE_LEN;
+                break;
+            case ANIMATION_INTIMIDATE:
+                controller.setAnimation(INTIMIDATE_ANIM);
                 break;
             case ANIMATION_EAT:
                 controller.setAnimation(EAT_ANIM);
