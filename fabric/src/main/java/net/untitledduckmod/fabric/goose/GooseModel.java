@@ -10,7 +10,6 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 import static net.untitledduckmod.duck.DuckModelIdentifiers.*;
 
 public class GooseModel extends AnimatedGeoModel<GooseEntity> {
-    private Identifier currentTexture = GOOSE_TEXTURE;
 
     @Override
     public Identifier getModelLocation(GooseEntity object) {
@@ -18,8 +17,24 @@ public class GooseModel extends AnimatedGeoModel<GooseEntity> {
     }
 
     @Override
-    public Identifier getTextureLocation(GooseEntity object) {
-        return currentTexture;
+    public Identifier getTextureLocation(GooseEntity entity) {
+        if (entity.isBaby()) {
+            return GOSLING_TEXTURE;
+        } else {
+            if (entity.hasCustomName()) {
+                String name = entity.getCustomName().asString().toLowerCase();
+                switch (name) {
+                    case "ping":
+                        return PING_GOOSE_TEXTURE;
+                    case "sus":
+                        return SUS_GOOSE_TEXTURE;
+                    case "untitled":
+                        return UNTITLED_GOOSE_TEXTURE;
+                }
+            }
+        }
+
+        return entity.getVariant() == 0 ? GOOSE_TEXTURE : CANADIAN_GOOSE_TEXTURE;
     }
 
     @Override
@@ -39,9 +54,6 @@ public class GooseModel extends AnimatedGeoModel<GooseEntity> {
                 root.setScaleY(0.7f);
                 root.setScaleZ(0.7f);
             }
-            currentTexture = GOSLING_TEXTURE;
-        } else {
-            currentTexture = entity.getVariant() == 0 ? GOOSE_TEXTURE : CANADIAN_GOOSE_TEXTURE;
         }
 
         IBone head = this.getAnimationProcessor().getBone("head");

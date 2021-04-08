@@ -300,6 +300,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                 return super.interactMob(player, hand);
             } else {
                 if (isAngry()) {
+                    // Peace goose when angry with food
                     if (FOOD.test(itemStack)) {
                         ItemStack newStack = itemStack.copy();
                         newStack.setCount(1);

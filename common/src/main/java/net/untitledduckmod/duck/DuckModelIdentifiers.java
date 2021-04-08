@@ -15,4 +15,8 @@ public class DuckModelIdentifiers {
     public static final Identifier GOOSE_TEXTURE = new Identifier(DuckMod.MOD_ID, "textures/entity/goose.png");
     public static final Identifier CANADIAN_GOOSE_TEXTURE = new Identifier(DuckMod.MOD_ID, "textures/entity/canadian_goose.png");
     public static final Identifier GOSLING_TEXTURE = new Identifier(DuckMod.MOD_ID, "textures/entity/gosling.png");
+
+    public static final Identifier PING_GOOSE_TEXTURE = new Identifier(DuckMod.MOD_ID, "textures/entity/ping_goose.png");
+    public static final Identifier SUS_GOOSE_TEXTURE = new Identifier(DuckMod.MOD_ID, "textures/entity/sus_goose.png");
+    public static final Identifier UNTITLED_GOOSE_TEXTURE = new Identifier(DuckMod.MOD_ID, "textures/entity/untitled_goose.png");
 }

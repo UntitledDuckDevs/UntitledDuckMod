@@ -1,0 +1,6 @@
+- [ ] Goose
+  - [ ] Charge Animation
+- [ ] Duck diving can result in seeds/food
+- [ ] Jack Goose Thing
+- [ ] Advancements?
+- [ ] Optimize PNGs
