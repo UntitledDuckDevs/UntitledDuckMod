@@ -21,7 +21,6 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +57,6 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     public static final String EGG_LAY_TIME_TAG = "gooseEggLayTime";
     public static final String VARIANT_TAG = "gooseVariant";
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
-    public static final Ingredient FOOD = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS, Items.KELP, Items.SEAGRASS);
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Integer> ANGER_TIME = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -88,9 +86,12 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     private static final AnimationBuilder HONK_ANIM = new AnimationBuilder().addAnimation("honk", true);
     private static final AnimationBuilder BITE_ANIM = new AnimationBuilder().addAnimation("bite", true);
     private static final AnimationBuilder SIT_ANIM = new AnimationBuilder().addAnimation("sit", true);
+    private static final AnimationBuilder CHARGE_ANIM = new AnimationBuilder().addAnimation("charge", true);
 
+    public static final Ingredient FOOD = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS,
+            Items.KELP, Items.SEAGRASS);
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
-    private static final Item TAMING_ITEM = Items.SALMON;
+    private static final Ingredient TAMING_INGREDIENT = Ingredient.ofItems(Items.KELP, Items.SEAGRASS);
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
     private final AnimationFactory factory = new AnimationFactory(this);
@@ -283,9 +284,8 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         // TODO: Cleanup
         ItemStack itemStack = player.getStackInHand(hand);
-        Item item = itemStack.getItem();
         if (this.world.isClient) {
-            boolean tamable = this.isOwner(player) || this.isTamed() || item == TAMING_ITEM && !this.isTamed() && !this.hasAngerTime();
+            boolean tamable = this.isOwner(player) || this.isTamed() || TAMING_INGREDIENT.test(itemStack) && !this.isTamed() && !this.hasAngerTime();
             return tamable ? ActionResult.CONSUME : ActionResult.PASS;
         } else {
             if (isTamed()) {
@@ -313,7 +313,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                     }
                     return ActionResult.CONSUME;
                 } else {
-                    if (item == TAMING_ITEM) {
+                    if (TAMING_INGREDIENT.test(itemStack)) {
                         if (!player.abilities.creativeMode) {
                             itemStack.decrement(1);
                         }
@@ -346,7 +346,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
     @Override
     protected void loot(ItemEntity item) {
-        // Don't pickup throwed/spitted items
+        // Don't pickup threw/spat items
         if (item.getThrower() == this.getUuid()) {
             return;
         }
@@ -368,7 +368,10 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         ItemStack itemStack = getMainHandStack();
         if (FOOD.test(equipment) || this.canPickupItem(equipment)) {
             if (!itemStack.isEmpty()) {
-                this.dropStack(itemStack).setPickupDelay(60);
+                ItemEntity itemEntity = this.dropStack(itemStack);
+                if (itemEntity != null) {
+                    itemEntity.setPickupDelay(60);
+                }
             }
 
             this.equipLootStack(equipmentSlot, equipment);
@@ -382,7 +385,12 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     @Override
     public boolean canPickupItem(ItemStack stack) {
         ItemStack mainHandStack = getMainHandStack();
-        return (!FOOD.test(mainHandStack) && FOOD.test(stack)) || mainHandStack.isEmpty();
+
+        if ((!FOOD.test(mainHandStack) && FOOD.test(stack))) return true;
+        if (mainHandStack.isEmpty()) {
+            return stack.getItem() != ModItems.getGooseEgg();
+        }
+        return false;
     }
 
     @Nullable
@@ -418,8 +426,8 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
             return PlayState.CONTINUE;
         }
 
+
         byte currentAnimation = getAnimation();
-        //System.out.println(currentAnimation);
         switch (currentAnimation) {
             case ANIMATION_BITE:
                 controller.setAnimation(BITE_ANIM);
@@ -444,6 +452,10 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                 if (inWater) {
                     controller.setAnimation(isMoving ? SWIM_ANIM : SWIM_IDLE_ANIM);
                 } else {
+                    if (isAttacking()) {
+                        controller.setAnimation(CHARGE_ANIM);
+                        return PlayState.CONTINUE;
+                    }
                     controller.setAnimation(isMoving ? WALK_ANIM : IDLE_ANIM);
                 }
                 break;

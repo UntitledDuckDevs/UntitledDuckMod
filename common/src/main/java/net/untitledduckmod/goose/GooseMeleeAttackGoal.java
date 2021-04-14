@@ -17,7 +17,7 @@ public class GooseMeleeAttackGoal extends MeleeAttackGoal {
 
     @Override
     public boolean canStart() {
-        return !goose.isBaby() && super.canStart();
+        return !goose.isBaby() && !goose.isTouchingWater() && super.canStart();
     }
 
     @Override
