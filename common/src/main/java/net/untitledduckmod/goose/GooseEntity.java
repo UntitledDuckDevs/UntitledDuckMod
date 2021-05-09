@@ -260,7 +260,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
             }
 
             // Trigger panic animation when being attacked or being on fire
-            if (!panicked && getAttacker() != null || isOnFire()) {
+            if (!panicked && (((getHealth() < getMaxHealth()/2) || isBaby()) && (getAttacker() != null || isOnFire()))) {
                 setAnimation(ANIMATION_PANIC);
                 panicked = true;
             } else if (panicked && getAttacker() == null && !isOnFire()) {
