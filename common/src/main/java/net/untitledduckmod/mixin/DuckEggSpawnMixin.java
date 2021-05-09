@@ -3,6 +3,7 @@ package net.untitledduckmod.mixin;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.items.DuckEggEntity;
@@ -20,11 +21,11 @@ public class DuckEggSpawnMixin {
     @Inject(method = "onEntitySpawn", at = @At("TAIL"))
     public void spawnDuckEgg(EntitySpawnS2CPacket packet, CallbackInfo info) {
         EntityType<?> entityType = packet.getEntityTypeId();
-        if (entityType == ModEntityTypes.getDuckEgg()) {
+        if (entityType == ModEntityTypes.getDuckEgg() || entityType == ModEntityTypes.getGooseEgg()) {
             double x = packet.getX();
             double y = packet.getY();
             double z = packet.getZ();
-            DuckEggEntity entity = new DuckEggEntity(this.world, x, y, z);
+            DuckEggEntity entity = new DuckEggEntity((EntityType<? extends ThrownItemEntity>) entityType, this.world, x, y, z);
             entity.updateTrackedPosition(x, y, z);
             entity.refreshPositionAfterTeleport(x, y, z);
             entity.pitch = (float) (packet.getPitch() * 360) / 256.0F;

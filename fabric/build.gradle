@@ -18,6 +18,7 @@ dependencies {
 
     modImplementation "software.bernie.geckolib:geckolib-fabric-1.16.5:${rootProject.geckolib_version_fabric}:dev"
     modImplementation 'me.shedaniel:RoughlyEnoughItems:5.9.172'
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:5.9.172"
 
     implementation(project(path: ":common")) {
         transitive = false
@@ -69,8 +70,8 @@ if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKe
         project {
             id = "451766"
             releaseType = "beta"
-            changelogType = 'text'
-            changelog = "${rootProject.changelog}"
+            changelogType = 'markdown'
+            changelog = file('../CHANGELOG.md')
             addGameVersion("1.16.5")
             addGameVersion("Fabric")
             addGameVersion("Java 8")

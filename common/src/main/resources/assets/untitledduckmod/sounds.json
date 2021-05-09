@@ -84,5 +84,76 @@
       "minecraft:mob/chicken/step2"
     ],
     "subtitle": "subtitles.block.generic.footsteps"
+  },
+  "duck_sack_use": {
+    "category": "neutral",
+    "sounds": [
+      "minecraft:item/armor/equip_generic1",
+      "minecraft:item/armor/equip_generic2",
+      "minecraft:item/armor/equip_generic3",
+      "minecraft:item/armor/equip_generic4",
+      "minecraft:item/armor/equip_generic5",
+      "minecraft:item/armor/equip_generic6"
+    ],
+    "subtitle": "untitledduckmod.subtitle.duck_sack_use"
+  },
+
+  "goose_honk": {
+    "category": "neutral",
+    "sounds": [
+      "untitledduckmod:goose_honk_1",
+      "untitledduckmod:goose_honk_2",
+      "untitledduckmod:goose_honk_3"
+    ],
+    "subtitle": "untitledduckmod.subtitle.goose_honk"
+  },
+  "goose_lay_egg": {
+    "category": "neutral",
+    "sounds": [
+      "minecraft:mob/chicken/plop"
+    ],
+    "subtitle": "untitledduckmod.subtitle.goose_lay_egg"
+  },
+  "gosling_ambient": {
+    "category": "neutral",
+    "sounds": [
+      "untitledduckmod:duckling_ambient_1",
+      "untitledduckmod:duckling_ambient_2"
+    ],
+    "subtitle": "untitledduckmod.subtitle.gosling_ambient"
+  },
+  "goose_death": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "untitledduckmod:goose_honk_1",
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "untitledduckmod.subtitle.goose_death"
+  },
+  "gosling_death": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "untitledduckmod:duckling_ambient_1",
+        "pitch": 1.25,
+        "volume": 0.2
+      },
+      {
+        "name": "untitledduckmod:duckling_ambient_2",
+        "pitch": 1.25,
+        "volume": 0.2
+      }
+    ],
+    "subtitle": "untitledduckmod.subtitle.gosling_death"
+  },
+  "gosling_hurt": {
+    "category": "neutral",
+    "sounds": [
+      "untitledduckmod:duckling_ambient_1",
+      "untitledduckmod:duckling_ambient_2"
+    ],
+    "subtitle": "untitledduckmod.subtitle.duckling_hurt"
   }
 }

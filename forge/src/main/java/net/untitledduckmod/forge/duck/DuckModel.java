@@ -1,22 +1,22 @@
-package net.untitledduckmod.forge;
+package net.untitledduckmod.forge.duck;
 
 import net.minecraft.util.Identifier;
-import net.untitledduckmod.DuckEntity;
-import net.untitledduckmod.DuckModelIdentifiers;
+import net.untitledduckmod.duck.DuckEntity;
+import net.untitledduckmod.duck.DuckModelIdentifiers;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
-import static net.untitledduckmod.DuckModelIdentifiers.*;
+import static net.untitledduckmod.duck.DuckModelIdentifiers.*;
 
 public class DuckModel extends AnimatedGeoModel<DuckEntity> {
     private Identifier currentTexture = NORMAL_TEXTURE;
 
     @Override
     public Identifier getModelLocation(DuckEntity object) {
-        return DuckModelIdentifiers.MODEL_LOCATION;
+        return DuckModelIdentifiers.DUCK_MODEL_LOCATION;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class DuckModel extends AnimatedGeoModel<DuckEntity> {
 
     @Override
     public Identifier getAnimationFileLocation(DuckEntity animatable) {
-        return DuckModelIdentifiers.ANIMATION_FILE_LOCATION;
+        return DuckModelIdentifiers.DUCK_ANIMATION_FILE_LOCATION;
     }
 
     @Override

@@ -4,6 +4,8 @@
   "package": "net.untitledduckmod.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "BrewingRecipeRegistryInvoker",
+    "IllagerIntimidationMixin"
   ],
   "client": [
     "DuckEggSpawnMixin"

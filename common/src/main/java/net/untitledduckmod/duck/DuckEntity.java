@@ -1,4 +1,4 @@
-package net.untitledduckmod;
+package net.untitledduckmod.duck;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -21,11 +21,17 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.Tag;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.untitledduckmod.ModEntityTypes;
+import net.untitledduckmod.ModItems;
+import net.untitledduckmod.ModSoundEvents;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -65,6 +71,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private boolean isFlapping;
     private boolean wasSongPlaying = false;
     private boolean panicked = false;
+    private boolean fromSack;
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -182,6 +189,35 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         isFlapping = world.isClient && !isTouchingWater() && !this.onGround;
     }
 
+    @Override
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ItemStack stackInHand = player.getStackInHand(hand);
+        if (stackInHand.getItem() == ModItems.getEmptyDuckSack()) {
+            CompoundTag duckData = new CompoundTag();
+            if (saveSelfToTag(duckData)) {
+                stackInHand.decrement(1);
+
+                ItemStack duckSack = new ItemStack(ModItems.getDuckSack());
+                CompoundTag sackData = new CompoundTag();
+                sackData.put("EntityTag", duckData);
+                duckSack.setTag(sackData);
+
+                if (stackInHand.isEmpty()) {
+                    player.setStackInHand(hand, duckSack);
+                } else if (!player.inventory.insertStack(duckSack)) {
+                    player.dropItem(duckSack, false);
+                }
+                world.playSound(null, getBlockPos(), ModSoundEvents.getDuckSackUse(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
+            } else {
+                LOGGER.error("Could not save duck data to duck sack!");
+            }
+
+            remove();
+            return ActionResult.success(world.isClient);
+        }
+        return super.interactMob(player, hand);
+    }
+
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
@@ -279,5 +315,23 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         } else {
             this.setVelocity(this.getVelocity().add(0.0D, 0.3D, 0.0D));
         }
+    }
+
+    public void setFromSack(boolean isFromSack) {
+        fromSack = isFromSack;
+    }
+
+    public boolean isFromSack() {
+        return fromSack;
+    }
+
+    @Override
+    public boolean cannotDespawn() {
+        return super.cannotDespawn() || fromSack;
+    }
+
+    @Override
+    public boolean canImmediatelyDespawn(double distanceSquared) {
+        return !this.isFromSack() && !this.hasCustomName();
     }
 }

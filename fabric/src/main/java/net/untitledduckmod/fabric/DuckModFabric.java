@@ -1,10 +1,7 @@
 package net.untitledduckmod.fabric;
 
 import net.fabricmc.api.ModInitializer;
-import net.untitledduckmod.DuckMod;
-import net.untitledduckmod.ModEntityTypes;
-import net.untitledduckmod.ModItems;
-import net.untitledduckmod.ModSoundEvents;
+import net.untitledduckmod.*;
 import software.bernie.geckolib3.GeckoLib;
 
 
@@ -17,6 +14,9 @@ public class DuckModFabric implements ModInitializer {
         ModEntityTypes.setupSpawning();
         ModSoundEvents.register(null);
         ModItems.register(null);
+        ModStatusEffects.register();
+        ModPotions.register();
+        ModPotions.registerBrewing();
         GeckoLib.initialize();
     }
 }

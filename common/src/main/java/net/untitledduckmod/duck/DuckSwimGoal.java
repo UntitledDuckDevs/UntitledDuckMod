@@ -1,14 +1,15 @@
-package net.untitledduckmod;
+package net.untitledduckmod.duck;
 
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.tag.FluidTags;
 
 import java.util.EnumSet;
 
 public class DuckSwimGoal extends Goal {
-    private final DuckEntity duck;
+    private final PathAwareEntity duck;
 
-    public DuckSwimGoal(DuckEntity duck) {
+    public DuckSwimGoal(PathAwareEntity duck) {
         this.duck = duck;
         this.setControls(EnumSet.of(Goal.Control.JUMP));
         duck.getNavigation().setCanSwim(true);

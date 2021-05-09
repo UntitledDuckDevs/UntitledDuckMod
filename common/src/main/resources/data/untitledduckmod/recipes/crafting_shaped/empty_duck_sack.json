@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " F ",
+    "L L",
+    " L "
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "F": {
+      "item": "untitledduckmod:duck_feather"
+    }
+  },
+  "result": {
+    "item": "untitledduckmod:empty_duck_sack"
+  }
+}

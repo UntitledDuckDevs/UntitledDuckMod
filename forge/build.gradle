@@ -73,8 +73,8 @@ if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKe
         project {
             id = "451789"
             releaseType = "beta"
-            changelogType = 'text'
-            changelog = "${rootProject.changelog}"
+            changelogType = 'markdown'
+            changelog = file('../CHANGELOG.md')
             addGameVersion("1.16.5")
             addGameVersion("Java 8")
 

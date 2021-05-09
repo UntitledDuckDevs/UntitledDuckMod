@@ -48,4 +48,39 @@ public class ModSoundEvents {
     public static SoundEvent getDuckEggSound() {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static SoundEvent getGooseEggSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getGooseHonkSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getGooseDeathSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getGoslingDeathSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getGoslingAmbientSound() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getDuckSackUse() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SoundEvent getGoslingHurtSound() {
+        throw new AssertionError();
+    }
 }
