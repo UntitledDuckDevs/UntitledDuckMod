@@ -1,0 +1,15 @@
+{
+  "entity.untitledduckmod.duck": "鴨子",
+  "item.untitledduckmod.duck_spawn_egg": "鴨子生怪蛋",
+  "item.untitledduckmod.duck_egg": "鴨蛋",
+  "item.untitledduckmod.raw_duck": "生鴨肉",
+  "item.untitledduckmod.cooked_duck": "烤鴨肉",
+  "item.untitledduckmod.duck_feather": "鴨毛",
+  "untitledduckmod.subtitle.duck_ambient": "鴨子呱呱",
+  "untitledduckmod.subtitle.duckling_ambient": "鴨子嘰喳",
+  "untitledduckmod.subtitle.duck_hurt": "鴨子受傷",
+  "untitledduckmod.subtitle.duckling_hurt": "鴨子受傷",
+  "untitledduckmod.subtitle.duck_death": "鴨子死亡",
+  "untitledduckmod.subtitle.duckling_death": "Duckling dies",
+  "untitledduckmod.subtitle.duck_lay_egg": "鴨子下蛋"
+}
