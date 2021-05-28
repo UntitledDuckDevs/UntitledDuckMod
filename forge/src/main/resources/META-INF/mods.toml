@@ -31,7 +31,7 @@ side = "BOTH"
 [[dependencies.untitledduckmod]]
 modId="geckolib3"
 mandatory=true
-versionRange="[3.0.31,)"
+versionRange="[3.0.35,)"
 ordering="NONE"
 side="BOTH"
 
