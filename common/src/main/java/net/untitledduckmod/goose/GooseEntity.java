@@ -346,6 +346,10 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
     @Override
     protected void loot(ItemEntity item) {
+        // Gosling shouldn't pick up items
+        if (isBaby()) {
+            return;
+        }
         // Don't pickup threw/spat items
         if (item.getThrower() == this.getUuid()) {
             return;
