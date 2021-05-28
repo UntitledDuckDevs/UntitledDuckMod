@@ -44,6 +44,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 public class DuckEntity extends AnimalEntity implements IAnimatable {
     public static final String EGG_LAY_TIME_TAG = "duckEggLayTime";
     public static final String VARIANT_TAG = "duckVariant";
+    public static final String IS_FROM_SACK_TAG = "isFromSack";
+
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -71,7 +73,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private boolean isFlapping;
     private boolean wasSongPlaying = false;
     private boolean panicked = false;
-    private boolean fromSack;
+    private boolean isFromSack = false;
 
     public DuckEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -102,6 +104,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         super.writeCustomDataToTag(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
+        tag.putBoolean(IS_FROM_SACK_TAG, isFromSack);
     }
 
     public void readCustomDataFromTag(CompoundTag tag) {
@@ -110,6 +113,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         if (tag.contains(EGG_LAY_TIME_TAG)) {
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
         }
+        setFromSack(tag.getBoolean(IS_FROM_SACK_TAG));
     }
 
     public byte getVariant() {
@@ -317,21 +321,16 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         }
     }
 
-    public void setFromSack(boolean isFromSack) {
-        fromSack = isFromSack;
+    @Override
+    public boolean cannotDespawn() {
+        return super.cannotDespawn() || isFromSack;
     }
 
     public boolean isFromSack() {
-        return fromSack;
+        return isFromSack;
     }
 
-    @Override
-    public boolean cannotDespawn() {
-        return super.cannotDespawn() || fromSack;
-    }
-
-    @Override
-    public boolean canImmediatelyDespawn(double distanceSquared) {
-        return !this.isFromSack() && !this.hasCustomName();
+    public void setFromSack(boolean fromSack) {
+        isFromSack = fromSack;
     }
 }
