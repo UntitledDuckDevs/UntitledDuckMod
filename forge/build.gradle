@@ -19,7 +19,7 @@ loom {
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
-    modImplementation "software.bernie.geckolib:geckolib-forge-1.16.5:${rootProject.geckolib_version_forge}"
+    modImplementation "software.bernie.geckolib:geckolib-forge-1.17:${rootProject.geckolib_version_forge}"
 
     implementation(project(path: ":common")) {
         transitive = false
