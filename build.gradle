@@ -1,6 +1,6 @@
 plugins {
-    id "architectury-plugin" version "3.0-SNAPSHOT"
-    id "forgified-fabric-loom" version "0.6-SNAPSHOT" apply false
+    id "architectury-plugin" version "3.2-SNAPSHOT"
+    id 'dev.architectury.loom' version "0.8.0-SNAPSHOT" apply false
     id 'com.matthewprenger.cursegradle' version '1.4.0' apply false
 }
 
@@ -9,7 +9,7 @@ architectury {
 }
 
 subprojects {
-    apply plugin: "forgified-fabric-loom"
+    apply plugin: "dev.architectury.loom"
 
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
@@ -25,6 +25,9 @@ allprojects {
     version = rootProject.mod_version
     group = rootProject.maven_group
 
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+
     repositories {
         maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     }
@@ -35,7 +38,7 @@ allprojects {
         // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
         // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
         // We'll use that if it's available, but otherwise we'll use the older option.
-        def targetVersion = 8
+        def targetVersion = 16
         if (JavaVersion.current().isJava9Compatible()) {
             options.release = targetVersion
         }

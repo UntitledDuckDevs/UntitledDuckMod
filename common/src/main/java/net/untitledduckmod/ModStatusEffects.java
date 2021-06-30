@@ -1,6 +1,6 @@
 package net.untitledduckmod;
 
-import me.shedaniel.architectury.annotations.ExpectPlatform;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.entity.effect.StatusEffect;
 
 public class ModStatusEffects {

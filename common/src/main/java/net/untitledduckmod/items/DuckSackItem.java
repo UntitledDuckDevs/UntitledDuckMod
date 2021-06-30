@@ -5,7 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -49,7 +49,7 @@ public class DuckSackItem extends Item {
         return ActionResult.SUCCESS;
     }
 
-    private void placeCreature(ServerWorld world, BlockPos pos, CompoundTag entityData) {
+    private void placeCreature(ServerWorld world, BlockPos pos, NbtCompound entityData) {
         // Remove uuid when there already is a creature with same uuid.
         // This makes it possible to use the bucket in creative, cloning every tag except the uuid.
         if (entityData != null && entityData.contains("EntityTag") && entityData.getCompound("EntityTag").containsUuid("UUID")) {
@@ -70,7 +70,7 @@ public class DuckSackItem extends Item {
     @Override
     public Text getName(ItemStack stack) {
         if (stack.hasTag()) {
-            CompoundTag duckData = stack.getTag();
+            NbtCompound duckData = stack.getTag();
             if (duckData != null && duckData.contains("EntityTag") && duckData.getCompound("EntityTag").contains("CustomName")) {
                 Text duckName = Text.Serializer.fromJson(duckData.getCompound("EntityTag").getString("CustomName"));
                 return new TranslatableText("item.untitledduckmod.duck_sack.named", duckName);
