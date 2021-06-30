@@ -129,15 +129,15 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         this.dataTracker.startTracking(ANGER_TIME, 0);
     }
 
-    public void writeCustomDataToTag(NbtCompound tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
         this.angerToTag(tag);
     }
 
-    public void readCustomDataFromTag(NbtCompound tag) {
-        super.readCustomDataFromTag(tag);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
         setVariant(tag.getByte(VARIANT_TAG));
         if (tag.contains(EGG_LAY_TIME_TAG)) {
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);

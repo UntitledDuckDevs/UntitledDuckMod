@@ -100,15 +100,15 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         this.dataTracker.startTracking(ANIMATION, ANIMATION_IDLE);
     }
 
-    public void writeCustomDataToTag(NbtCompound tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
         tag.putBoolean(IS_FROM_SACK_TAG, isFromSack);
     }
 
-    public void readCustomDataFromTag(NbtCompound tag) {
-        super.readCustomDataFromTag(tag);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
         setVariant(tag.getByte(VARIANT_TAG));
         if (tag.contains(EGG_LAY_TIME_TAG)) {
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
