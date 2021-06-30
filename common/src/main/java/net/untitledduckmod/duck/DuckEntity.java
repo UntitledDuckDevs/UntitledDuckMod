@@ -208,7 +208,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
 
                 if (stackInHand.isEmpty()) {
                     player.setStackInHand(hand, duckSack);
-                } else if (!player.inventory.insertStack(duckSack)) {
+                } else if (!player.getInventory().insertStack(duckSack)) {
                     player.dropItem(duckSack, false);
                 }
                 world.playSound(null, getBlockPos(), ModSoundEvents.getDuckSackUse(), SoundCategory.NEUTRAL, 1.0F, 1.0F);

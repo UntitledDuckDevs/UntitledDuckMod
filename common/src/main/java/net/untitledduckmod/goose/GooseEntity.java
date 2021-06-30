@@ -304,7 +304,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                     if (FOOD.test(itemStack)) {
                         ItemStack newStack = itemStack.copy();
                         newStack.setCount(1);
-                        if (!player.abilities.creativeMode) {
+                        if (!player.getAbilities().creativeMode) {
                             itemStack.decrement(1);
                         }
                         if (tryEquip(newStack)) {
@@ -314,7 +314,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                     return ActionResult.CONSUME;
                 } else {
                     if (TAMING_INGREDIENT.test(itemStack)) {
-                        if (!player.abilities.creativeMode) {
+                        if (!player.getAbilities().creativeMode) {
                             itemStack.decrement(1);
                         }
                         if (this.random.nextInt(3) == 0) {
@@ -576,8 +576,8 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         }
         for(int i = 0; i < 8; ++i) {
             Vec3d vel = new Vec3d(((double)this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
-            vel = vel.rotateX(-this.pitch * 0.017453292F);
-            vel = vel.rotateY(-this.yaw * 0.017453292F);
+            vel = vel.rotateX(-this.getPitch() * 0.017453292F);
+            vel = vel.rotateY(-this.getYaw() * 0.017453292F);
 
             Vec3d rotationVec = Vec3d.fromPolar(0, bodyYaw);
             Vec3d pos = new Vec3d(this.getX() + rotationVec.x / 2.0D, getEyeY() - 0.2D, this.getZ() + rotationVec.z/2.0D);
