@@ -148,7 +148,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         this.goalSelector.add(0, new DuckSwimGoal(this));
         this.goalSelector.add(1, new EscapeDangerGoal(this, 1.6D));
         this.goalSelector.add(2, new AnimalMateGoal(this, 1.0D));
-        this.goalSelector.add(3, new TemptGoal(this, 1.0D, false, BREEDING_INGREDIENT));
+        this.goalSelector.add(3, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
         this.goalSelector.add(4, new FollowParentGoal(this, 1.1D));
         this.goalSelector.add(5, new WanderAroundGoal(this, 1.0D));
         this.goalSelector.add(5, new DuckCleanGoal(this));
