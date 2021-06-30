@@ -34,7 +34,7 @@ import net.minecraft.tag.Tag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.IntRange;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.untitledduckmod.ModEntityTypes;
@@ -60,7 +60,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Integer> ANGER_TIME = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final IntRange ANGER_TIME_RANGE = new IntRange(20, 39);
+    private static final UniformIntProvider ANGER_TIME_RANGE =  UniformIntProvider.create(20, 39);
     private UUID targetUuid;
 
     public static final byte ANIMATION_IDLE = 0;
