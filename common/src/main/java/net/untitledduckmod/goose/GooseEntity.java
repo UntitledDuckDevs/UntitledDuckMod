@@ -23,7 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -129,14 +129,14 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         this.dataTracker.startTracking(ANGER_TIME, 0);
     }
 
-    public void writeCustomDataToTag(CompoundTag tag) {
+    public void writeCustomDataToTag(NbtCompound tag) {
         super.writeCustomDataToTag(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
         this.angerToTag(tag);
     }
 
-    public void readCustomDataFromTag(CompoundTag tag) {
+    public void readCustomDataFromTag(NbtCompound tag) {
         super.readCustomDataFromTag(tag);
         setVariant(tag.getByte(VARIANT_TAG));
         if (tag.contains(EGG_LAY_TIME_TAG)) {

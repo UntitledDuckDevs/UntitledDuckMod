@@ -18,7 +18,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -100,14 +100,14 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         this.dataTracker.startTracking(ANIMATION, ANIMATION_IDLE);
     }
 
-    public void writeCustomDataToTag(CompoundTag tag) {
+    public void writeCustomDataToTag(NbtCompound tag) {
         super.writeCustomDataToTag(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
         tag.putBoolean(IS_FROM_SACK_TAG, isFromSack);
     }
 
-    public void readCustomDataFromTag(CompoundTag tag) {
+    public void readCustomDataFromTag(NbtCompound tag) {
         super.readCustomDataFromTag(tag);
         setVariant(tag.getByte(VARIANT_TAG));
         if (tag.contains(EGG_LAY_TIME_TAG)) {
@@ -197,12 +197,12 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack stackInHand = player.getStackInHand(hand);
         if (stackInHand.getItem() == ModItems.getEmptyDuckSack()) {
-            CompoundTag duckData = new CompoundTag();
+            NbtCompound duckData = new NbtCompound();
             if (saveSelfToTag(duckData)) {
                 stackInHand.decrement(1);
 
                 ItemStack duckSack = new ItemStack(ModItems.getDuckSack());
-                CompoundTag sackData = new CompoundTag();
+                NbtCompound sackData = new NbtCompound();
                 sackData.put("EntityTag", duckData);
                 duckSack.setTag(sackData);
 
