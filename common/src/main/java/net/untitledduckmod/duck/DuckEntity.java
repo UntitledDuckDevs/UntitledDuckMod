@@ -198,7 +198,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         ItemStack stackInHand = player.getStackInHand(hand);
         if (stackInHand.getItem() == ModItems.getEmptyDuckSack()) {
             NbtCompound duckData = new NbtCompound();
-            if (saveSelfToTag(duckData)) {
+            if (saveSelfNbt(duckData)) {
                 stackInHand.decrement(1);
 
                 ItemStack duckSack = new ItemStack(ModItems.getDuckSack());
