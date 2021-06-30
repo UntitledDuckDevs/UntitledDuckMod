@@ -5,6 +5,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
@@ -16,7 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderer.geo.GeoEntityRenderer;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 /**
  * This renderer extends GeoEntityRenderer to render leashes for Geckolib Entities by using vanillas code from MobEntityRenderer.
@@ -25,8 +26,8 @@ import software.bernie.geckolib3.renderer.geo.GeoEntityRenderer;
  */
 
 public class GeoMobRenderer<T extends MobEntity & IAnimatable> extends GeoEntityRenderer<T> {
-    protected GeoMobRenderer(EntityRenderDispatcher renderManager, AnimatedGeoModel<T> modelProvider) {
-        super(renderManager, modelProvider);
+    protected GeoMobRenderer(EntityRendererFactory.Context context, AnimatedGeoModel<T> modelProvider) {
+        super(context, modelProvider);
     }
 
     @Override
