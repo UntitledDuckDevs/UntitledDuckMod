@@ -216,7 +216,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
                 LOGGER.error("Could not save duck data to duck sack!");
             }
 
-            remove();
+            discard();
             return ActionResult.success(world.isClient);
         }
         return super.interactMob(player, hand);
