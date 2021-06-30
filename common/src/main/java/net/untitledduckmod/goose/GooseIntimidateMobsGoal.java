@@ -32,7 +32,7 @@ public class GooseIntimidateMobsGoal extends Goal {
             return false;
         }
         if (goose.age % 5 == 0) {
-            targetEntity = this.goose.world.getClosestEntityIncludingUngeneratedChunks(IllagerEntity.class, new TargetPredicate(), goose, goose.getX(), goose.getY(), goose.getZ(), goose.getBoundingBox().expand(INTIMIDATE_DISTANCE, 3, INTIMIDATE_DISTANCE));
+            targetEntity = this.goose.world.getClosestEntity(IllagerEntity.class, TargetPredicate.createAttackable(), goose, goose.getX(), goose.getY(), goose.getZ(), goose.getBoundingBox().expand(INTIMIDATE_DISTANCE, 3, INTIMIDATE_DISTANCE));
             return targetEntity != null;
         }
         return false;
