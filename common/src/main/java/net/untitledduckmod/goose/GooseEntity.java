@@ -133,7 +133,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         super.writeCustomDataToNbt(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
-        this.angerToTag(tag);
+        this.writeAngerToNbt(tag);
     }
 
     public void readCustomDataFromNbt(NbtCompound tag) {
@@ -204,7 +204,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         this.goalSelector.add(5, new GoosePickupFoodGoal(this));
         this.goalSelector.add(6, new GooseMeleeAttackGoal(this, 1.5D, true));
 
-        this.goalSelector.add(7, new TemptGoal(this, 1.0D, false, BREEDING_INGREDIENT));
+        this.goalSelector.add(7, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
         this.goalSelector.add(8, new FollowParentGoal(this, 1.1D));
 
         this.goalSelector.add(9, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
@@ -565,7 +565,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
     @Override
     public void chooseRandomAngerTime() {
-        this.setAngerTime(ANGER_TIME_RANGE.choose(this.random));
+        this.setAngerTime(ANGER_TIME_RANGE.get(this.random));
     }
 
     @Override
