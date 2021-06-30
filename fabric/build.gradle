@@ -16,9 +16,9 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
-    modImplementation "software.bernie.geckolib:geckolib-fabric-1.16.5:${rootProject.geckolib_version_fabric}:dev"
-    modImplementation 'me.shedaniel:RoughlyEnoughItems:5.9.172'
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:5.9.172"
+    modImplementation "software.bernie.geckolib:geckolib-fabric-1.17:${rootProject.geckolib_version_fabric}:dev"
+     modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
 
     implementation(project(path: ":common")) {
         transitive = false
