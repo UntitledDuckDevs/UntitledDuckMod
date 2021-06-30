@@ -142,7 +142,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         if (tag.contains(EGG_LAY_TIME_TAG)) {
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
         }
-        this.angerFromTag((ServerWorld)this.world, tag);
+        this.readAngerFromNbt((ServerWorld)this.world, tag);
     }
 
     public byte getVariant() {

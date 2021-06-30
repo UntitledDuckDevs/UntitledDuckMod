@@ -47,7 +47,7 @@ public class GeoMobRenderer<T extends MobEntity & IAnimatable> extends GeoEntity
         stack.push();
         Vec3d lv = leashHolder.method_30951(partialTicks);
         double d = (double) (MathHelper.lerp(partialTicks, entity.bodyYaw, entity.prevBodyYaw) * 0.017453292F) + 1.5707963267948966D;
-        Vec3d lv2 = entity.method_29919();
+        Vec3d lv2 = entity.getLeashOffset();
         double e = Math.cos(d) * lv2.z + Math.sin(d) * lv2.x;
         double g = Math.sin(d) * lv2.z - Math.cos(d) * lv2.x;
         double h = MathHelper.lerp(partialTicks, entity.prevX, entity.getX()) + e;

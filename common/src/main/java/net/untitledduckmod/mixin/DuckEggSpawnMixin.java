@@ -31,7 +31,7 @@ public class DuckEggSpawnMixin {
             entity.pitch = (float) (packet.getPitch() * 360) / 256.0F;
             entity.yaw = (float) (packet.getYaw() * 360) / 256.0F;
             int id = packet.getId();
-            entity.setEntityId(id);
+            entity.setId(id);
             entity.setUuid(packet.getUuid());
             this.world.addEntity(id, entity);
         }
