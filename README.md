@@ -14,6 +14,7 @@ Credits
 - Duck Model, Texture and Animations by ArtistMonster24
 - Duck Sounds by [Sidearm Studios] from the [Ultimate Animal Sounds] pack
 - Duckling Sounds by [basedMedia]: [Chirp1], [Chirp2]
+- 1.17 Port by [quiqueck], many thanks!
 
 License
 -------
@@ -30,3 +31,4 @@ The exception is the duckling sounds which are licensed under CC0.
 [Ultimate Animal Sounds]: https://assetstore.unity.com/packages/audio/sound-fx/animals/ultimate-animal-sounds-173490
 [Chirp1]: https://freesound.org/people/basedMedia/sounds/548099/
 [Chirp2]: https://freesound.org/people/basedMedia/sounds/548096/
+[quiqueck]: https://github.com/quiqueck

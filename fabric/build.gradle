@@ -72,9 +72,9 @@ if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKe
             releaseType = "beta"
             changelogType = 'text'
             changelog = file('../CHANGELOG.md')
-            addGameVersion("1.16.5")
+            addGameVersion("1.17")
             addGameVersion("Fabric")
-            addGameVersion("Java 8")
+            addGameVersion("Java 16")
 
             relations {
                 requiredDependency 'fabric-api'
@@ -82,7 +82,7 @@ if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKe
             }
 
             mainArtifact(remapJar) {
-                displayName = "Untitled Duck Mod - ${rootProject.mod_version} (Fabric)"
+                displayName = "Untitled Duck Mod - ${rootProject.mod_version} - 1.17 (Fabric)"
             }
             afterEvaluate {
                 uploadTask.dependsOn("build")

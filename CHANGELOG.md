@@ -1,5 +1,5 @@
-## [0.3.0] - 2021-05-28
+## [0.3.0] - 2021-07-05
 
-### Changes
+### Added
 
-- Add meat, eggs and feathers to forge tags
+- Ported to 1.17 by quiqueck(https://github.com/quiqueck), many thanks!
