@@ -61,13 +61,13 @@ public class DuckEggEntity extends ThrownItemEntity {
                 for (int j = 0; j < i; ++j) {
                     PassiveEntity duckEntity = mobEntityType.create(this.world);
                     duckEntity.setBreedingAge(-24000);
-                    duckEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.yaw, 0.0F);
+                    duckEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
                     this.world.spawnEntity(duckEntity);
                 }
             }
 
             this.world.sendEntityStatus(this, (byte) 3);
-            this.remove();
+            this.discard();
         }
     }
 

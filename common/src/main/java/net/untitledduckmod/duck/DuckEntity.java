@@ -18,7 +18,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -88,7 +88,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     }
 
     @Override
-    public boolean handleFallDamage(float fallDistance, float damageMultiplier) {
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
 
@@ -100,15 +100,15 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         this.dataTracker.startTracking(ANIMATION, ANIMATION_IDLE);
     }
 
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
         tag.putBoolean(IS_FROM_SACK_TAG, isFromSack);
     }
 
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
         setVariant(tag.getByte(VARIANT_TAG));
         if (tag.contains(EGG_LAY_TIME_TAG)) {
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
@@ -148,7 +148,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
         this.goalSelector.add(0, new DuckSwimGoal(this));
         this.goalSelector.add(1, new EscapeDangerGoal(this, 1.6D));
         this.goalSelector.add(2, new AnimalMateGoal(this, 1.0D));
-        this.goalSelector.add(3, new TemptGoal(this, 1.0D, false, BREEDING_INGREDIENT));
+        this.goalSelector.add(3, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
         this.goalSelector.add(4, new FollowParentGoal(this, 1.1D));
         this.goalSelector.add(5, new WanderAroundGoal(this, 1.0D));
         this.goalSelector.add(5, new DuckCleanGoal(this));
@@ -197,18 +197,18 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack stackInHand = player.getStackInHand(hand);
         if (stackInHand.getItem() == ModItems.getEmptyDuckSack()) {
-            CompoundTag duckData = new CompoundTag();
-            if (saveSelfToTag(duckData)) {
+            NbtCompound duckData = new NbtCompound();
+            if (saveSelfNbt(duckData)) {
                 stackInHand.decrement(1);
 
                 ItemStack duckSack = new ItemStack(ModItems.getDuckSack());
-                CompoundTag sackData = new CompoundTag();
+                NbtCompound sackData = new NbtCompound();
                 sackData.put("EntityTag", duckData);
                 duckSack.setTag(sackData);
 
                 if (stackInHand.isEmpty()) {
                     player.setStackInHand(hand, duckSack);
-                } else if (!player.inventory.insertStack(duckSack)) {
+                } else if (!player.getInventory().insertStack(duckSack)) {
                     player.dropItem(duckSack, false);
                 }
                 world.playSound(null, getBlockPos(), ModSoundEvents.getDuckSackUse(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
@@ -216,7 +216,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
                 LOGGER.error("Could not save duck data to duck sack!");
             }
 
-            remove();
+            discard();
             return ActionResult.success(world.isClient);
         }
         return super.interactMob(player, hand);

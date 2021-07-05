@@ -23,7 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -34,7 +34,7 @@ import net.minecraft.tag.Tag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.IntRange;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.untitledduckmod.ModEntityTypes;
@@ -60,7 +60,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Integer> ANGER_TIME = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final IntRange ANGER_TIME_RANGE = new IntRange(20, 39);
+    private static final UniformIntProvider ANGER_TIME_RANGE =  UniformIntProvider.create(20, 39);
     private UUID targetUuid;
 
     public static final byte ANIMATION_IDLE = 0;
@@ -116,7 +116,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     @Override
-    public boolean handleFallDamage(float fallDistance, float damageMultiplier) {
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
 
@@ -129,20 +129,20 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         this.dataTracker.startTracking(ANGER_TIME, 0);
     }
 
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
-        this.angerToTag(tag);
+        this.writeAngerToNbt(tag);
     }
 
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
         setVariant(tag.getByte(VARIANT_TAG));
         if (tag.contains(EGG_LAY_TIME_TAG)) {
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
         }
-        this.angerFromTag((ServerWorld)this.world, tag);
+        this.readAngerFromNbt((ServerWorld)this.world, tag);
     }
 
     public byte getVariant() {
@@ -204,7 +204,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         this.goalSelector.add(5, new GoosePickupFoodGoal(this));
         this.goalSelector.add(6, new GooseMeleeAttackGoal(this, 1.5D, true));
 
-        this.goalSelector.add(7, new TemptGoal(this, 1.0D, false, BREEDING_INGREDIENT));
+        this.goalSelector.add(7, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
         this.goalSelector.add(8, new FollowParentGoal(this, 1.1D));
 
         this.goalSelector.add(9, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
@@ -304,7 +304,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                     if (FOOD.test(itemStack)) {
                         ItemStack newStack = itemStack.copy();
                         newStack.setCount(1);
-                        if (!player.abilities.creativeMode) {
+                        if (!player.getAbilities().creativeMode) {
                             itemStack.decrement(1);
                         }
                         if (tryEquip(newStack)) {
@@ -314,7 +314,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                     return ActionResult.CONSUME;
                 } else {
                     if (TAMING_INGREDIENT.test(itemStack)) {
-                        if (!player.abilities.creativeMode) {
+                        if (!player.getAbilities().creativeMode) {
                             itemStack.decrement(1);
                         }
                         if (this.random.nextInt(3) == 0) {
@@ -565,7 +565,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
     @Override
     public void chooseRandomAngerTime() {
-        this.setAngerTime(ANGER_TIME_RANGE.choose(this.random));
+        this.setAngerTime(ANGER_TIME_RANGE.get(this.random));
     }
 
     @Override
@@ -576,8 +576,8 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         }
         for(int i = 0; i < 8; ++i) {
             Vec3d vel = new Vec3d(((double)this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
-            vel = vel.rotateX(-this.pitch * 0.017453292F);
-            vel = vel.rotateY(-this.yaw * 0.017453292F);
+            vel = vel.rotateX(-this.getPitch() * 0.017453292F);
+            vel = vel.rotateY(-this.getYaw() * 0.017453292F);
 
             Vec3d rotationVec = Vec3d.fromPolar(0, bodyYaw);
             Vec3d pos = new Vec3d(this.getX() + rotationVec.x / 2.0D, getEyeY() - 0.2D, this.getZ() + rotationVec.z/2.0D);

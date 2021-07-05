@@ -1,6 +1,6 @@
 package net.untitledduckmod;
 
-import me.shedaniel.architectury.annotations.ExpectPlatform;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.entity.EntityType;
 import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.goose.GooseEntity;

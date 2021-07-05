@@ -6,7 +6,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.Direction;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -50,7 +50,7 @@ public class ForgeSpawnEggItem extends SpawnEggItem {
     }
 
     @Override
-    public EntityType<?> getEntityType(@Nullable CompoundTag arg) {
+    public EntityType<?> getEntityType(@Nullable NbtCompound arg) {
         return entityTypeSupplier.get();
     }
 }
