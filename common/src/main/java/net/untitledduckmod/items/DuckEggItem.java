@@ -16,8 +16,8 @@ import net.minecraft.world.World;
 import java.util.function.Supplier;
 
 public class DuckEggItem extends Item {
-    private final Supplier<EntityType<? extends ThrownItemEntity>> thrownEntityType;
-    private final Supplier<EntityType<? extends PassiveEntity>> mobEntityType;
+    public final Supplier<EntityType<? extends ThrownItemEntity>> thrownEntityType;
+    public final Supplier<EntityType<? extends PassiveEntity>> mobEntityType;
 
     public DuckEggItem(Settings settings, Supplier<EntityType<? extends ThrownItemEntity>> entityType, Supplier<EntityType<? extends PassiveEntity>> mobEntityType) {
         super(settings);

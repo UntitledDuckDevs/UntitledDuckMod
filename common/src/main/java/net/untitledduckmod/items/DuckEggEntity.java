@@ -20,8 +20,12 @@ public class DuckEggEntity extends ThrownItemEntity {
     private final EntityType<? extends PassiveEntity> mobEntityType;
 
     public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
+        this(entityType, ModEntityTypes.getDuck(), world);
+    }
+
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, EntityType<? extends PassiveEntity> mobEntityType, World world) {
         super(entityType, world);
-        this.mobEntityType = ModEntityTypes.getDuck();
+        this.mobEntityType = mobEntityType;
     }
 
     public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, EntityType<? extends PassiveEntity> mobEntityType) {
@@ -30,9 +34,13 @@ public class DuckEggEntity extends ThrownItemEntity {
         this.mobEntityType = mobEntityType;
     }
 
-    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z) {
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, EntityType<? extends PassiveEntity> mobEntityType, World world, double x, double y, double z) {
         super(entityType, x, y, z, world);
-        this.mobEntityType = ModEntityTypes.getDuck();
+        this.mobEntityType = mobEntityType;
+    }
+
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z) {
+        this(entityType, ModEntityTypes.getDuck(), x, y, z, world);
     }
 
     @Environment(EnvType.CLIENT)
