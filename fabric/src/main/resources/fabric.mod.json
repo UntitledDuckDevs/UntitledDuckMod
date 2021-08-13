@@ -10,7 +10,8 @@
   ],
   "contact": {
     "homepage": "https://github.com/UntitledAuthors/UntitledDuckMod",
-    "sources": "https://github.com/UntitledAuthors/UntitledDuckMod"
+    "sources": "https://github.com/UntitledAuthors/UntitledDuckMod",
+    "issues": "https://github.com/UntitledAuthors/UntitledDuckMod/issues"
   },
   "license": "MIT",
   "icon": "logo.png",
