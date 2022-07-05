@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.potion.Potion;
 import net.minecraft.sound.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,13 +31,12 @@ public class DuckModForge {
 
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event) {
-            ModEntityTypes.registerAttributes();
             ModEntityTypesImpl.setupSpawning();
         }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void onPostRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
-            ForgeSpawnEggItem.addModdedEggs();
+        public static void onRegisterAttributes(final EntityAttributeCreationEvent event) {
+            ModEntityTypesImpl.registerAttributes(event);
         }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)

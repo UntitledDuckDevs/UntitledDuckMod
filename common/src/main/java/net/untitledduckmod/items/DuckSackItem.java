@@ -37,7 +37,7 @@ public class DuckSackItem extends Item {
         final Hand hand = context.getHand();
 
         if(!world.isClient) {
-            placeCreature((ServerWorld) world, pos.offset(blockSide), context.getStack().getTag());
+            placeCreature((ServerWorld) world, pos.offset(blockSide), context.getStack().getNbt());
             if (player != null) {
                 player.swingHand(hand);
                 if(!player.isCreative()) {
@@ -69,8 +69,8 @@ public class DuckSackItem extends Item {
 
     @Override
     public Text getName(ItemStack stack) {
-        if (stack.hasTag()) {
-            NbtCompound duckData = stack.getTag();
+        if (stack.hasNbt()) {
+            NbtCompound duckData = stack.getNbt();
             if (duckData != null && duckData.contains("EntityTag") && duckData.getCompound("EntityTag").contains("CustomName")) {
                 Text duckName = Text.Serializer.fromJson(duckData.getCompound("EntityTag").getString("CustomName"));
                 return new TranslatableText("item.untitledduckmod.duck_sack.named", duckName);

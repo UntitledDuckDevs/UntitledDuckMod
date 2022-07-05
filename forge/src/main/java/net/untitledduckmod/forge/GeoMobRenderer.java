@@ -5,6 +5,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
@@ -25,9 +26,10 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
  */
 
 public class GeoMobRenderer<T extends MobEntity & IAnimatable> extends GeoEntityRenderer<T> {
-    protected GeoMobRenderer(EntityRenderDispatcher renderManager, AnimatedGeoModel<T> modelProvider) {
-        super(renderManager, modelProvider);
+    protected GeoMobRenderer(EntityRendererFactory.Context context, AnimatedGeoModel<T> modelProvider) {
+        super(context, modelProvider);
     }
+
 
     @Override
     public Identifier getTexture(T entity) {
@@ -45,9 +47,9 @@ public class GeoMobRenderer<T extends MobEntity & IAnimatable> extends GeoEntity
 
     private <E extends Entity> void method_4073(T entity, float partialTicks, MatrixStack stack, VertexConsumerProvider buffer, E leashHolder) {
         stack.push();
-        Vec3d lv = leashHolder.method_30951(partialTicks);
+        Vec3d lv = leashHolder.getLeashPos(partialTicks);
         double d = (double) (MathHelper.lerp(partialTicks, entity.bodyYaw, entity.prevBodyYaw) * 0.017453292F) + 1.5707963267948966D;
-        Vec3d lv2 = entity.method_29919();
+        Vec3d lv2 = entity.getLeashOffset();
         double e = Math.cos(d) * lv2.z + Math.sin(d) * lv2.x;
         double g = Math.sin(d) * lv2.z - Math.cos(d) * lv2.x;
         double h = MathHelper.lerp(partialTicks, entity.prevX, entity.getX()) + e;
@@ -58,7 +60,7 @@ public class GeoMobRenderer<T extends MobEntity & IAnimatable> extends GeoEntity
         float l = (float) (lv.y - i);
         float m = (float) (lv.z - j);
         VertexConsumer lv3 = buffer.getBuffer(RenderLayer.getLeash());
-        Matrix4f lv4 = stack.peek().getModel();
+        Matrix4f lv4 = stack.peek().getPositionMatrix();
         float o = MathHelper.fastInverseSqrt(k * k + m * m) * 0.025F / 2.0F;
         float p = m * o;
         float q = k * o;

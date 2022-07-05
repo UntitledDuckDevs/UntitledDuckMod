@@ -31,7 +31,7 @@ public class DuckEggItem extends Item {
         if (!world.isClient) {
             DuckEggEntity eggEntity = new DuckEggEntity(thrownEntityType.get(), world, user, mobEntityType.get());
             eggEntity.setItem(itemStack);
-            eggEntity.setProperties(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
+            eggEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
             world.spawnEntity(eggEntity);
         }
 

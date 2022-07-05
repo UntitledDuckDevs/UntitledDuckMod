@@ -9,12 +9,14 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.goose.GooseEntity;
@@ -37,9 +39,10 @@ public class ModEntityTypesImpl {
         ENTITIES.register(bus);
     }
 
-    public static void registerAttributes() {
-        DefaultAttributeRegistry.put(DUCK.get(), DuckEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), DuckEntity.SWIM_SPEED_MULTIPLIER).build());
-        DefaultAttributeRegistry.put(GOOSE.get(), GooseEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), GooseEntity.SWIM_SPEED_MULTIPLIER).build());
+    public static void registerAttributes(EntityAttributeCreationEvent event) {
+        System.out.println("Registering attributes...");
+        event.put(DUCK.get(), DuckEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), DuckEntity.SWIM_SPEED_MULTIPLIER).build());
+        event.put(GOOSE.get(), GooseEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), GooseEntity.SWIM_SPEED_MULTIPLIER).build());
     }
 
     public static void setupSpawning() {

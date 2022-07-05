@@ -31,6 +31,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -533,7 +534,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     @Override
-    protected void swimUpward(Tag<Fluid> fluid) {
+    protected void swimUpward(TagKey<Fluid> fluid) {
         // This bypasses forge modifying jump depending on swim speed
         if (this.getNavigation().canSwim()) {
             this.setVelocity(this.getVelocity().add(0.0D, 0.03999999910593033D, 0.0D));
@@ -569,7 +570,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     @Override
-    public <A extends IAnimatable> void summonParticle(ParticleKeyFrameEvent<A> particleKeyFrameEvent) {
+    public void summonParticle(ParticleKeyFrameEvent particleKeyFrameEvent) {
         ItemStack stack = getMainHandStack();
         if (stack == ItemStack.EMPTY) {
             return;

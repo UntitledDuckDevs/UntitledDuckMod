@@ -46,7 +46,7 @@ public class GeoMobRenderer<T extends MobEntity & IAnimatable> extends GeoEntity
 
     private <E extends Entity> void method_4073(T entity, float partialTicks, MatrixStack stack, VertexConsumerProvider buffer, E leashHolder) {
         stack.push();
-        Vec3d lv = leashHolder.method_30951(partialTicks);
+        Vec3d lv = leashHolder.getLeashPos(partialTicks);
         double d = (double) (MathHelper.lerp(partialTicks, entity.bodyYaw, entity.prevBodyYaw) * 0.017453292F) + 1.5707963267948966D;
         Vec3d lv2 = entity.getLeashOffset();
         double e = Math.cos(d) * lv2.z + Math.sin(d) * lv2.x;
@@ -59,7 +59,7 @@ public class GeoMobRenderer<T extends MobEntity & IAnimatable> extends GeoEntity
         float l = (float) (lv.y - i);
         float m = (float) (lv.z - j);
         VertexConsumer lv3 = buffer.getBuffer(RenderLayer.getLeash());
-        Matrix4f lv4 = stack.peek().getModel();
+        Matrix4f lv4 = stack.peek().getPositionMatrix();
         float o = MathHelper.fastInverseSqrt(k * k + m * m) * 0.025F / 2.0F;
         float p = m * o;
         float q = k * o;

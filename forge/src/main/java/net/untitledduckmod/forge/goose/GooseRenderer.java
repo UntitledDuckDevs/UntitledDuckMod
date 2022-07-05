@@ -4,17 +4,17 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.util.math.Vec3f;
 import net.untitledduckmod.goose.GooseEntity;
 import net.untitledduckmod.forge.GeoMobRenderer;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 
 public class GooseRenderer extends GeoMobRenderer<GooseEntity> {
-    public GooseRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, new GooseModel());
+    public GooseRenderer(EntityRendererFactory.Context context) {
+        super(context, new GooseModel());
         this.shadowRadius = 0.3f;
     }
 
@@ -31,7 +31,7 @@ public class GooseRenderer extends GeoMobRenderer<GooseEntity> {
         if (bone.getName().equals("beak") && !mainHand.isEmpty()) {
             stack.push();
             stack.translate(0, 1.15, -0.45);
-            stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-90));
+            stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
             stack.scale(0.7f, 0.7f, 0.7f);
 
             MinecraftClient.getInstance().getHeldItemRenderer().renderItem(goose, mainHand,
