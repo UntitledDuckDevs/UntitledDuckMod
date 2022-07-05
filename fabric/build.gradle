@@ -1,10 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
-    id "com.matthewprenger.cursegradle"
-}
-
-configurations {
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
@@ -12,23 +7,27 @@ architectury {
     fabric()
 }
 
+loom {
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
-    modImplementation "software.bernie.geckolib:geckolib-fabric-1.17:${rootProject.geckolib_version_fabric}:dev"
-     modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
-	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
+    modImplementation "software.bernie.geckolib:geckolib-fabric-1.18:${rootProject.geckolib_version_fabric}"
+    //modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+	//modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
 
-    implementation(project(path: ":common")) {
-        transitive = false
-    }
-    developmentFabric(project(path: ":common")) {
-        transitive = false
-    }
-    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
-        transitive = false
-    }
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 
 processResources {
@@ -40,30 +39,35 @@ processResources {
 }
 
 shadowJar {
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
 }
 
 remapJar {
+    injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "fabric"
+    classifier null
 }
 
 jar {
     classifier "dev"
 }
 
-java {
-    withSourcesJar()
-}
-
 sourcesJar {
-    def commonSources = project(":common").remapSourcesJar
+    def commonSources = project(":common").sourcesJar
     dependsOn commonSources
-    from zipTree(commonSources.output)
+    from commonSources.archiveFile.map { zipTree(it) }
 }
 
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+/*
 if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKey')) {
     curseforge {
         apiKey = System.getenv("CURSEFORGE_KEY") ?: project.findProperty("curseforgeKey")
@@ -93,4 +97,4 @@ if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKe
             forgeGradleIntegration = false
         }
     }
-} // if
+}*/

@@ -1,10 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
-    id "com.matthewprenger.cursegradle"
-}
-
-configurations {
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
@@ -13,23 +8,24 @@ architectury {
 }
 
 loom {
-    useFabricMixin = true
-    mixinConfig "untitledduckmod.mixins.json"
+    forge {
+    }
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
-    modImplementation "software.bernie.geckolib:geckolib-forge-1.17:${rootProject.geckolib_version_forge}"
+    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    modImplementation "software.bernie.geckolib:geckolib-forge-1.18:${rootProject.geckolib_version_forge}"
 
-    implementation(project(path: ":common")) {
-        transitive = false
-    }
-    developmentForge(project(path: ":common")) {
-        transitive = false
-    }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
-        transitive = false
-    }
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
 
 processResources {
@@ -42,31 +38,35 @@ processResources {
 
 shadowJar {
     exclude "fabric.mod.json"
+    exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
 }
 
 remapJar {
-    dependsOn(shadowJar)
-    input.set(shadowJar.archivePath)
-    classifier "forge"
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier null
 }
 
 jar {
     classifier "dev"
 }
 
-java {
-    withSourcesJar()
-}
-
 sourcesJar {
-    def commonSources = project(":common").remapSourcesJar
+    def commonSources = project(":common").sourcesJar
     dependsOn commonSources
-    from zipTree(commonSources.output)
+    from commonSources.archiveFile.map { zipTree(it) }
 }
 
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+/*
 if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKey')) {
     curseforge {
         apiKey = System.getenv("CURSEFORGE_KEY") ?: project.findProperty("curseforgeKey")
@@ -95,4 +95,4 @@ if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKe
             forgeGradleIntegration = false
         }
     }
-} // if
+} */ // if
