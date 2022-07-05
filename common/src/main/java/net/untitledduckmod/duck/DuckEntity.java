@@ -48,8 +48,8 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     public static final String IS_FROM_SACK_TAG = "isFromSack";
 
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
-    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
-    protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
+    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(DuckEntity.class, TrackedDataHandlerRegistry.BYTE);
+    protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(DuckEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final byte ANIMATION_IDLE = 0;
     protected static final byte ANIMATION_CLEAN = 1;
     protected static final byte ANIMATION_DIVE = 2;
