@@ -40,13 +40,13 @@ public class ModEntityTypesImpl {
         // BiomeModifications is experimental but approved
         //noinspection deprecation
         BiomeModifications.addSpawn(context -> true,SpawnGroup.CREATURE, ModEntityTypes.getDuck(),
-                ModSpawningSettings.Duck.WEIGHT,
-                ModSpawningSettings.Duck.MIN_GROUP,
-                ModSpawningSettings.Duck.MAX_GROUP);
+                ModConfig.Duck.WEIGHT.get(),
+                ModConfig.Duck.GROUP_SIZE.get(),
+                ModConfig.Duck.GROUP_SIZE.get());
         BiomeModifications.addSpawn(context -> true, SpawnGroup.CREATURE, ModEntityTypes.getGoose(),
-                ModSpawningSettings.Goose.WEIGHT,
-                ModSpawningSettings.Goose.MIN_GROUP,
-                ModSpawningSettings.Goose.MAX_GROUP);
+                ModConfig.Goose.WEIGHT.get(),
+                ModConfig.Goose.GROUP_SIZE.get(),
+                ModConfig.Goose.GROUP_SIZE.get());
     }
 
     public static EntityType<DuckEntity> getDuck() {
