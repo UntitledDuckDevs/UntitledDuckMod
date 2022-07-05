@@ -40,7 +40,6 @@ public class ModEntityTypesImpl {
     }
 
     public static void registerAttributes(EntityAttributeCreationEvent event) {
-        System.out.println("Registering attributes...");
         event.put(DUCK.get(), DuckEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), DuckEntity.SWIM_SPEED_MULTIPLIER).build());
         event.put(GOOSE.get(), GooseEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), GooseEntity.SWIM_SPEED_MULTIPLIER).build());
     }

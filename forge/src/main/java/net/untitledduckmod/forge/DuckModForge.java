@@ -15,7 +15,7 @@ import net.untitledduckmod.*;
 @Mod(DuckMod.MOD_ID)
 public class DuckModForge {
     public DuckModForge() {
-        DuckMod.init();
+        DuckMod.preInit();
         ModItems.register(null);
         ModEntityTypes.register(null);
         ModStatusEffects.register();
@@ -42,6 +42,10 @@ public class DuckModForge {
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onPostRegisterPotions(final RegistryEvent.Register<Potion> event) {
             ModPotions.registerBrewing();
+        }
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onPostEntitySetup(final RegistryEvent.Register<EntityType<?>> event) {
+            DuckMod.postEntityInit();
         }
 
         @SubscribeEvent
