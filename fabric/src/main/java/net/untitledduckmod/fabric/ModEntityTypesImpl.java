@@ -38,7 +38,6 @@ public class ModEntityTypesImpl {
         SpawnRestrictionAccessor.callRegister(DUCK, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
         SpawnRestrictionAccessor.callRegister(GOOSE, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
         // BiomeModifications is experimental but approved
-        //noinspection deprecation
         BiomeModifications.addSpawn(context -> true,SpawnGroup.CREATURE, ModEntityTypes.getDuck(),
                 ModConfig.Duck.WEIGHT.get(),
                 ModConfig.Duck.GROUP_SIZE.get(),
