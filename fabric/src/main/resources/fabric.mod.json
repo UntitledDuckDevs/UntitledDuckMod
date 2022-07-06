@@ -5,7 +5,7 @@
   "name": "Untitled Duck Mod",
   "description": "Ducks and Geese for Forge and Fabric! Powered by geckolib and architectury.",
   "authors": [
-    "Paspartout",
+    "Okabintaro",
     "ArtistMonster24"
   ],
   "contributors": [
@@ -14,9 +14,9 @@
     "Chubz <github.com/Chubzik1>"
   ],
   "contact": {
-    "homepage": "https://github.com/Paspartout/UntitledDuckMod",
-    "sources":  "https://github.com/Paspartout/UntitledDuckMod",
-    "issues":  "https://github.com/Paspartout/UntitledDuckMod/issues"
+    "homepage": "https://github.com/Okabintaro/UntitledDuckMod",
+    "sources":  "https://github.com/Okabintaro/UntitledDuckMod",
+    "issues":  "https://github.com/Okabintaro/UntitledDuckMod/issues"
   },
   "license": "MIT",
   "icon": "logo.png",

@@ -1,17 +1,17 @@
 modLoader = "javafml"
-loaderVersion = "[35,)"
-issueTrackerURL = ""
+loaderVersion = "[40,)"
+issueTrackerURL = "https://github.com/Okabintaro/UntitledDuckMod/issues"
 license = "MIT"
 
 [[mods]]
 modId = "untitledduckmod"
 version = "${version}"
 displayName = "Untitled Duck Mod"
-authors = "Paspartout, ArtistMonster24"
+authors = "Okabintaro, ArtistMonster24"
 logoFile = "logo.png"
-credits = "Thanks to geckolib!"
+credits = "Thanks to geckolib and architectury!"
 description = '''
-Ducks for Forge and Fabric! Powered by geckolib and architectury.
+Ducks and Geese for Forge and Fabric! Powered by geckolib and architectury.
 '''
 
 [[dependencies.untitledduckmod]]
