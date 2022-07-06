@@ -155,7 +155,7 @@ public abstract class TinyConfig {
                 }, func);
             } else if (type.isEnum()) {
                 List<?> values = Arrays.asList(field.getType().getEnumConstants());
-                Function<Object, Text> func = value -> new TranslatableText(modid + ".midnightconfig." + "enum." + type.getSimpleName() + "." + info.value.toString());
+                Function<Object, Text> func = value -> new TranslatableText(modid + ".config." + "enum." + type.getSimpleName() + "." + info.value.toString());
                 info.widget = new AbstractMap.SimpleEntry<ButtonWidget.PressAction, Function<Object, Text>>(button -> {
                     int index = values.indexOf(info.value) + 1;
                     info.value = values.get(index >= values.size() ? 0 : index);
@@ -222,10 +222,10 @@ public abstract class TinyConfig {
     @Environment(EnvType.CLIENT)
     private static class MidnightConfigScreen extends Screen {
         protected MidnightConfigScreen(Screen parent, String modid) {
-            super(new TranslatableText(modid + ".midnightconfig." + "title"));
+            super(new TranslatableText(modid + ".config." + "title"));
             this.parent = parent;
             this.modid = modid;
-            this.translationPrefix = modid + ".midnightconfig.";
+            this.translationPrefix = modid + ".config.";
         }
         private final String translationPrefix;
         private final Screen parent;

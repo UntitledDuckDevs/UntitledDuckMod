@@ -5,22 +5,24 @@ import net.untitledduckmod.ModConfig;
 import net.untitledduckmod.fabric.config.TinyConfig;
 
 public class ModConfigImpl extends TinyConfig {
+    @Comment public static Comment ducks;
     @Entry
-    public static int GOOSE_SPAWN_WEIGHT = 4;
+    public static int duck_spawn_weight = 6;
     @Entry
-    public static int GOOSE_GROUP_SIZE = 4;
+    public static int duck_group_size = 4;
 
+    @Comment public static Comment geese;
     @Entry
-    public static int DUCK_SPAWN_WEIGHT = 4;
+    public static int goose_spawn_weight = 4;
     @Entry
-    public static int DUCK_GROUP_SIZE = 4;
+    public static int goose_group_size = 4;
 
     public static void setup() {
         TinyConfig.init(DuckMod.MOD_ID, ModConfigImpl.class);
         TinyConfig.write(DuckMod.MOD_ID);
-        ModConfig.Goose.WEIGHT = () -> GOOSE_SPAWN_WEIGHT;
-        ModConfig.Goose.GROUP_SIZE = () -> GOOSE_GROUP_SIZE;
-        ModConfig.Duck.WEIGHT = () -> DUCK_SPAWN_WEIGHT;
-        ModConfig.Duck.GROUP_SIZE = () -> DUCK_GROUP_SIZE;
+        ModConfig.Goose.WEIGHT = () -> goose_spawn_weight;
+        ModConfig.Goose.GROUP_SIZE = () -> goose_group_size;
+        ModConfig.Duck.WEIGHT = () -> duck_spawn_weight;
+        ModConfig.Duck.GROUP_SIZE = () -> duck_group_size;
     }
 }
