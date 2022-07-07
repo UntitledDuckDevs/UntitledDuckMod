@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.potion.Potion;
 import net.minecraft.sound.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,7 +15,7 @@ import net.untitledduckmod.*;
 @Mod(DuckMod.MOD_ID)
 public class DuckModForge {
     public DuckModForge() {
-        DuckMod.init();
+        DuckMod.preInit();
         ModItems.register(null);
         ModEntityTypes.register(null);
         ModStatusEffects.register();
@@ -30,18 +31,21 @@ public class DuckModForge {
 
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event) {
-            ModEntityTypes.registerAttributes();
             ModEntityTypesImpl.setupSpawning();
         }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void onPostRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
-            ForgeSpawnEggItem.addModdedEggs();
+        public static void onRegisterAttributes(final EntityAttributeCreationEvent event) {
+            ModEntityTypesImpl.registerAttributes(event);
         }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onPostRegisterPotions(final RegistryEvent.Register<Potion> event) {
             ModPotions.registerBrewing();
+        }
+        @SubscribeEvent(priority = EventPriority.LOWEST)
+        public static void onPostEntitySetup(final RegistryEvent.Register<EntityType<?>> event) {
+            DuckMod.postEntityInit();
         }
 
         @SubscribeEvent

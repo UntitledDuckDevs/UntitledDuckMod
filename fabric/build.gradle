@@ -1,10 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
-    id "com.matthewprenger.cursegradle"
-}
-
-configurations {
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
@@ -12,23 +7,28 @@ architectury {
     fabric()
 }
 
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+repositories {
+    maven { url "https://maven.terraformersmc.com/releases" }
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
-    modImplementation "software.bernie.geckolib:geckolib-fabric-1.17:${rootProject.geckolib_version_fabric}:dev"
-     modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
-	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
+    modImplementation "software.bernie.geckolib:geckolib-fabric-1.18:${rootProject.geckolib_version_fabric}"
+    modImplementation "com.terraformersmc:modmenu:${rootProject.mod_menu_version}"
+    //modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+	//modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
 
-    implementation(project(path: ":common")) {
-        transitive = false
-    }
-    developmentFabric(project(path: ":common")) {
-        transitive = false
-    }
-    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
-        transitive = false
-    }
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 
 processResources {
@@ -40,57 +40,71 @@ processResources {
 }
 
 shadowJar {
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
 }
 
 remapJar {
+    injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "fabric"
+    classifier 'fabric'
 }
 
 jar {
     classifier "dev"
 }
 
-java {
-    withSourcesJar()
-}
-
 sourcesJar {
-    def commonSources = project(":common").remapSourcesJar
+    def commonSources = project(":common").sourcesJar
     dependsOn commonSources
-    from zipTree(commonSources.output)
+    from commonSources.archiveFile.map { zipTree(it) }
 }
 
-if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKey')) {
-    curseforge {
-        apiKey = System.getenv("CURSEFORGE_KEY") ?: project.findProperty("curseforgeKey")
-        project {
-            id = "451766"
-            releaseType = "beta"
-            changelogType = 'text'
-            changelog = file('../CHANGELOG.md')
-            addGameVersion("1.17")
-            addGameVersion("Fabric")
-            addGameVersion("Java 16")
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
 
-            relations {
-                requiredDependency 'fabric-api'
-                requiredDependency 'geckolib-fabric'
-            }
+unifiedPublishing {
+    project {
+        displayName = "[Fabric $rootProject.supported_version] v$project.version"
+        changelog = new File("$rootProject.rootDir.toString()/docs/LATEST_CHANGES.md").getText('UTF-8')
+        releaseType = "beta" // Optional, use "release", "beta" or "alpha"
+        gameVersions = ["1.18.2"]
+        gameLoaders = ["fabric"]
 
-            mainArtifact(remapJar) {
-                displayName = "Untitled Duck Mod - ${rootProject.mod_version} - 1.17 (Fabric)"
+        mainPublication tasks.remapJar
+
+        relations {
+            depends {
+                curseforge = "fabric-api"
+                modrinth = "fabric-api"
             }
-            afterEvaluate {
-                uploadTask.dependsOn("build")
+            depends {
+                curseforge = "geckolib"
+            }
+            optional {
+                curseforge = "modmenu"
+                modrinth = "modmenu"
             }
         }
-        options {
-            //debug = true
-            forgeGradleIntegration = false
+
+        if  (System.getenv("CF_TOKEN") != null) {
+            curseforge {
+                token = System.getenv("CF_TOKEN")
+                id = "640166" // Required, must be a string, ID of CurseForge project
+            }
+        }
+
+        if  (System.getenv("MODRINTH_TOKEN") != null) {
+            modrinth {
+                token = System.getenv("MODRINTH_TOKEN")
+                id = "vkofLrpU"
+            }
         }
     }
-} // if
+}

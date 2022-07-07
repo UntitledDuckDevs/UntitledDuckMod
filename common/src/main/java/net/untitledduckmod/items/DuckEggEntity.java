@@ -24,15 +24,22 @@ public class DuckEggEntity extends ThrownItemEntity {
         this.mobEntityType = ModEntityTypes.getDuck();
     }
 
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z) {
+        // Used for client side rendering, so mobEntityType doesn't matter
+        super(entityType, x, y, z, world);
+        this.mobEntityType = ModEntityTypes.getDuck();
+    }
+
     public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, EntityType<? extends PassiveEntity> mobEntityType) {
         // This is the only constructor used on server side that matters
         super(entityType, owner, world);
         this.mobEntityType = mobEntityType;
     }
 
-    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z) {
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z, EntityType<? extends PassiveEntity> mobEntityType) {
+        // Used for dispensing the item
         super(entityType, x, y, z, world);
-        this.mobEntityType = ModEntityTypes.getDuck();
+        this.mobEntityType = mobEntityType;
     }
 
     @Environment(EnvType.CLIENT)

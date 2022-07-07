@@ -3,22 +3,22 @@ package net.untitledduckmod.forge;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
-import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.goose.GooseEntity;
-import net.untitledduckmod.ModSpawningSettings;
+import net.untitledduckmod.ModConfig;
 import net.untitledduckmod.items.DuckEggEntity;
 import net.untitledduckmod.registration.EntityTypeBuilders;
 
@@ -37,9 +37,9 @@ public class ModEntityTypesImpl {
         ENTITIES.register(bus);
     }
 
-    public static void registerAttributes() {
-        DefaultAttributeRegistry.put(DUCK.get(), DuckEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), DuckEntity.SWIM_SPEED_MULTIPLIER).build());
-        DefaultAttributeRegistry.put(GOOSE.get(), GooseEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), GooseEntity.SWIM_SPEED_MULTIPLIER).build());
+    public static void registerAttributes(EntityAttributeCreationEvent event) {
+        event.put(DUCK.get(), DuckEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), DuckEntity.SWIM_SPEED_MULTIPLIER).build());
+        event.put(GOOSE.get(), GooseEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), GooseEntity.SWIM_SPEED_MULTIPLIER).build());
     }
 
     public static void setupSpawning() {
@@ -55,8 +55,8 @@ public class ModEntityTypesImpl {
         if (event.getName() == null)
             return;
         List<SpawnSettings.SpawnEntry> spawner = event.getSpawns().getSpawner(SpawnGroup.CREATURE);
-        spawner.add(new SpawnSettings.SpawnEntry(DUCK.get(), ModSpawningSettings.Duck.WEIGHT, ModSpawningSettings.Duck.MIN_GROUP, ModSpawningSettings.Duck.MAX_GROUP));
-        spawner.add(new SpawnSettings.SpawnEntry(GOOSE.get(), ModSpawningSettings.Goose.WEIGHT, ModSpawningSettings.Goose.MIN_GROUP, ModSpawningSettings.Goose.MAX_GROUP));
+        spawner.add(new SpawnSettings.SpawnEntry(DUCK.get(), ModConfig.Duck.WEIGHT.get(), ModConfig.Duck.GROUP_SIZE.get(), ModConfig.Duck.GROUP_SIZE.get()));
+        spawner.add(new SpawnSettings.SpawnEntry(GOOSE.get(), ModConfig.Goose.WEIGHT.get(), ModConfig.Goose.GROUP_SIZE.get(), ModConfig.Goose.GROUP_SIZE.get()));
     }
 
     public static EntityType<DuckEntity> getDuck() {

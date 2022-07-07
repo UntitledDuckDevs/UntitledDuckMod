@@ -8,7 +8,7 @@ import software.bernie.geckolib3.GeckoLib;
 public class DuckModFabric implements ModInitializer {
     @Override
     public void onInitialize() {
-        DuckMod.init();
+        DuckMod.preInit();
         ModEntityTypes.register(null);
         ModEntityTypes.registerAttributes();
         ModEntityTypes.setupSpawning();
@@ -18,5 +18,6 @@ public class DuckModFabric implements ModInitializer {
         ModPotions.register();
         ModPotions.registerBrewing();
         GeckoLib.initialize();
+        DuckMod.postEntityInit();
     }
 }

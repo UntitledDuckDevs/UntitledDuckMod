@@ -2,11 +2,12 @@ package net.untitledduckmod.forge;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
@@ -37,7 +38,6 @@ public class ModItemsImpl {
     }
 
     public static void setup(Object optionalEvent) {
-        ForgeSpawnEggItem.addModdedEggs();
     }
 
     public static Item getDuckSpawnEgg() {

@@ -31,6 +31,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -57,9 +58,9 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     public static final String EGG_LAY_TIME_TAG = "gooseEggLayTime";
     public static final String VARIANT_TAG = "gooseVariant";
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
-    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
-    protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
-    private static final TrackedData<Integer> ANGER_TIME = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.BYTE);
+    protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final TrackedData<Integer> ANGER_TIME = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final UniformIntProvider ANGER_TIME_RANGE =  UniformIntProvider.create(20, 39);
     private UUID targetUuid;
 
@@ -533,7 +534,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     @Override
-    protected void swimUpward(Tag<Fluid> fluid) {
+    protected void swimUpward(TagKey<Fluid> fluid) {
         // This bypasses forge modifying jump depending on swim speed
         if (this.getNavigation().canSwim()) {
             this.setVelocity(this.getVelocity().add(0.0D, 0.03999999910593033D, 0.0D));
@@ -569,7 +570,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     @Override
-    public <A extends IAnimatable> void summonParticle(ParticleKeyFrameEvent<A> particleKeyFrameEvent) {
+    public void summonParticle(ParticleKeyFrameEvent particleKeyFrameEvent) {
         ItemStack stack = getMainHandStack();
         if (stack == ItemStack.EMPTY) {
             return;

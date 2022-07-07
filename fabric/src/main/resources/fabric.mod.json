@@ -3,14 +3,20 @@
   "id": "untitledduckmod",
   "version": "${version}",
   "name": "Untitled Duck Mod",
-  "description": "Ducks for Forge and Fabric! Powered by geckolib and architectury.",
+  "description": "Ducks and Geese for Forge and Fabric! Powered by geckolib and architectury.",
   "authors": [
-    "Paspartout",
+    "Okabintaro",
     "ArtistMonster24"
   ],
+  "contributors": [
+    "Frank <github.com/quiqueck>",
+    "Kevin Köllmann <github.com/koelle25>",
+    "Chubz <github.com/Chubzik1>"
+  ],
   "contact": {
-    "homepage": "https://github.com/UntitledAuthors/UntitledDuckMod",
-    "sources": "https://github.com/UntitledAuthors/UntitledDuckMod"
+    "homepage": "https://github.com/Okabintaro/UntitledDuckMod",
+    "sources":  "https://github.com/Okabintaro/UntitledDuckMod",
+    "issues":  "https://github.com/Okabintaro/UntitledDuckMod/issues"
   },
   "license": "MIT",
   "icon": "logo.png",
@@ -21,16 +27,24 @@
     ],
     "client": [
       "net.untitledduckmod.fabric.DuckModFabricClientSetup"
-    ]
+    ],
+    "modmenu": [ "net.untitledduckmod.fabric.config.DuckModMenu" ]
   },
   "depends": {
-    "fabricloader": ">=0.11.6",
+    "fabricloader": ">=0.14.0",
     "fabric": "*",
-    "minecraft": ">=1.17",
+    "minecraft": ">=1.18",
     "geckolib3": ">=3.0.5"
   },
   "mixins": [
     "untitledduckmod.mixins.json",
     "untitledduckmod_fabric.mixins.json"
-  ]
+  ],
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/M8B6gbN4NN"
+      }
+    }
+  }
 }

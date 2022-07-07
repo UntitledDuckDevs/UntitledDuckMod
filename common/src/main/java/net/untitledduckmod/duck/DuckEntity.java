@@ -24,6 +24,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -47,8 +48,8 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     public static final String IS_FROM_SACK_TAG = "isFromSack";
 
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
-    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
-    protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(TameableEntity.class, TrackedDataHandlerRegistry.BYTE);
+    protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(DuckEntity.class, TrackedDataHandlerRegistry.BYTE);
+    protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(DuckEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final byte ANIMATION_IDLE = 0;
     protected static final byte ANIMATION_CLEAN = 1;
     protected static final byte ANIMATION_DIVE = 2;
@@ -204,7 +205,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
                 ItemStack duckSack = new ItemStack(ModItems.getDuckSack());
                 NbtCompound sackData = new NbtCompound();
                 sackData.put("EntityTag", duckData);
-                duckSack.setTag(sackData);
+                duckSack.setNbt(sackData);
 
                 if (stackInHand.isEmpty()) {
                     player.setStackInHand(hand, duckSack);
@@ -213,7 +214,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
                 }
                 world.playSound(null, getBlockPos(), ModSoundEvents.getDuckSackUse(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
             } else {
-                LOGGER.error("Could not save duck data to duck sack!");
+                //LOGGER.error("Could not save duck data to duck sack!");
             }
 
             discard();
@@ -312,7 +313,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     }
 
     @Override
-    protected void swimUpward(Tag<Fluid> fluid) {
+    protected void swimUpward(TagKey<Fluid> fluid) {
         // This bypasses forge modifying jump depending on swim speed
         if (this.getNavigation().canSwim()) {
             this.setVelocity(this.getVelocity().add(0.0D, 0.03999999910593033D, 0.0D));

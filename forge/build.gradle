@@ -1,10 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
-    id "com.matthewprenger.cursegradle"
-}
-
-configurations {
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
@@ -13,23 +8,24 @@ architectury {
 }
 
 loom {
-    useFabricMixin = true
-    mixinConfig "untitledduckmod.mixins.json"
+    forge {
+    }
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
-    modImplementation "software.bernie.geckolib:geckolib-forge-1.17:${rootProject.geckolib_version_forge}"
+    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    modImplementation "software.bernie.geckolib:geckolib-forge-1.18:${rootProject.geckolib_version_forge}"
 
-    implementation(project(path: ":common")) {
-        transitive = false
-    }
-    developmentForge(project(path: ":common")) {
-        transitive = false
-    }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
-        transitive = false
-    }
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
 
 processResources {
@@ -42,57 +38,66 @@ processResources {
 
 shadowJar {
     exclude "fabric.mod.json"
+    exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
 }
 
 remapJar {
-    dependsOn(shadowJar)
-    input.set(shadowJar.archivePath)
-    classifier "forge"
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier 'forge'
 }
 
 jar {
     classifier "dev"
 }
 
-java {
-    withSourcesJar()
-}
-
 sourcesJar {
-    def commonSources = project(":common").remapSourcesJar
+    def commonSources = project(":common").sourcesJar
     dependsOn commonSources
-    from zipTree(commonSources.output)
+    from commonSources.archiveFile.map { zipTree(it) }
 }
 
-if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKey')) {
-    curseforge {
-        apiKey = System.getenv("CURSEFORGE_KEY") ?: project.findProperty("curseforgeKey")
-        project {
-            id = "451789"
-            releaseType = "beta"
-            changelogType = 'text'
-            changelog = file('../CHANGELOG.md')
-            addGameVersion("1.16.5")
-            addGameVersion("Java 8")
-            addGameVersion("Forge")
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
 
-            relations {
-                requiredDependency 'geckolib'
-            }
+unifiedPublishing {
+    project {
+        displayName = "[Forge $rootProject.supported_version] v$project.version"
+        changelog = new File("$rootProject.rootDir.toString()/docs/LATEST_CHANGES.md").getText('UTF-8')
+        releaseType = "beta" // Optional, use "release", "beta" or "alpha"
+        gameVersions = ["1.18.2"]
+        gameLoaders = ["forge"]
 
-            mainArtifact(remapJar) {
-                displayName = "Untitled Duck Mod - ${rootProject.mod_version} (Forge)"
+        mainPublication tasks.remapJar
+
+        relations {
+            depends {
+                curseforge = "fabric-api"
+                modrinth = "fabric-api"
             }
-            afterEvaluate {
-                uploadTask.dependsOn("build")
+            depends {
+                curseforge = "geckolib"
             }
         }
-        options {
-            //debug = true
-            forgeGradleIntegration = false
+
+        if  (System.getenv("CF_TOKEN") != null) {
+            curseforge {
+                token = System.getenv("CF_TOKEN")
+                id = "640166" // Required, must be a string, ID of CurseForge project
+            }
+        }
+
+        if  (System.getenv("MODRINTH_TOKEN") != null) {
+            modrinth {
+                token = System.getenv("MODRINTH_TOKEN")
+                id = "vkofLrpU"
+            }
         }
     }
-} // if
+}
