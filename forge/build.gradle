@@ -68,8 +68,8 @@ components.java {
 
 unifiedPublishing {
     project {
-        displayName = "[Forge $rootProject.supported_version] v$project.version"
-        changelog = new File("$rootProject.rootDir.toString()/docs/LATEST_CHANGES.md").getText('UTF-8')
+        displayName = "[Forge $rootProject.minecraft_version] v$project.version"
+        changelog = new File("${rootProject.rootDir.toPath().toString()}/docs/LATEST_CHANGES.md").getText('UTF-8')
         releaseType = "beta" // Optional, use "release", "beta" or "alpha"
         gameVersions = ["1.18.2"]
         gameLoaders = ["forge"]
@@ -77,10 +77,6 @@ unifiedPublishing {
         mainPublication tasks.remapJar
 
         relations {
-            depends {
-                curseforge = "fabric-api"
-                modrinth = "fabric-api"
-            }
             depends {
                 curseforge = "geckolib"
             }
