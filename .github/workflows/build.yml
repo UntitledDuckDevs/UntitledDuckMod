@@ -58,6 +58,8 @@ jobs:
       # Check out current repository
       - name: Fetch Sources
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       # Generate Changelog
       - name: Generate changelog using
         uses: orhun/git-cliff-action@v1
