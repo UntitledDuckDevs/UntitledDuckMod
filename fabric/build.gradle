@@ -68,3 +68,43 @@ components.java {
         skip()
     }
 }
+
+unifiedPublishing {
+    project {
+        displayName = "[Fabric $rootProject.supported_version] v$project.version"
+        changelog = new File("$rootProject.rootDir.toString()/docs/LATEST_CHANGES.md").getText('UTF-8')
+        releaseType = "beta" // Optional, use "release", "beta" or "alpha"
+        gameVersions = ["1.18.2"]
+        gameLoaders = ["fabric"]
+
+        mainPublication tasks.remapJar
+
+        relations {
+            depends {
+                curseforge = "fabric-api"
+                modrinth = "fabric-api"
+            }
+            depends {
+                curseforge = "geckolib"
+            }
+            optional {
+                curseforge = "modmenu"
+                modrinth = "modmenu"
+            }
+        }
+
+        if  (System.getenv("CF_TOKEN") != null) {
+            curseforge {
+                token = System.getenv("CF_TOKEN")
+                id = "640166" // Required, must be a string, ID of CurseForge project
+            }
+        }
+
+        if  (System.getenv("MODRINTH_TOKEN") != null) {
+            modrinth {
+                token = System.getenv("MODRINTH_TOKEN")
+                id = "vkofLrpU"
+            }
+        }
+    }
+}
