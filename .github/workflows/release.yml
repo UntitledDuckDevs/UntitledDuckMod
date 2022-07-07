@@ -28,33 +28,31 @@ jobs:
           ${{ github.event.release.body }}
           EOM
           )"
+          echo "$CHANGELOG" >docs/LATEST_CHANGES.md
+          cat docs/LATEST_CHANGES.md docs/CHANGELOG.md > /tmp/out && mv /tmp/out docs/CHANGELOG.md         
           
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
           CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-          echo "$CHANGELOG" >docs/LATEST_CHANGES.md
-          cat docs/LATEST_CHANGES.md docs
-          cat docs/LATEST_CHANGES.md docs/CHANGELOG.md > /tmp/out && mv /tmp/out docs/CHANGELOG.md
-
           echo "::set-output name=changelog::$CHANGELOG"
 
       # Build the mod
       - name: Build the mod
         run: ./gradlew build
 
-      # Publish the mod to curseforge and modrinth
-      - name: Upload Mod
-        run: ./gradlew forge:publishUnified fabric:publishUnified --stacktrace
-        env:
-          CF_TOKEN: ${{ secrets.CF_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          BRANCH_NAME: ${{ github.ref }}
-
       # Upload mod as a release asset
       - name: Upload mod to github releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload ${{ github.event.release.tag_name }} ./forge/build/libs/*-forge.jar ./forge/build/libs/*-fabric.jar
+        run: gh release upload ${{ github.event.release.tag_name }} ./forge/build/libs/*-forge.jar ./fabric/build/libs/*-fabric.jar
+
+      # Publish the mod to curseforge and modrinth
+      - name: Upload Mod
+        run: ./gradlew publishUnified --stacktrace
+        env:
+          CF_TOKEN: ${{ secrets.CF_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          BRANCH_NAME: ${{ github.ref }}
 
       # Create pull request for updated changelog
       - name: Create Pull Request

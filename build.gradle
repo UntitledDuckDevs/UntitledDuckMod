@@ -10,6 +10,7 @@ architectury {
 
 subprojects {
     apply plugin: "dev.architectury.loom"
+    apply plugin: "me.shedaniel.unified-publishing"
 
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
