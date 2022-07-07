@@ -7,9 +7,6 @@ architectury {
     fabric()
 }
 
-loom {
-}
-
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
@@ -53,7 +50,7 @@ remapJar {
     injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    classifier 'fabric'
 }
 
 jar {
@@ -71,34 +68,3 @@ components.java {
         skip()
     }
 }
-/*
-if (System.getenv("CURSEFORGE_KEY") != null || project.hasProperty('curseforgeKey')) {
-    curseforge {
-        apiKey = System.getenv("CURSEFORGE_KEY") ?: project.findProperty("curseforgeKey")
-        project {
-            id = "451766"
-            releaseType = "beta"
-            changelogType = 'text'
-            changelog = file('../CHANGELOG.md')
-            addGameVersion("1.17")
-            addGameVersion("Fabric")
-            addGameVersion("Java 16")
-
-            relations {
-                requiredDependency 'fabric-api'
-                requiredDependency 'geckolib-fabric'
-            }
-
-            mainArtifact(remapJar) {
-                displayName = "Untitled Duck Mod - ${rootProject.mod_version} - 1.17 (Fabric)"
-            }
-            afterEvaluate {
-                uploadTask.dependsOn("build")
-            }
-        }
-        options {
-            //debug = true
-            forgeGradleIntegration = false
-        }
-    }
-}*/

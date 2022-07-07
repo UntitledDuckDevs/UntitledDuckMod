@@ -19,9 +19,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 17
@@ -34,9 +32,8 @@ jobs:
       run: ./gradlew --info build
     - name: Upload Mod
       uses: actions/upload-artifact@v2
-      if: ${{ always() }}
       with:
         name: modjars
         path: |
-          forge/build/libs/*-forge.jar
-          fabric/build/libs/*-fabric.jar
+          forge/build/libs/*.jar
+          fabric/build/libs/*.jar
