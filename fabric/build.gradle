@@ -77,7 +77,7 @@ unifiedPublishing {
         gameVersions = ["${rootProject.minecraft_version}"]
         gameLoaders = ["fabric"]
 
-        mainPublication tasks.remapJar
+        mainPublication remapJar
 
         relations {
             depends {
