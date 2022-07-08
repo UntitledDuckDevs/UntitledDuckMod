@@ -104,6 +104,7 @@ unifiedPublishing {
             modrinth {
                 token = System.getenv("MODRINTH_TOKEN")
                 id = "ojFjz7JF"
+                version = "$project.version-$project.name"
             }
         }
     }
