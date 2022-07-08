@@ -3,10 +3,7 @@ package net.untitledduckmod.goose;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -37,6 +34,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
@@ -109,6 +108,12 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         this.setCanPickUpLoot(true);
     }
 
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        setVariant((byte) random.nextInt(2)); // Randomly choose between the two variants
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    }
+
     public static DefaultAttributeContainer.Builder getDefaultAttributes() {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 7.0D)
@@ -124,8 +129,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        byte variant = (byte) random.nextInt(2); // Chooses between 0 and 1 randomly
-        this.dataTracker.startTracking(VARIANT, variant);
+        this.dataTracker.startTracking(VARIANT, (byte)0);
         this.dataTracker.startTracking(ANIMATION, ANIMATION_IDLE);
         this.dataTracker.startTracking(ANGER_TIME, 0);
     }
@@ -143,7 +147,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         if (tag.contains(EGG_LAY_TIME_TAG)) {
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
         }
-        this.readAngerFromNbt((ServerWorld)this.world, tag);
+        this.readAngerFromNbt(this.world, tag);
     }
 
     public byte getVariant() {
