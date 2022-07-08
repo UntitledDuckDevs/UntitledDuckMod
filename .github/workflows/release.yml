@@ -4,6 +4,7 @@ name: Release
 on:
   release:
     types: [prereleased, released]
+  workflow_dispatch:
 
 jobs:
   # Prepare and publish the plugin to the Marketplace repository
@@ -48,7 +49,7 @@ jobs:
 
       # Publish the mod to curseforge and modrinth
       - name: Upload Mod
-        run: ./gradlew publishUnified --stacktrace
+        run: ./gradlew forge:publishUnified fabric:publishUnified --stacktrace
         env:
           CF_TOKEN: ${{ secrets.CF_TOKEN }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
