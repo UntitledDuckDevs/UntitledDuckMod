@@ -27,8 +27,8 @@ public class ModConfigImpl {
                 .defineInRange("duck_group_size", 4, 0, Integer.MAX_VALUE);
         configBuilder.pop();
 
-        ModConfig.Duck.WEIGHT = DUCK_WEIGHT;
-        ModConfig.Duck.GROUP_SIZE = DUCK_GROUP_SIZE;
+        ModConfig.Duck.WEIGHT = () -> DUCK_WEIGHT.get();
+        ModConfig.Duck.GROUP_SIZE = () -> DUCK_GROUP_SIZE.get();
     }
     public static void gooseConfig(ForgeConfigSpec.Builder configBuilder) {
         configBuilder.comment("Settings for the goose").push(CATEGORY_GOOSE);
@@ -41,8 +41,8 @@ public class ModConfigImpl {
                 .defineInRange("goose_group_size", 4, 0, Integer.MAX_VALUE);
         configBuilder.pop();
 
-        ModConfig.Goose.GROUP_SIZE = GOOSE_GROUP_SIZE;
-        ModConfig.Goose.WEIGHT = GOOSE_WEIGHT;
+        ModConfig.Goose.GROUP_SIZE = () -> GOOSE_GROUP_SIZE.get();
+        ModConfig.Goose.WEIGHT = () -> GOOSE_WEIGHT.get();
     }
 
     public static void setup() {
