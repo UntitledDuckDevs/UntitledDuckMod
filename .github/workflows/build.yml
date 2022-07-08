@@ -66,7 +66,7 @@ jobs:
         id: git-cliff
         with:
           config: cliff.toml
-          args: -vv --unreleased
+          args: -vv --unreleased --tag "v${{ needs.build.outputs.version }}"
       - name: Print changelog
         run: cat "${{ steps.git-cliff.outputs.changelog }}"
       # Remove old release drafts by using the curl request for the available releases with draft flag

@@ -1,12 +1,11 @@
 Untitled Duck Mod
 =================
 
-[![Download for Forge](http://cf.way2muchnoise.eu/title/untitled-duck-mod-forge.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-forge)
-[![Download for Fabric](http://cf.way2muchnoise.eu/title/untitled-duck-mod-fabric.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-fabric)
+[![Download from Curseforge](http://cf.way2muchnoise.eu/title/untitled-duck-mode.svg?badge_style=flat)](https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod)
+[![Download from Modrinth](https://img.shields.io/badge/Download-Modrinth-1bd96a?style=flat-square)](https://modrinth.com/mod/untitled-duck-mod)
 
-This mod simply adds ducks to minecraft.
-
-It is powered by [geckolib] and [architectury] and works on both fabric and forge in version 1.16.
+This mod adds ducks and geese to minecraft.
+It works on both fabric and forge since it is powered by [geckolib] and [architectury].
 
 Credits
 -------
