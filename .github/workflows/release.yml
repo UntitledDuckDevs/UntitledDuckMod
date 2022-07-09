@@ -9,7 +9,7 @@ on:
 jobs:
   # Prepare and publish the plugin to the Marketplace repository
   release:
-    name: Build and release mod to github
+    name: Build and upload mod
     runs-on: ubuntu-latest
     steps:
       # Set environment variables
@@ -42,21 +42,13 @@ jobs:
         run: ./gradlew build
 
       # Upload mod as a release asset
-      - name: Upload mod to github releases
+      - name: Upload to github releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload ${{ github.event.release.tag_name }} ./forge/build/libs/*-forge.jar ./fabric/build/libs/*-fabric.jar
 
-      # Publish the mod to curseforge and modrinth
-      - name: Upload Mod
-        run: ./gradlew forge:publishUnified fabric:publishUnified --stacktrace
-        env:
-          CF_TOKEN: ${{ secrets.CF_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          BRANCH_NAME: ${{ github.ref }}
-
       # Create pull request for updated changelog
-      - name: Create Pull Request
+      - name: Create Pull Request for changelog update
         if: ${{ steps.properties.outputs.changelog != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -73,5 +65,15 @@ jobs:
             --body "Current pull request contains patched \`CHANGELOG.md\` file for the \`$VERSION\` version." \
             --base master \
             --head $BRANCH
+
+      # Publish the mod to curseforge and modrinth
+      - name: Publish Mod
+        if: github.event_name == 'released'
+        run: ./gradlew publishUnified --stacktrace
+        env:
+          CF_TOKEN: ${{ secrets.CF_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          BRANCH_NAME: ${{ github.ref }}
+
 
 
