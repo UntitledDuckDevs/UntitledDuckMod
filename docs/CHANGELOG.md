@@ -1,3 +1,8 @@
+## Version ["v0.4.1"] - 2022-07-09
+
+### Bug fixes
+
+- Fix inspecio compatibility([#40](https://github.com/Okabintaro/UntitledDuckMod/issues/40))
 ## Version ["v0.4.0"] - 2022-07-08
 
 This release adds support for minecraft 1.18.2 on both fabric and forge again.
