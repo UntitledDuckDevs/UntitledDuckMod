@@ -43,12 +43,14 @@ jobs:
 
       # Upload mod as a release asset
       - name: Upload to github releases
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release upload ${{ github.event.release.tag_name }} ./forge/build/libs/*-forge.jar ./fabric/build/libs/*-fabric.jar
 
       # Create pull request for updated changelog
       - name: Create Pull Request for changelog update
+        continue-on-error: true
         if: ${{ steps.properties.outputs.changelog != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
