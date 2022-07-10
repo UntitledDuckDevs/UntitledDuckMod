@@ -5,10 +5,12 @@ It works on both fabric and forge since it is powered by [geckolib] and [archite
 
 If you encounter any bugs, please report them on the github issue tracker linked in this project.
 
+This is the fabric version of the mod. The forge version can be found at [here][udm-forge].
+
 ## Requirements
 
 You will need to install [geckolib] for this mod to work.
-Additionally, on fabric, make sure you have [fabric-api][fabric-api-mr] installed.
+Additionally, on fabric, make sure you have [fabric-api][fabric-api-cf] installed.
 
 ## Features
 
@@ -56,10 +58,7 @@ This is so they also spawn in modded biomes and similar to how vanilla animals s
 
 ### How can I configure the spawn rates?
 
-**Forge:** For forge the spawn rates are world/server specific and the configuration file is stored in `.minecraft/saves/YOURWORLD/serverconfig/untitledduckmod-server.toml`.
-In there you can adjust the spawn weight for each mob which basically makes them spawn more often the higher the value is.
-
-**Fabric:** The configuration file in fabric is stored in `.minecraft/config/untitledduckmod.json`.
+The configuration file in fabric is stored in `.minecraft/config/untitledduckmod.json`.
 There are no comments in this file, but you can adjust the number behind `duck_spawn_weight` and `goose_spawn_weight` to adjust how often they should spawn.
 Alternatively, if you have the [ModMenu][modmenu-mr] installed you can use the configuration ui to change these values.
 
@@ -91,3 +90,5 @@ Credits
 [quiqueck]: https://github.com/quiqueck
 [modmenu-mr]: https://modrinth.com/mod/modmenu
 [modmenu-cf]: https://www.curseforge.com/minecraft/mc-mods/modmenu
+[udm-fabric]: https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-fabric
+[udm-forge]: https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-forge

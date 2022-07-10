@@ -85,7 +85,7 @@ unifiedPublishing {
         if  (System.getenv("CF_TOKEN") != null) {
             curseforge {
                 token = System.getenv("CF_TOKEN")
-                id = "640166" // Required, must be a string, ID of CurseForge project
+                id = "451789" // Required, must be a string, ID of CurseForge project
             }
         }
 

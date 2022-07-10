@@ -5,10 +5,11 @@ It works on both fabric and forge since it is powered by [geckolib] and [archite
 
 If you encounter any bugs, please report them on the github issue tracker linked in this project.
 
+This is the forge version of the mod. The fabric version can be found at [here][udm-fabric].
+
 ## Requirements
 
 You will need to install [geckolib] for this mod to work.
-Additionally, on fabric, make sure you have [fabric-api][fabric-api-mr] installed.
 
 ## Features
 
@@ -91,3 +92,5 @@ Credits
 [quiqueck]: https://github.com/quiqueck
 [modmenu-mr]: https://modrinth.com/mod/modmenu
 [modmenu-cf]: https://www.curseforge.com/minecraft/mc-mods/modmenu
+[udm-fabric]: https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-fabric
+[udm-forge]: https://www.curseforge.com/minecraft/mc-mods/untitled-duck-mod-forge
