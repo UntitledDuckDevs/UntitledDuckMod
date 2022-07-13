@@ -1,5 +1,9 @@
-## Version ["v0.4.1"] - 2022-07-09
+## Version ["v0.5.0"] - 2022-07-13
+
+### Features
+
+- Buff goose health to 20 HP when tamed([#61](https://github.com/Okabintaro/UntitledDuckMod/issues/61))
 
 ### Bug fixes
 
-- Fix inspecio compatibility([#40](https://github.com/Okabintaro/UntitledDuckMod/issues/40))
+- Fix potion brewing and pillager intimidation by goose on forge([#63](https://github.com/Okabintaro/UntitledDuckMod/issues/63))
