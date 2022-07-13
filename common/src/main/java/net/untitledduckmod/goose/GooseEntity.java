@@ -122,6 +122,19 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     @Override
+    public void setTamed(boolean tamed) {
+        super.setTamed(tamed);
+        if (tamed) {
+            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+            setHealth(20.0F);
+        } else {
+            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(7.0);
+        }
+
+        getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(2.0);
+    }
+
+    @Override
     public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
