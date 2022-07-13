@@ -9,6 +9,7 @@ architectury {
 
 loom {
     forge {
+        mixinConfig "untitledduckmod.mixins.json"
     }
 }
 

@@ -27,7 +27,6 @@ public class DuckCleanGoal extends Goal {
 
     @Override
     public void start() {
-        //System.out.printf("[%d:%d] Start cleaning\n", nextCleanTime,duck.age);
         cleanTime = ANIMATION_LENGTH;
         duck.setAnimation(DuckEntity.ANIMATION_CLEAN);
         nextCleanTime = duck.age + (10 * 20 + duck.getRandom().nextInt(10) * 20);
