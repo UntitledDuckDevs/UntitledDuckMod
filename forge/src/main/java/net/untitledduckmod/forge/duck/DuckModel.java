@@ -15,17 +15,17 @@ public class DuckModel extends AnimatedGeoModel<DuckEntity> {
     private Identifier currentTexture = NORMAL_TEXTURE;
 
     @Override
-    public Identifier getModelLocation(DuckEntity object) {
+    public Identifier getModelResource(DuckEntity object) {
         return DuckModelIdentifiers.DUCK_MODEL_LOCATION;
     }
 
     @Override
-    public Identifier getTextureLocation(DuckEntity object) {
+    public Identifier getTextureResource(DuckEntity object) {
         return currentTexture;
     }
 
     @Override
-    public Identifier getAnimationFileLocation(DuckEntity animatable) {
+    public Identifier getAnimationResource(DuckEntity animatable) {
         return DuckModelIdentifiers.DUCK_ANIMATION_FILE_LOCATION;
     }
 

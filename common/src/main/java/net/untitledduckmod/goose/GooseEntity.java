@@ -27,7 +27,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.tag.Tag;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -244,11 +243,11 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     @Override
-    protected void onEquipStack(ItemStack stack) {
+    public void onEquipStack(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack) {
         if (world.isClient) {
             return;
         }
-        Entity holder = stack.getHolder();
+        Entity holder = newStack.getHolder();
         if (isAngry() && holder instanceof ItemEntity) {
             ItemEntity ie = (ItemEntity) holder;
             UUID thrower = ie.getThrower();
@@ -256,7 +255,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                stopAnger();
             }
         }
-        super.onEquipStack(stack);
+        super.onEquipStack(slot, oldStack, newStack);
     }
 
     @Override
@@ -397,7 +396,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
             }
 
             this.equipLootStack(equipmentSlot, equipment);
-            this.onEquipStack(equipment);
+            //this.onEquipStack(equipment);
             return true;
         } else {
             return false;

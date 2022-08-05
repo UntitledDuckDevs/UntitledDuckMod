@@ -9,7 +9,6 @@ import net.minecraft.world.biome.SpawnSettings;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -25,7 +24,7 @@ import net.untitledduckmod.registration.EntityTypeBuilders;
 import java.util.List;
 
 public class ModEntityTypesImpl {
-    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, DuckMod.MOD_ID);
+    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, DuckMod.MOD_ID);
 
     public static final RegistryObject<EntityType<DuckEntity>> DUCK = ENTITIES.register("duck", EntityTypeBuilders.DUCK);
     public static final RegistryObject<EntityType<DuckEggEntity>> DUCK_EGG = ENTITIES.register("duck_egg", EntityTypeBuilders.DUCK_EGG);
@@ -45,19 +44,9 @@ public class ModEntityTypesImpl {
     public static void setupSpawning() {
         SpawnRestriction.register(DUCK.get(), SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
         SpawnRestriction.register(GOOSE.get(), SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
-        MinecraftForge.EVENT_BUS.addListener(ModEntityTypesImpl::onBiomeLoading);
     }
 
-    private static void onBiomeLoading(BiomeLoadingEvent event) {
-        if (event.isCanceled()) {
-            return;
-        }
-        if (event.getName() == null)
-            return;
-        List<SpawnSettings.SpawnEntry> spawner = event.getSpawns().getSpawner(SpawnGroup.CREATURE);
-        spawner.add(new SpawnSettings.SpawnEntry(DUCK.get(), ModConfig.Duck.WEIGHT.get(), ModConfig.Duck.GROUP_SIZE.get(), ModConfig.Duck.GROUP_SIZE.get()));
-        spawner.add(new SpawnSettings.SpawnEntry(GOOSE.get(), ModConfig.Goose.WEIGHT.get(), ModConfig.Goose.GROUP_SIZE.get(), ModConfig.Goose.GROUP_SIZE.get()));
-    }
+    // TODO: Add BiomeModifier for Spawns(https://forge.gemwire.uk/wiki/Biome_Modifiers)
 
     public static EntityType<DuckEntity> getDuck() {
         return DUCK.get();

@@ -13,17 +13,17 @@ import static net.untitledduckmod.duck.DuckModelIdentifiers.*;
 
 public class GooseModel extends AnimatedGeoModel<GooseEntity> {
     @Override
-    public Identifier getModelLocation(GooseEntity object) {
+    public Identifier getModelResource(GooseEntity object) {
         return GOOSE_MODEL_LOCATION;
     }
 
     @Override
-    public Identifier getTextureLocation(GooseEntity entity) {
+    public Identifier getTextureResource(GooseEntity entity) {
         if (entity.isBaby()) {
             return GOSLING_TEXTURE;
         } else {
             if (entity.hasCustomName()) {
-                String name = entity.getCustomName().asString().toLowerCase();
+                String name = entity.getCustomName().getString().toLowerCase();
                 switch (name) {
                     case "ping":
                         return PING_GOOSE_TEXTURE;
@@ -39,7 +39,7 @@ public class GooseModel extends AnimatedGeoModel<GooseEntity> {
     }
 
     @Override
-    public Identifier getAnimationFileLocation(GooseEntity animatable) {
+    public Identifier getAnimationResource(GooseEntity animatable) {
         return GOOSE_ANIMATION_FILE_LOCATION;
     }
 

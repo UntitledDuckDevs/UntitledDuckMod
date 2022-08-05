@@ -9,7 +9,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -73,7 +72,7 @@ public class DuckSackItem extends Item {
             NbtCompound duckData = stack.getNbt();
             if (duckData != null && duckData.contains("EntityTag") && duckData.getCompound("EntityTag").contains("CustomName")) {
                 Text duckName = Text.Serializer.fromJson(duckData.getCompound("EntityTag").getString("CustomName"));
-                return new TranslatableText("item.untitledduckmod.duck_sack.named", duckName);
+                return Text.translatable("item.untitledduckmod.duck_sack.named", duckName);
             }
         }
         return super.getName(stack);

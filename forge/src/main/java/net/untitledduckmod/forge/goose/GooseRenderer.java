@@ -1,21 +1,29 @@
 package net.untitledduckmod.forge.goose;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import net.untitledduckmod.goose.GooseEntity;
-import net.untitledduckmod.forge.GeoMobRenderer;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
-public class GooseRenderer extends GeoMobRenderer<GooseEntity> {
+public class GooseRenderer extends GeoEntityRenderer<GooseEntity> {
+    private final HeldItemRenderer heldItemRenderer;
+
     public GooseRenderer(EntityRendererFactory.Context context) {
         super(context, new GooseModel());
+        this.heldItemRenderer = context.getHeldItemRenderer();
         this.shadowRadius = 0.3f;
+    }
+
+    public Identifier getTexture(GooseEntity entity) {
+        return getTextureLocation(entity);
     }
 
     GooseEntity goose;
@@ -34,8 +42,7 @@ public class GooseRenderer extends GeoMobRenderer<GooseEntity> {
             stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
             stack.scale(0.7f, 0.7f, 0.7f);
 
-            MinecraftClient.getInstance().getHeldItemRenderer().renderItem(goose, mainHand,
-                    ModelTransformation.Mode.GROUND, false, stack, rtb, packedLightIn);
+            heldItemRenderer.renderItem(goose, mainHand, ModelTransformation.Mode.GROUND, false, stack, rtb, packedLightIn);
             stack.pop();
 
             bufferIn = rtb.getBuffer(RenderLayer.getEntityCutout(whTexture));
