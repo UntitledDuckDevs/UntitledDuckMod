@@ -19,7 +19,7 @@ public class DuckDiveGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        // Don't dive if not near player
+        // Don't dive if not in water
         if (nextDiveTime > duck.age || duck.getDespawnCounter() >= 100 || !duck.isTouchingWater() || duck.getAnimation() != DuckEntity.ANIMATION_IDLE) {
             return false;
         }

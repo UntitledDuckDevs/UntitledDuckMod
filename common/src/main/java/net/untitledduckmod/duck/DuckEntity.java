@@ -66,8 +66,8 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     private static final AnimationBuilder SWIM_ANIM = new AnimationBuilder().addAnimation("swim", true);
     private static final AnimationBuilder SWIM_IDLE_ANIM = new AnimationBuilder().addAnimation("idle_swim", true);
     private static final AnimationBuilder CLEAN_ANIM = new AnimationBuilder().addAnimation("clean");
-    private static final AnimationBuilder SWIM_CLEAN_ANIM = new AnimationBuilder().addAnimation("clean_swim");
-    private static final AnimationBuilder DIVE_ANIM = new AnimationBuilder().addAnimation("dive");
+    private static final AnimationBuilder SWIM_CLEAN_ANIM = new AnimationBuilder().addAnimation("clean_swim").addAnimation("idle_swim");
+    private static final AnimationBuilder DIVE_ANIM = new AnimationBuilder().addAnimation("dive").addAnimation("idle_swim");
     private static final AnimationBuilder DANCE_ANIM = new AnimationBuilder().addAnimation("dance", true);
     private static final AnimationBuilder FLY_ANIM = new AnimationBuilder().addAnimation("fly", true);
     private static final AnimationBuilder PANIC_ANIM = new AnimationBuilder().addAnimation("panic", true);
