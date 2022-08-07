@@ -6,15 +6,19 @@ import net.fabricmc.fabric.mixin.object.builder.SpawnRestrictionAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
-import net.untitledduckmod.*;
+import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.ModConfig;
+import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.goose.GooseEntity;
 import net.untitledduckmod.items.DuckEggEntity;
 import net.untitledduckmod.registration.EntityTypeBuilders;
+
+import static net.untitledduckmod.ModEntityTypes.DUCK_BIOMES;
+import static net.untitledduckmod.ModEntityTypes.GOOSE_BIOMES;
 
 public class ModEntityTypesImpl {
     public static EntityType<DuckEntity> DUCK;
@@ -35,14 +39,14 @@ public class ModEntityTypesImpl {
     }
 
     public static void setupSpawning() {
-        SpawnRestrictionAccessor.callRegister(DUCK, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
-        SpawnRestrictionAccessor.callRegister(GOOSE, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
+        SpawnRestrictionAccessor.callRegister(DUCK, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
+        SpawnRestrictionAccessor.callRegister(GOOSE, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
         // BiomeModifications is experimental but approved
-        BiomeModifications.addSpawn(context -> true,SpawnGroup.CREATURE, ModEntityTypes.getDuck(),
+        BiomeModifications.addSpawn(context -> context.hasTag(DUCK_BIOMES), SpawnGroup.CREATURE, ModEntityTypes.getDuck(),
                 ModConfig.Duck.WEIGHT.get(),
                 ModConfig.Duck.GROUP_SIZE.get(),
                 ModConfig.Duck.GROUP_SIZE.get());
-        BiomeModifications.addSpawn(context -> true, SpawnGroup.CREATURE, ModEntityTypes.getGoose(),
+        BiomeModifications.addSpawn(context -> context.hasTag(GOOSE_BIOMES), SpawnGroup.CREATURE, ModEntityTypes.getGoose(),
                 ModConfig.Goose.WEIGHT.get(),
                 ModConfig.Goose.GROUP_SIZE.get(),
                 ModConfig.Goose.GROUP_SIZE.get());

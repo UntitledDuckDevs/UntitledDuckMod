@@ -1,10 +1,10 @@
 {
   "type": "forge:add_spawns",
-  "biomes": "minecraft:river",
+  "biomes": "#untitledduckmod:duck_spawn",
   "spawners":
   {
     "type": "untitledduckmod:duck",
-    "weight": 20,
+    "weight": 6,
     "minCount": 2,
     "maxCount": 4
   }
