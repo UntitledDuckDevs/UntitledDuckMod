@@ -36,6 +36,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
 import net.untitledduckmod.ModSoundEvents;
@@ -609,5 +610,10 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
     public boolean isHungry() {
         return isAngry() || getHealth() <= getMaxHealth() - 0.5f;
+    }
+
+    @Override
+    public boolean canSpawn(WorldView world) {
+        return world.doesNotIntersectEntities(this);
     }
 }

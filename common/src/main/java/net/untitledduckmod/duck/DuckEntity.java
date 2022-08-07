@@ -33,6 +33,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
 import net.untitledduckmod.ModSoundEvents;
@@ -331,6 +332,8 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
             this.setVelocity(this.getVelocity().add(0.0D, 0.3D, 0.0D));
         }
     }
+
+    public boolean canSpawn(WorldView world) { return world.doesNotIntersectEntities(this); }
 
     @Override
     public boolean cannotDespawn() {

@@ -42,8 +42,8 @@ public class ModEntityTypesImpl {
     }
 
     public static void setupSpawning() {
-        SpawnRestriction.register(DUCK.get(), SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
-        SpawnRestriction.register(GOOSE.get(), SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::isValidNaturalSpawn);
+        SpawnRestriction.register(DUCK.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
+        SpawnRestriction.register(GOOSE.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
     }
 
     // TODO: Add BiomeModifier for Spawns(https://forge.gemwire.uk/wiki/Biome_Modifiers)
