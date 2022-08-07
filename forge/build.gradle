@@ -48,7 +48,7 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "${rootProject.minecraft_version}-fabric"
+    classifier "${rootProject.minecraft_version}-forge"
 }
 
 jar {

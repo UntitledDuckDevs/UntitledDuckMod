@@ -27,8 +27,9 @@ jobs:
         java-version: 17
         distribution: 'temurin'
     - uses: gradle/gradle-build-action@v2
+      cache-disabled: true
     - name: Build with Gradle
-      run: ./gradlew --info build
+      run: ./gradlew --info --no-daemon build
     - name: Upload Mod as artifact
       uses: actions/upload-artifact@v3
       with:
