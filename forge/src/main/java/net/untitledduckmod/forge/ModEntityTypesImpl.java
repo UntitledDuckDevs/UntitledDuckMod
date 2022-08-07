@@ -3,6 +3,7 @@ package net.untitledduckmod.forge;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.mob.WaterCreatureEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.SpawnSettings;
@@ -16,19 +17,26 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.forge.duck.DuckEntityForge;
+import net.untitledduckmod.forge.goose.GooseEntityForge;
 import net.untitledduckmod.goose.GooseEntity;
 import net.untitledduckmod.ModConfig;
 import net.untitledduckmod.items.DuckEggEntity;
 import net.untitledduckmod.registration.EntityTypeBuilders;
 
 import java.util.List;
+import java.util.function.Supplier;
+
+import static net.untitledduckmod.registration.EntityTypeBuilders.build;
 
 public class ModEntityTypesImpl {
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, DuckMod.MOD_ID);
 
-    public static final RegistryObject<EntityType<DuckEntity>> DUCK = ENTITIES.register("duck", EntityTypeBuilders.DUCK);
+    public final static Supplier<EntityType<DuckEntityForge>> DUCK_FORGE_BUILDER = () -> (EntityType<DuckEntityForge>) build("duck", EntityType.Builder.create(DuckEntityForge::new, SpawnGroup.CREATURE).setDimensions(0.6f, 0.6f).maxTrackingRange(10));
+    public final static Supplier<EntityType<GooseEntityForge>> GOOSE_FORGE_BUILDER = () -> (EntityType<GooseEntityForge>) build("goose", EntityType.Builder.create(GooseEntityForge::new, SpawnGroup.CREATURE).setDimensions(0.7f, 1.2f).maxTrackingRange(10));
+    public static final RegistryObject<EntityType<DuckEntityForge>> DUCK = ENTITIES.register("duck", DUCK_FORGE_BUILDER);
     public static final RegistryObject<EntityType<DuckEggEntity>> DUCK_EGG = ENTITIES.register("duck_egg", EntityTypeBuilders.DUCK_EGG);
-    public static final RegistryObject<EntityType<GooseEntity>> GOOSE = ENTITIES.register("goose", EntityTypeBuilders.GOOSE);
+    public static final RegistryObject<EntityType<GooseEntityForge>> GOOSE = ENTITIES.register("goose", GOOSE_FORGE_BUILDER);
     public static final RegistryObject<EntityType<DuckEggEntity>> GOOSE_EGG = ENTITIES.register("goose_egg", EntityTypeBuilders.GOOSE_EGG);
 
     public static void register(Object optionalEvent) {
@@ -46,9 +54,7 @@ public class ModEntityTypesImpl {
         SpawnRestriction.register(GOOSE.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
     }
 
-    // TODO: Add BiomeModifier for Spawns(https://forge.gemwire.uk/wiki/Biome_Modifiers)
-
-    public static EntityType<DuckEntity> getDuck() {
+    public static EntityType<DuckEntityForge> getDuck() {
         return DUCK.get();
     }
 
@@ -56,7 +62,7 @@ public class ModEntityTypesImpl {
         return DUCK_EGG.get();
     }
 
-    public static EntityType<GooseEntity> getGoose() {
+    public static EntityType<GooseEntityForge> getGoose() {
         return GOOSE.get();
     }
 
