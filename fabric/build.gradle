@@ -24,8 +24,8 @@ dependencies {
 
     modImplementation "software.bernie.geckolib:geckolib-fabric-1.19:${rootProject.geckolib_version_fabric}"
     modImplementation "com.terraformersmc:modmenu:${rootProject.mod_menu_version}"
-    //modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
-	//modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
+    modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
