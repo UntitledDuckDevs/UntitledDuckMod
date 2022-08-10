@@ -6,12 +6,6 @@ name: Build Mod and create release draft
 on:
   push:
     branches: [ master, "1.18", "1.19" ]
-    paths:
-      - 'common/**'
-      - 'fabric/**'
-      - 'forge/**'
-      - '*.gradle'
-      - 'gradle.properties'
   pull_request:
   workflow_dispatch:
 
@@ -26,7 +20,7 @@ jobs:
       with:
         java-version: 17
         distribution: 'temurin'
-    - uses: gradle/gradle-build-action@v2
+    - uses: gradle/gradle-build-action@v2.2.2
       with:
         cache-disabled: true
     - name: Build with Gradle
