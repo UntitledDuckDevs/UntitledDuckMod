@@ -2,7 +2,6 @@ package net.untitledduckmod.fabric;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.mixin.object.builder.SpawnRestrictionAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
@@ -39,8 +38,8 @@ public class ModEntityTypesImpl {
     }
 
     public static void setupSpawning() {
-        SpawnRestrictionAccessor.callRegister(DUCK, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
-        SpawnRestrictionAccessor.callRegister(GOOSE, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
+        SpawnRestriction.register(DUCK, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
+        SpawnRestriction.register(GOOSE, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
         // BiomeModifications is experimental but approved
         BiomeModifications.addSpawn(context -> context.hasTag(DUCK_BIOMES), SpawnGroup.CREATURE, ModEntityTypes.getDuck(),
                 ModConfig.Duck.WEIGHT.get(),
