@@ -31,9 +31,9 @@
     "modmenu": [ "net.untitledduckmod.fabric.config.DuckModMenu" ]
   },
   "depends": {
-    "fabricloader": ">=0.14.0",
+    "fabricloader": ">=0.14.9",
     "fabric": "*",
-    "minecraft": ">=1.19",
+    "minecraft": ">=1.19.2",
     "geckolib3": ">=3.1.6"
   },
   "mixins": [
