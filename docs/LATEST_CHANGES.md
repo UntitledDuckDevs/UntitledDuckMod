@@ -1,9 +1,13 @@
-## Version ["v0.5.0"] - 2022-07-13
+## Version ["v0.6.1"] - 2022-09-02
 
-### Features
+This version fixes some bugs and drops support for 1.19 and 1.19.1.
 
-- Buff goose health to 20 HP when tamed([#61](https://github.com/Okabintaro/UntitledDuckMod/issues/61))
+### Changes
 
-### Bug fixes
+- Updated zh_tw translations by Pancakes0228([#71](https://github.com/Okabintaro/UntitledDuckMod/issues/71))
+- Add Simplified Chinese by Lymno([#67](https://github.com/Okabintaro/UntitledDuckMod/issues/67))
 
-- Fix potion brewing and pillager intimidation by goose on forge([#63](https://github.com/Okabintaro/UntitledDuckMod/issues/63))
+### Bug fixes(fabric)
+
+- Use SpawnRestriction directly, instead of the Accessor([#69](https://github.com/Okabintaro/UntitledDuckMod/issues/69))
+- Register missing duck sound events([#73](https://github.com/Okabintaro/UntitledDuckMod/issues/73))
