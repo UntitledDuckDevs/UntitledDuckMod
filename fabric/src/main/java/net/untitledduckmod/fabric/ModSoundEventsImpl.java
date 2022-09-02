@@ -25,12 +25,15 @@ public class ModSoundEventsImpl {
 
     public static void register(Object optionalEvent) {
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCK_AMBIENT, DUCK_AMBIENT);
-        Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCKLING_AMBIENT, DUCKLING_AMBIENT);
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCK_HURT, DUCK_HURT);
-        Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCKLING_HURT, DUCKLING_HURT);
+        Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCK_DEATH, DUCK_DEATH);
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCK_STEP, DUCK_STEP);
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCK_LAY_EGG, DUCK_LAY_EGG);
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCK_SACK_USE, DUCK_SACK_USE);
+
+        Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCKLING_AMBIENT, DUCKLING_AMBIENT);
+        Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCKLING_HURT, DUCKLING_HURT);
+        Registry.register(Registry.SOUND_EVENT, SoundIdentifier.DUCKLING_DEATH, DUCKLING_DEATH);
 
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.GOOSE_LAY_EGG, GOOSE_LAY_EGG);
         Registry.register(Registry.SOUND_EVENT, SoundIdentifier.GOOSE_HONK, GOOSE_HONK);
