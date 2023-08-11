@@ -20,7 +20,7 @@ public class DuckEggSpawnMixin {
 
     @Inject(method = "onEntitySpawn", at = @At("TAIL"))
     public void spawnDuckEgg(EntitySpawnS2CPacket packet, CallbackInfo info) {
-        EntityType<?> entityType = packet.getEntityTypeId();
+        EntityType<?> entityType = packet.getEntityType();
         if (entityType == ModEntityTypes.getDuckEgg() || entityType == ModEntityTypes.getGooseEgg()) {
             double x = packet.getX();
             double y = packet.getY();

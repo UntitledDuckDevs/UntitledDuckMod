@@ -1,17 +1,18 @@
 package net.untitledduckmod.fabric.goose;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.HeldItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.RotationAxis;
 import net.untitledduckmod.goose.GooseEntity;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class GooseRenderer extends GeoEntityRenderer<GooseEntity> {
     private final HeldItemRenderer heldItemRenderer;
@@ -22,27 +23,31 @@ public class GooseRenderer extends GeoEntityRenderer<GooseEntity> {
         this.heldItemRenderer = context.getHeldItemRenderer();
     }
 
-    GooseEntity goose;
-
     @Override
-    public void renderEarly(GooseEntity animatable, MatrixStack stackIn, float ticks, VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
-        goose = animatable;
-        super.renderEarly(animatable, stackIn, ticks, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, partialTicks);
+    public void preRender(MatrixStack poseStack, GooseEntity animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if (animatable.isBaby()) {
+            this.withScale(0.7f);
+        } else {
+            this.withScale(1.0f);
+        }
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
-    public void renderRecursively(GeoBone bone, MatrixStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderRecursively(MatrixStack poseStack, GooseEntity animatable, GeoBone bone, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        ItemStack mainHand = animatable.getMainHandStack();
         if (bone.getName().equals("beak") && !mainHand.isEmpty()) {
-            stack.push();
-            stack.translate(0, 1.15, -0.45);
-            stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90));
-            stack.scale(0.7f, 0.7f, 0.7f);
+            poseStack.push();
+            poseStack.translate(0.0, 1.15, -0.45);
 
-            heldItemRenderer.renderItem(goose, mainHand, ModelTransformation.Mode.GROUND, false, stack, rtb, packedLightIn);
-            stack.pop();
+            poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+            poseStack.scale(0.7f, 0.7f, 0.7f);
 
-            bufferIn = rtb.getBuffer(RenderLayer.getEntityCutout(whTexture));
+            heldItemRenderer.renderItem(animatable, mainHand, ModelTransformationMode.GROUND, false, poseStack, bufferSource, packedLight);
+            poseStack.pop();
+
+            buffer = bufferSource.getBuffer(RenderLayer.getEntityCutout(this.getTexture(animatable)));
         }
-        super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

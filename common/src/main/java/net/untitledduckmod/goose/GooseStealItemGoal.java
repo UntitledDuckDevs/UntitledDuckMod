@@ -70,7 +70,7 @@ public class GooseStealItemGoal extends Goal {
         if (goose.distanceTo(targetPlayer) <= 2.0f) {
             ItemStack stolenItemStack = playerHandStack.copy();
             stolenItemStack.setCount(1);
-            if (goose.tryEquip(stolenItemStack)) {
+            if (!goose.tryEquip(stolenItemStack).isEmpty()) {
                 playerHandStack.decrement(1);
             }
 

@@ -22,10 +22,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -39,15 +39,16 @@ import net.untitledduckmod.ModItems;
 import net.untitledduckmod.ModSoundEvents;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class DuckEntity extends AnimalEntity implements IAnimatable {
+public class DuckEntity extends AnimalEntity implements GeoAnimatable {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String EGG_LAY_TIME_TAG = "duckEggLayTime";
     public static final String VARIANT_TAG = "duckVariant";
@@ -61,21 +62,21 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     protected static final byte ANIMATION_DIVE = 2;
     protected static final byte ANIMATION_DANCE = 3;
     protected static final byte ANIMATION_PANIC = 4;
-    private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk", true);
-    private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle", true);
-    private static final AnimationBuilder SWIM_ANIM = new AnimationBuilder().addAnimation("swim", true);
-    private static final AnimationBuilder SWIM_IDLE_ANIM = new AnimationBuilder().addAnimation("idle_swim", true);
-    private static final AnimationBuilder CLEAN_ANIM = new AnimationBuilder().addAnimation("clean");
-    private static final AnimationBuilder SWIM_CLEAN_ANIM = new AnimationBuilder().addAnimation("clean_swim").addAnimation("idle_swim");
-    private static final AnimationBuilder DIVE_ANIM = new AnimationBuilder().addAnimation("dive").addAnimation("idle_swim");
-    private static final AnimationBuilder DANCE_ANIM = new AnimationBuilder().addAnimation("dance", true);
-    private static final AnimationBuilder FLY_ANIM = new AnimationBuilder().addAnimation("fly", true);
-    private static final AnimationBuilder PANIC_ANIM = new AnimationBuilder().addAnimation("panic", true);
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenPlay("walk");
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenPlay("idle");
+    private static final RawAnimation SWIM_ANIM = RawAnimation.begin().thenPlay("swim");
+    private static final RawAnimation SWIM_IDLE_ANIM = RawAnimation.begin().thenPlay("idle_swim");
+    private static final RawAnimation CLEAN_ANIM = RawAnimation.begin().thenPlay("clean");
+    private static final RawAnimation SWIM_CLEAN_ANIM = RawAnimation.begin().thenPlay("clean_swim").thenPlay("idle_swim");
+    private static final RawAnimation DIVE_ANIM = RawAnimation.begin().thenPlay("dive").thenPlay("idle_swim");
+    private static final RawAnimation DANCE_ANIM = RawAnimation.begin().thenPlay("dance");
+    private static final RawAnimation FLY_ANIM = RawAnimation.begin().thenPlay("fly");
+    private static final RawAnimation PANIC_ANIM = RawAnimation.begin().thenPlay("panic");
 
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
-    private final AnimationFactory factory = new AnimationFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private int eggLayTime;
     private boolean isFlapping;
     private boolean wasSongPlaying = false;
@@ -241,8 +242,8 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 2, this::predicate));
+    public void registerControllers(ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 2, this::predicate));
     }
 
     public boolean lookingAround() {
@@ -250,7 +251,7 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
     }
 
     @SuppressWarnings("rawtypes")
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         float limbSwingAmount = event.getLimbSwingAmount();
         boolean isMoving = !(limbSwingAmount > -0.05F && limbSwingAmount < 0.05F);
         boolean inWater = isTouchingWater();
@@ -262,33 +263,30 @@ public class DuckEntity extends AnimalEntity implements IAnimatable {
 
         byte currentAnimation = getAnimation();
         switch (currentAnimation) {
-            case ANIMATION_CLEAN:
-                controller.setAnimation(inWater ? SWIM_CLEAN_ANIM : CLEAN_ANIM);
-                break;
-            case ANIMATION_DIVE:
-                controller.setAnimation(DIVE_ANIM);
-                break;
-            case ANIMATION_DANCE:
-                controller.setAnimation(DANCE_ANIM);
-                break;
-            case ANIMATION_PANIC:
-                controller.setAnimation(PANIC_ANIM);
-                break;
-            default:
+            case ANIMATION_CLEAN -> controller.setAnimation(inWater ? SWIM_CLEAN_ANIM : CLEAN_ANIM);
+            case ANIMATION_DIVE -> controller.setAnimation(DIVE_ANIM);
+            case ANIMATION_DANCE -> controller.setAnimation(DANCE_ANIM);
+            case ANIMATION_PANIC -> controller.setAnimation(PANIC_ANIM);
+            default -> {
                 if (inWater) {
                     controller.setAnimation(isMoving ? SWIM_ANIM : SWIM_IDLE_ANIM);
                 } else {
                     controller.setAnimation(isMoving ? WALK_ANIM : IDLE_ANIM);
                 }
-                break;
+            }
         }
 
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object o) {
+        return this.age;
     }
 
     @Override

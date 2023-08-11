@@ -1,16 +1,16 @@
 package net.untitledduckmod.forge;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.potion.Potion;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.item.ItemGroups;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import net.untitledduckmod.*;
+
+import static net.untitledduckmod.forge.ModItemsImpl.*;
 
 @Mod(DuckMod.MOD_ID)
 public class DuckModForge {
@@ -42,8 +42,27 @@ public class DuckModForge {
         }
 
         @SubscribeEvent
-        public static void clientSetup(FMLClientSetupEvent event) {
-            DuckModForgeClientSetup.setupEntityRenderers();
+        public static void buildContentsOfCreativeModeTab(CreativeModeTabEvent.BuildContents event) {
+            if (event.getTab() == ItemGroups.SPAWN_EGGS) {
+                event.accept(DUCK_SPAWN_EGG);
+                event.accept(GOOSE_SPAWN_EGG);
+            } else if (event.getTab() == ItemGroups.INGREDIENTS) {
+                event.accept(DUCK_EGG);
+                event.accept(GOOSE_EGG);
+                event.accept(DUCK_FEATHER);
+                event.accept(GOOSE_FOOT);
+            } else if (event.getTab() == ItemGroups.COMBAT) {
+                event.accept(DUCK_EGG);
+                event.accept(GOOSE_EGG);
+            } else if (event.getTab() == ItemGroups.FOOD_AND_DRINK) {
+                event.accept(RAW_DUCK);
+                event.accept(COOKED_DUCK);
+                event.accept(RAW_GOOSE);
+                event.accept(COOKED_GOOSE);
+            } else if (event.getTab() == ItemGroups.TOOLS) {
+                event.accept(DUCK_SACK);
+                event.accept(EMPTY_DUCK_SACK);
+            }
         }
     }
 }

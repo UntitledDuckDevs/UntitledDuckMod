@@ -1,17 +1,19 @@
 package net.untitledduckmod.forge.goose;
 
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.untitledduckmod.goose.GooseEntity;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
-import java.util.Locale;
+import java.util.Objects;
 
 import static net.untitledduckmod.duck.DuckModelIdentifiers.*;
 
-public class GooseModel extends AnimatedGeoModel<GooseEntity> {
+public class GooseModel extends GeoModel<GooseEntity> {
     @Override
     public Identifier getModelResource(GooseEntity object) {
         return GOOSE_MODEL_LOCATION;
@@ -23,14 +25,17 @@ public class GooseModel extends AnimatedGeoModel<GooseEntity> {
             return GOSLING_TEXTURE;
         } else {
             if (entity.hasCustomName()) {
-                String name = entity.getCustomName().getString().toLowerCase();
+                String name = Objects.requireNonNull(entity.getCustomName()).getString().toLowerCase();
                 switch (name) {
-                    case "ping":
+                    case "ping" -> {
                         return PING_GOOSE_TEXTURE;
-                    case "sus":
+                    }
+                    case "sus" -> {
                         return SUS_GOOSE_TEXTURE;
-                    case "untitled":
+                    }
+                    case "untitled" -> {
                         return UNTITLED_GOOSE_TEXTURE;
+                    }
                 }
             }
         }
@@ -44,24 +49,14 @@ public class GooseModel extends AnimatedGeoModel<GooseEntity> {
     }
 
     @Override
-    public void setLivingAnimations(GooseEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    public void setCustomAnimations(GooseEntity animatable, long instanceId, AnimationState<GooseEntity> animationState) {
+        super.setCustomAnimations(animatable, instanceId, animationState);
 
-        if (entity.isBaby()) {
-            IBone root = this.getAnimationProcessor().getBone("root");
-            // TODO: Why are these checks needed in fabric? Maybe a bug in geckolib.
-            if (root != null) {
-                root.setScaleX(0.7f);
-                root.setScaleY(0.7f);
-                root.setScaleZ(0.7f);
-            }
-        }
-
-        IBone head = this.getAnimationProcessor().getBone("head");
-        if (entity.lookingAround() && head != null) {
-            EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-            head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
-            head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        if (animatable.lookingAround() && head != null) {
+            EntityModelData extraData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+            head.setRotX(extraData.headPitch() * MathHelper.RADIANS_PER_DEGREE);
+            head.setRotY(extraData.netHeadYaw() * MathHelper.RADIANS_PER_DEGREE);
         }
     }
 }

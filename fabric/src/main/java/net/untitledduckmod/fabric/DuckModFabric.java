@@ -2,7 +2,7 @@ package net.untitledduckmod.fabric;
 
 import net.fabricmc.api.ModInitializer;
 import net.untitledduckmod.*;
-import software.bernie.geckolib3.GeckoLib;
+import software.bernie.geckolib.GeckoLib;
 
 
 public class DuckModFabric implements ModInitializer {

@@ -49,11 +49,12 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.awt.Color;
+import java.awt.*;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -62,8 +63,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -138,7 +139,7 @@ public abstract class TinyConfig {
         info.id = modid;
 
         if (e != null) {
-            if (!e.name().equals("")) info.name = Text.translatable(e.name());
+            if (!e.name().isEmpty()) info.name = Text.translatable(e.name());
             if (type == int.class) textField(info, Integer::parseInt, INTEGER_ONLY, (int) e.min(), (int) e.max(), true);
             else if (type == float.class) textField(info, Float::parseFloat, DECIMAL_ONLY, (float) e.min(), (float) e.max(), false);
             else if (type == double.class) textField(info, Double::parseDouble, DECIMAL_ONLY, e.min(), e.max(), false);
@@ -256,21 +257,33 @@ public abstract class TinyConfig {
             super.init();
             if (!reload) loadValues();
 
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 154, this.height - 28, 150, 20, ScreenTexts.CANCEL, button -> {
-                loadValues();
-                Objects.requireNonNull(client).setScreen(parent);
-            }));
+            this.addDrawableChild(
+                new ButtonWidget.Builder(
+                    ScreenTexts.CANCEL,
+                    button -> {
+                        loadValues();
+                        Objects.requireNonNull(client).setScreen(parent);
+                    })
+                    .dimensions(this.width / 2 - 154, this.height - 28, 150, 20)
+                    .narrationSupplier(n -> ScreenTexts.CANCEL.copyContentOnly())
+                    .build());
 
-            ButtonWidget done = this.addDrawableChild(new ButtonWidget(this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, (button) -> {
-                for (EntryInfo info : entries)
-                    if (info.id.equals(modid)) {
-                        try {
-                            info.field.set(null, info.value);
-                        } catch (IllegalAccessException ignored) {}
-                    }
-                write(modid);
-                Objects.requireNonNull(client).setScreen(parent);
-            }));
+            ButtonWidget done = this.addDrawableChild(
+                new ButtonWidget.Builder(
+                    ScreenTexts.DONE,
+                    button -> {
+                        for (EntryInfo info : entries)
+                            if (info.id.equals(modid)) {
+                                try {
+                                    info.field.set(null, info.value);
+                                } catch (IllegalAccessException ignored) {}
+                            }
+                        write(modid);
+                        Objects.requireNonNull(client).setScreen(parent);
+                    })
+                    .dimensions(this.width / 2 + 4, this.height - 28, 150, 20)
+                    .narrationSupplier(n -> ScreenTexts.DONE.copyContentOnly())
+                    .build());
 
             this.list = new MidnightConfigListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
             if (this.client != null && this.client.world != null) this.list.setRenderBackground(false);
@@ -278,20 +291,34 @@ public abstract class TinyConfig {
             for (EntryInfo info : entries) {
                 if (info.id.equals(modid)) {
                     Text name = Objects.requireNonNullElseGet(info.name, () -> Text.translatable(translationPrefix + info.field.getName()));
-                    ButtonWidget resetButton = new ButtonWidget(width - 205, 0, 40, 20, Text.translatable("Reset").formatted(Formatting.RED), (button -> {
-                        info.value = info.defaultValue;
-                        info.tempValue = info.defaultValue.toString();
-                        info.index = 0;
-                        double scrollAmount = list.getScrollAmount();
-                        this.reload = true;
-                        Objects.requireNonNull(client).setScreen(this);
-                        list.setScrollAmount(scrollAmount);
-                    }));
+                    MutableText text = Text.translatable("Reset");
+                    ButtonWidget resetButton = new ButtonWidget.Builder(
+                        text.formatted(Formatting.RED),
+                        button -> {
+                            info.value = info.defaultValue;
+                            info.tempValue = info.defaultValue.toString();
+                            info.index = 0;
+                            double scrollAmount = list.getScrollAmount();
+                            this.reload = true;
+                            Objects.requireNonNull(client).setScreen(this);
+                            list.setScrollAmount(scrollAmount);
+                        })
+                        .dimensions(width - 205, 0, 40, 20)
+                        .narrationSupplier(n -> text)
+                        .build();
 
                     if (info.widget instanceof Map.Entry) {
                         Map.Entry<ButtonWidget.PressAction, Function<Object, Text>> widget = (Map.Entry<ButtonWidget.PressAction, Function<Object, Text>>) info.widget;
                         if (info.field.getType().isEnum()) widget.setValue(value -> Text.translatable(translationPrefix + "enum." + info.field.getType().getSimpleName() + "." + info.value.toString()));
-                        this.list.addButton(List.of(new ButtonWidget(width - 160, 0,150, 20, widget.getValue().apply(info.value), widget.getKey()),resetButton), name);
+                        Text text1 = widget.getValue().apply(info.value);
+                        this.list.addButton(
+                            List.of(
+                                new ButtonWidget.Builder(text1, widget.getKey())
+                                    .dimensions(width - 160, 0,150, 20)
+                                    .narrationSupplier(n -> text1.copyContentOnly())
+                                    .build(),
+                                resetButton),
+                            name);
                     } else if (info.field.getType() == List.class) {
                         if (!reload) info.index = 0;
                         TextFieldWidget widget = new TextFieldWidget(textRenderer, width - 160, 0, 150, 20, null);
@@ -302,15 +329,21 @@ public abstract class TinyConfig {
                         widget.setTextPredicate(processor);
                         resetButton.setWidth(20);
                         resetButton.setMessage(Text.literal("R").formatted(Formatting.RED));
-                        ButtonWidget cycleButton = new ButtonWidget(width - 185, 0, 20, 20, Text.literal(String.valueOf(info.index)).formatted(Formatting.GOLD), (button -> {
-                            ((List<String>)info.value).remove("");
-                            double scrollAmount = list.getScrollAmount();
-                            this.reload = true;
-                            info.index = info.index + 1;
-                            if (info.index > ((List<String>)info.value).size()) info.index = 0;
-                            Objects.requireNonNull(client).setScreen(this);
-                            list.setScrollAmount(scrollAmount);
-                        }));
+                        MutableText text1 = Text.literal(String.valueOf(info.index));
+                        ButtonWidget cycleButton = new ButtonWidget.Builder(
+                            text1.formatted(Formatting.GOLD),
+                            button -> {
+                                ((List<String>)info.value).remove("");
+                                double scrollAmount = list.getScrollAmount();
+                                this.reload = true;
+                                info.index = info.index + 1;
+                                if (info.index > ((List<String>)info.value).size()) info.index = 0;
+                                Objects.requireNonNull(client).setScreen(this);
+                                list.setScrollAmount(scrollAmount);
+                            })
+                            .dimensions(width - 185, 0, 20, 20)
+                            .narrationSupplier(n -> text1)
+                            .build();
                         this.list.addButton(List.of(widget, resetButton, cycleButton), name);
                     } else if (info.widget != null) {
                         TextFieldWidget widget = new TextFieldWidget(textRenderer, width - 160, 0, 150, 20, null);
@@ -321,7 +354,10 @@ public abstract class TinyConfig {
                         if (info.field.getAnnotation(Entry.class).isColor()) {
                             resetButton.setWidth(20);
                             resetButton.setMessage(Text.literal("R").formatted(Formatting.RED));
-                            ButtonWidget colorButton = new ButtonWidget(width - 185, 0, 20, 20, Text.literal("⬛"), (button -> {}));
+                            ButtonWidget colorButton = new ButtonWidget.Builder(
+                                Text.literal("⬛"), button -> {})
+                                .dimensions(width - 185, 0, 20, 20)
+                                .build();
                             try {colorButton.setMessage(Text.literal("⬛").setStyle(Style.EMPTY.withColor(Color.decode(info.tempValue).getRGB())));} catch (Exception ignored) {}
                             info.colorButton = colorButton;
                             this.list.addButton(List.of(widget, colorButton, resetButton), name);
@@ -338,7 +374,7 @@ public abstract class TinyConfig {
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             this.renderBackground(matrices);
             this.list.render(matrices, mouseX, mouseY, delta);
-            drawCenteredText(matrices, textRenderer, title, width / 2, 15, 0xFFFFFF);
+            drawCenteredTextWithShadow(matrices, textRenderer, title, width / 2, 15, 0xFFFFFF);
 
             for (EntryInfo info : entries) {
                 if (info.id.equals(modid)) {
@@ -404,7 +440,7 @@ public abstract class TinyConfig {
             return new ButtonEntry(buttons, text);
         }
         public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            buttons.forEach(b -> { b.y = y; b.render(matrices, mouseX, mouseY, tickDelta); });
+            buttons.forEach(b -> { b.setY(y); b.render(matrices, mouseX, mouseY, tickDelta); });
             if (text != null && (!text.getString().contains("spacer") || !buttons.isEmpty()))
                 DrawableHelper.drawTextWithShadow(matrices,textRenderer, text,12,y+5,0xFFFFFF);
         }

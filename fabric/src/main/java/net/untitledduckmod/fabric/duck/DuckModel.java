@@ -1,16 +1,17 @@
 package net.untitledduckmod.fabric.duck;
 
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.untitledduckmod.duck.DuckEntity;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 import static net.untitledduckmod.duck.DuckModelIdentifiers.*;
 
-public class DuckModel extends AnimatedGeoModel<DuckEntity> {
-    private Identifier currentTexture = NORMAL_TEXTURE;
+public class DuckModel extends GeoModel<DuckEntity> {
 
     @Override
     public Identifier getModelResource(DuckEntity object) {
@@ -18,8 +19,12 @@ public class DuckModel extends AnimatedGeoModel<DuckEntity> {
     }
 
     @Override
-    public Identifier getTextureResource(DuckEntity object) {
-        return currentTexture;
+    public Identifier getTextureResource(DuckEntity animatable) {
+        if (animatable.isBaby()) {
+            return DUCKLING_TEXTURE;
+        } else {
+            return animatable.getVariant() == 0 ? NORMAL_TEXTURE : FEMALE_TEXTURE;
+        }
     }
 
     @Override
@@ -28,27 +33,14 @@ public class DuckModel extends AnimatedGeoModel<DuckEntity> {
     }
 
     @Override
-    public void setLivingAnimations(DuckEntity entity, Integer uniqueID, AnimationEvent customPredicate) {
-        super.setLivingAnimations(entity, uniqueID, customPredicate);
+    public void setCustomAnimations(DuckEntity animatable, long instanceId, AnimationState<DuckEntity> animationState) {
+        super.setCustomAnimations(animatable, instanceId, animationState);
 
-        if (entity.isBaby()) {
-            IBone root = this.getAnimationProcessor().getBone("root");
-            // TODO: Why are these checks needed in fabric? Maybe a bug in geckolib.
-            if (root != null) {
-                root.setScaleX(0.7f);
-                root.setScaleY(0.7f);
-                root.setScaleZ(0.7f);
-            }
-            currentTexture = DUCKLING_TEXTURE;
-        } else {
-            currentTexture = entity.getVariant() == 0 ? NORMAL_TEXTURE : FEMALE_TEXTURE;
-        }
-
-        IBone head = this.getAnimationProcessor().getBone("head");
-        if (entity.lookingAround() && head != null) {
-            EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-            head.setRotationX(extraData.headPitch * ((float) Math.PI / 180F));
-            head.setRotationY(extraData.netHeadYaw * ((float) Math.PI / 180F));
+        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        if (animatable.lookingAround() && head != null) {
+            EntityModelData extraData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+            head.setRotX(extraData.headPitch() * MathHelper.RADIANS_PER_DEGREE);
+            head.setRotY(extraData.netHeadYaw() * MathHelper.RADIANS_PER_DEGREE);
         }
     }
 }

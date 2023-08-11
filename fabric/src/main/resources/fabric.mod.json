@@ -11,7 +11,8 @@
   "contributors": [
     "Frank <github.com/quiqueck>",
     "Kevin Köllmann <github.com/koelle25>",
-    "Chubz <github.com/Chubzik1>"
+    "Chubz <github.com/Chubzik1>",
+    "Utsuda Shinou  <github.com/utsudashinou>"
   ],
   "contact": {
     "homepage": "https://github.com/Okabintaro/UntitledDuckMod",
@@ -31,10 +32,10 @@
     "modmenu": [ "net.untitledduckmod.fabric.config.DuckModMenu" ]
   },
   "depends": {
-    "fabricloader": ">=0.14.9",
+    "fabricloader": ">=0.14.22",
     "fabric": "*",
-    "minecraft": ">=1.19.2",
-    "geckolib3": ">=3.1.6"
+    "minecraft": ">=1.19.4",
+    "geckolib": ">=4.2"
   },
   "mixins": [
     "untitledduckmod.mixins.json",
