@@ -6,8 +6,8 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.untitledduckmod.ModEntityTypes;
-import net.untitledduckmod.forge.duck.DuckRenderer;
-import net.untitledduckmod.forge.goose.GooseRenderer;
+import net.untitledduckmod.duck.DuckRenderer;
+import net.untitledduckmod.goose.GooseRenderer;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class DuckModForgeClientSetup {

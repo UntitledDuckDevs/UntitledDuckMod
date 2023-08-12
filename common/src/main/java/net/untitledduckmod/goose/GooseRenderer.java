@@ -1,4 +1,4 @@
-package net.untitledduckmod.fabric.goose;
+package net.untitledduckmod.goose;
 
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -9,7 +9,6 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
-import net.untitledduckmod.goose.GooseEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -19,8 +18,8 @@ public class GooseRenderer extends GeoEntityRenderer<GooseEntity> {
 
     public GooseRenderer(EntityRendererFactory.Context context) {
         super(context, new GooseModel());
-        this.shadowRadius = 0.3f;
         this.heldItemRenderer = context.getHeldItemRenderer();
+        this.shadowRadius = 0.3f;
     }
 
     @Override

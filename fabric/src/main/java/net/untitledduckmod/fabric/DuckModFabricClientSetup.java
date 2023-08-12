@@ -4,8 +4,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.untitledduckmod.ModEntityTypes;
-import net.untitledduckmod.fabric.duck.DuckRenderer;
-import net.untitledduckmod.fabric.goose.GooseRenderer;
+import net.untitledduckmod.duck.DuckRenderer;
+import net.untitledduckmod.goose.GooseRenderer;
 
 public class DuckModFabricClientSetup implements ClientModInitializer {
     @Override

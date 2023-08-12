@@ -1,8 +1,7 @@
-package net.untitledduckmod.fabric.goose;
+package net.untitledduckmod.goose;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.untitledduckmod.goose.GooseEntity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -14,7 +13,6 @@ import java.util.Objects;
 import static net.untitledduckmod.duck.DuckModelIdentifiers.*;
 
 public class GooseModel extends GeoModel<GooseEntity> {
-
     @Override
     public Identifier getModelResource(GooseEntity object) {
         return GOOSE_MODEL_LOCATION;
