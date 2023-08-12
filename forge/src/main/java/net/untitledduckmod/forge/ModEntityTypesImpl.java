@@ -44,9 +44,11 @@ public class ModEntityTypesImpl {
         ENTITIES.register(bus);
     }
 
-    public static void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(DUCK.get(), DuckEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), DuckEntity.SWIM_SPEED_MULTIPLIER).build());
-        event.put(GOOSE.get(), GooseEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), GooseEntity.SWIM_SPEED_MULTIPLIER).build());
+    public static void registerAttributes(Object optionalEvent) {
+        if (optionalEvent instanceof EntityAttributeCreationEvent event) {
+            event.put(DUCK.get(), DuckEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), DuckEntity.SWIM_SPEED_MULTIPLIER).build());
+            event.put(GOOSE.get(), GooseEntity.getDefaultAttributes().add(ForgeMod.SWIM_SPEED.get(), GooseEntity.SWIM_SPEED_MULTIPLIER).build());
+        }
     }
 
     public static void setupSpawning() {

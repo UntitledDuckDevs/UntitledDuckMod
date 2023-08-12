@@ -33,7 +33,7 @@ public class ModEntityTypesImpl {
         GOOSE_EGG = Registry.register(Registries.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "goose_egg"), EntityTypeBuilders.GOOSE_EGG.get());
     }
 
-    public static void registerAttributes() {
+    public static void registerAttributes(Object optionalEvent) {
         FabricDefaultAttributeRegistry.register(ModEntityTypesImpl.DUCK, DuckEntity.getDefaultAttributes());
         FabricDefaultAttributeRegistry.register(ModEntityTypesImpl.GOOSE, GooseEntity.getDefaultAttributes());
     }

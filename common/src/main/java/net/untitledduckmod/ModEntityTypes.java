@@ -20,7 +20,7 @@ public class ModEntityTypes {
     }
 
     @ExpectPlatform
-    public static void registerAttributes() {
+    public static void registerAttributes(Object optionalEvent) {
         throw new AssertionError();
     }
 
