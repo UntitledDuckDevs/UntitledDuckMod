@@ -3,28 +3,22 @@ package net.untitledduckmod.forge;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
-import net.minecraft.entity.mob.WaterCreatureEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.SpawnSettings;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.forge.duck.DuckEntityForge;
 import net.untitledduckmod.forge.goose.GooseEntityForge;
 import net.untitledduckmod.goose.GooseEntity;
-import net.untitledduckmod.ModConfig;
 import net.untitledduckmod.items.DuckEggEntity;
 import net.untitledduckmod.registration.EntityTypeBuilders;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 import static net.untitledduckmod.registration.EntityTypeBuilders.build;
@@ -52,8 +46,8 @@ public class ModEntityTypesImpl {
     }
 
     public static void setupSpawning() {
-        SpawnRestriction.register(DUCK.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
-        SpawnRestriction.register(GOOSE.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
+        SpawnRestriction.register(DUCK.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
+        SpawnRestriction.register(GOOSE.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
     }
 
     public static EntityType<DuckEntityForge> getDuck() {

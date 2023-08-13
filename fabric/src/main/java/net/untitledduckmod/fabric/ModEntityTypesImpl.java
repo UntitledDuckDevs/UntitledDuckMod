@@ -39,8 +39,8 @@ public class ModEntityTypesImpl {
     }
 
     public static void setupSpawning() {
-        SpawnRestriction.register(DUCK, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
-        SpawnRestriction.register(GOOSE, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
+        SpawnRestriction.register(DUCK, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
+        SpawnRestriction.register(GOOSE, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
         // BiomeModifications is experimental but approved
         BiomeModifications.addSpawn(context -> context.hasTag(DUCK_BIOMES), SpawnGroup.CREATURE, ModEntityTypes.getDuck(),
                 ModConfig.Duck.WEIGHT.get(),

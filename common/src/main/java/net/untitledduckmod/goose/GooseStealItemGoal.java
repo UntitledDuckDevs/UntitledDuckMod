@@ -18,7 +18,7 @@ public class GooseStealItemGoal extends Goal {
     public GooseStealItemGoal(GooseEntity goose) {
         this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
         this.goose = goose;
-        nextStealTime = goose.age + goose.getRandom().nextInt(20*60) + 20*60;
+        nextStealTime = goose.age + goose.getRandom().nextInt(20 * 60) + 20 * 60;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class GooseStealItemGoal extends Goal {
         }
         targetPlayer = goose.world.getClosestPlayer(goose.getX(), goose.getY(), goose.getZ(), 10.0D, true);
         if (targetPlayer == null) {
-            nextStealTime = goose.age + goose.getRandom().nextInt(10*20) + 10*20;
+            nextStealTime = goose.age + goose.getRandom().nextInt(10 * 20) + 10 * 20;
             return false;
         }
 
@@ -61,7 +61,7 @@ public class GooseStealItemGoal extends Goal {
 
     @Override
     public void stop() {
-        nextStealTime = goose.age + goose.getRandom().nextInt(20*60) + 20*60;
+        nextStealTime = goose.age + goose.getRandom().nextInt(20 * 60) + 20 * 60;
         targetPlayer = null;
     }
 

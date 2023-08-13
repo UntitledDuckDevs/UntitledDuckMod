@@ -8,7 +8,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class DuckRenderer extends GeoEntityRenderer<DuckEntity> {
-    public DuckRenderer(EntityRendererFactory.Context context){
+    public DuckRenderer(EntityRendererFactory.Context context) {
         super(context, new DuckModel());
         this.shadowRadius = 0.3f;
     }

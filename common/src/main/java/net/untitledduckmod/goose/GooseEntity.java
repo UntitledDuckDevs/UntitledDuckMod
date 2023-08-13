@@ -59,7 +59,7 @@ public class GooseEntity extends TameableEntity implements GeoAnimatable, Angera
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Integer> ANGER_TIME = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final UniformIntProvider ANGER_TIME_RANGE =  UniformIntProvider.create(20, 39);
+    private static final UniformIntProvider ANGER_TIME_RANGE = UniformIntProvider.create(20, 39);
     private UUID targetUuid;
 
     public static final byte ANIMATION_IDLE = 0;
@@ -141,7 +141,7 @@ public class GooseEntity extends TameableEntity implements GeoAnimatable, Angera
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(VARIANT, (byte)0);
+        this.dataTracker.startTracking(VARIANT, (byte) 0);
         this.dataTracker.startTracking(ANIMATION, ANIMATION_IDLE);
         this.dataTracker.startTracking(ANGER_TIME, 0);
     }
@@ -194,7 +194,7 @@ public class GooseEntity extends TameableEntity implements GeoAnimatable, Angera
     public void handleStatus(byte status) {
         if (status == 100) {
             ParticleEffect particleEffect = ParticleTypes.HAPPY_VILLAGER;
-            for(int i = 0; i < 7; ++i) {
+            for (int i = 0; i < 7; ++i) {
                 double d = this.random.nextGaussian() * 0.02D;
                 double e = this.random.nextGaussian() * 0.02D;
                 double f = this.random.nextGaussian() * 0.02D;
@@ -283,7 +283,7 @@ public class GooseEntity extends TameableEntity implements GeoAnimatable, Angera
             }
 
             // Trigger panic animation when being attacked or being on fire
-            if (!panicked && (((getHealth() < getMaxHealth()/2) || isBaby()) && (getAttacker() != null || isOnFire()))) {
+            if (!panicked && (((getHealth() < getMaxHealth() / 2) || isBaby()) && (getAttacker() != null || isOnFire()))) {
                 setAnimation(ANIMATION_PANIC);
                 panicked = true;
             } else if (panicked && getAttacker() == null && !isOnFire()) {
@@ -386,7 +386,7 @@ public class GooseEntity extends TameableEntity implements GeoAnimatable, Angera
         this.setAngryAt(null);
         this.setTarget(null);
         this.setAngerTime(0);
-        world.sendEntityStatus(this, (byte)100);
+        world.sendEntityStatus(this, (byte) 100);
     }
 
     @Override
@@ -495,7 +495,7 @@ public class GooseEntity extends TameableEntity implements GeoAnimatable, Angera
 
         ItemStack stack = getMainHandStack();
         stack.decrement(1);
-        playSound(getEatSound(stack), 0.5F + 0.5F * (float)this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+        playSound(getEatSound(stack), 0.5F + 0.5F * (float) this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
         if (stack.isEmpty()) {
             setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         }
@@ -591,13 +591,13 @@ public class GooseEntity extends TameableEntity implements GeoAnimatable, Angera
         if (stack == ItemStack.EMPTY) {
             return;
         }
-        for(int i = 0; i < 8; ++i) {
-            Vec3d vel = new Vec3d(((double)this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+        for (int i = 0; i < 8; ++i) {
+            Vec3d vel = new Vec3d(((double) this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
             vel = vel.rotateX(-this.getPitch() * 0.017453292F);
             vel = vel.rotateY(-this.getYaw() * 0.017453292F);
 
             Vec3d rotationVec = Vec3d.fromPolar(0, bodyYaw);
-            Vec3d pos = new Vec3d(this.getX() + rotationVec.x / 2.0D, getEyeY() - 0.2D, this.getZ() + rotationVec.z/2.0D);
+            Vec3d pos = new Vec3d(this.getX() + rotationVec.x / 2.0D, getEyeY() - 0.2D, this.getZ() + rotationVec.z / 2.0D);
             this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z,
                     vel.x, vel.y + 0.05D, vel.z);
         }

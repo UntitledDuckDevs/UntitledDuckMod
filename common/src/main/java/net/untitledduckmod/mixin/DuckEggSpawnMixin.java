@@ -28,8 +28,8 @@ public class DuckEggSpawnMixin {
             DuckEggEntity entity = new DuckEggEntity((EntityType<? extends ThrownItemEntity>) entityType, this.world, x, y, z);
             entity.updateTrackedPosition(x, y, z);
             entity.refreshPositionAfterTeleport(x, y, z);
-            entity.setPitch( (float) (packet.getPitch() * 360) / 256.0F );
-            entity.setYaw( (float) (packet.getYaw() * 360) / 256.0F );
+            entity.setPitch((packet.getPitch() * 360) / 256.0F);
+            entity.setYaw((packet.getYaw() * 360) / 256.0F);
             int id = packet.getId();
             entity.setId(id);
             entity.setUuid(packet.getUuid());

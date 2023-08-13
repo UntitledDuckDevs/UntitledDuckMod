@@ -91,8 +91,8 @@ public class DuckEntity extends AnimalEntity implements GeoAnimatable {
 
     public static DefaultAttributeContainer.Builder getDefaultAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 7.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2D);
+            .add(EntityAttributes.GENERIC_MAX_HEALTH, 7.0D)
+            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2D);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class DuckEntity extends AnimalEntity implements GeoAnimatable {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(VARIANT, (byte)0);
+        this.dataTracker.startTracking(VARIANT, (byte) 0);
         this.dataTracker.startTracking(ANIMATION, ANIMATION_IDLE);
     }
 
@@ -331,7 +331,9 @@ public class DuckEntity extends AnimalEntity implements GeoAnimatable {
         }
     }
 
-    public boolean canSpawn(WorldView world) { return world.doesNotIntersectEntities(this); }
+    public boolean canSpawn(WorldView world) {
+        return world.doesNotIntersectEntities(this);
+    }
 
     @Override
     public boolean cannotDespawn() {

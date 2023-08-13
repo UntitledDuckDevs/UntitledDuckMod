@@ -16,7 +16,7 @@ public class ModItemsImpl {
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DuckMod.MOD_ID);
 
     public static final RegistryObject<Item> DUCK_SPAWN_EGG = ITEMS.register(ItemSuppliers.DUCK_SPAWN_EGG_NAME,
-            () -> new ForgeSpawnEggItem(ModEntityTypes::getDuck, ModItems.DUCK_PRIMARY_COLOR, ModItems.DUCK_SECONDARY_COLOR, new Item.Settings()));
+        () -> new ForgeSpawnEggItem(ModEntityTypes::getDuck, ModItems.DUCK_PRIMARY_COLOR, ModItems.DUCK_SECONDARY_COLOR, new Item.Settings()));
     public static final RegistryObject<Item> DUCK_EGG = ITEMS.register(ItemSuppliers.DUCK_EGG_NAME, ItemSuppliers.DUCK_EGG);
     public static final RegistryObject<Item> RAW_DUCK = ITEMS.register(ItemSuppliers.RAW_DUCK_NAME, ItemSuppliers.RAW_DUCK);
     public static final RegistryObject<Item> COOKED_DUCK = ITEMS.register(ItemSuppliers.COOKED_DUCK_NAME, ItemSuppliers.COOKED_DUCK);
@@ -25,7 +25,7 @@ public class ModItemsImpl {
     public static final RegistryObject<Item> EMPTY_DUCK_SACK = ITEMS.register(ItemSuppliers.EMPTY_DUCK_SACK_NAME, ItemSuppliers.EMPTY_DUCK_SACK);
 
     public static final RegistryObject<Item> GOOSE_SPAWN_EGG = ITEMS.register(ItemSuppliers.GOOSE_SPAWN_EGG_NAME,
-            () -> new ForgeSpawnEggItem(ModEntityTypes::getGoose, ModItems.GOOSE_PRIMARY_COLOR, ModItems.GOOSE_SECONDARY_COLOR, new Item.Settings()));
+        () -> new ForgeSpawnEggItem(ModEntityTypes::getGoose, ModItems.GOOSE_PRIMARY_COLOR, ModItems.GOOSE_SECONDARY_COLOR, new Item.Settings()));
     public static final RegistryObject<Item> GOOSE_EGG = ITEMS.register(ItemSuppliers.GOOSE_EGG_NAME, ItemSuppliers.GOOSE_EGG);
     public static final RegistryObject<Item> RAW_GOOSE = ITEMS.register(ItemSuppliers.RAW_GOOSE_NAME, ItemSuppliers.RAW_GOOSE);
     public static final RegistryObject<Item> COOKED_GOOSE = ITEMS.register(ItemSuppliers.COOKED_GOOSE_NAME, ItemSuppliers.COOKED_GOOSE);

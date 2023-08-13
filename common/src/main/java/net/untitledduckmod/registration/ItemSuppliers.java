@@ -17,7 +17,7 @@ public class ItemSuppliers {
     public static final String DUCK_SPAWN_EGG_NAME = "duck_spawn_egg";
     public static final Identifier DUCK_SPAWN_EGG_ID = new Identifier(DuckMod.MOD_ID, DUCK_SPAWN_EGG_NAME);
     public static final Supplier<SpawnEggItem> DUCK_SPAWN_EGG = () -> new SpawnEggItem(ModEntityTypes.getDuck(),
-        ModItems.DUCK_PRIMARY_COLOR, ModItems.DUCK_SECONDARY_COLOR, new Item.Settings());
+            ModItems.DUCK_PRIMARY_COLOR, ModItems.DUCK_SECONDARY_COLOR, new Item.Settings());
 
     public static final String DUCK_EGG_NAME = "duck_egg";
     public static final Identifier DUCK_EGG_ID = new Identifier(DuckMod.MOD_ID, DUCK_EGG_NAME);
@@ -47,7 +47,7 @@ public class ItemSuppliers {
     public static final String GOOSE_SPAWN_EGG_NAME = "goose_spawn_egg";
     public static final Identifier GOOSE_SPAWN_EGG_ID = new Identifier(DuckMod.MOD_ID, GOOSE_SPAWN_EGG_NAME);
     public static final Supplier<SpawnEggItem> GOOSE_SPAWN_EGG = () -> new SpawnEggItem(ModEntityTypes.getGoose(),
-        ModItems.GOOSE_PRIMARY_COLOR, ModItems.GOOSE_SECONDARY_COLOR, new Item.Settings());
+            ModItems.GOOSE_PRIMARY_COLOR, ModItems.GOOSE_SECONDARY_COLOR, new Item.Settings());
 
     public static final String GOOSE_EGG_NAME = "goose_egg";
     public static final Identifier GOOSE_EGG_ID = new Identifier(DuckMod.MOD_ID, GOOSE_EGG_NAME);
