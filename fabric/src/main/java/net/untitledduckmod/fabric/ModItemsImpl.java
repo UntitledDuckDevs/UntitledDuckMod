@@ -38,39 +38,33 @@ public class ModItemsImpl {
         RAW_GOOSE = Registry.register(Registries.ITEM, ItemSuppliers.RAW_GOOSE_ID, ItemSuppliers.RAW_GOOSE.get());
         COOKED_GOOSE = Registry.register(Registries.ITEM, ItemSuppliers.COOKED_GOOSE_ID, ItemSuppliers.COOKED_GOOSE.get());
         GOOSE_FOOT = Registry.register(Registries.ITEM, ItemSuppliers.GOOSE_FOOT_ID, ItemSuppliers.GOOSE_FOOT.get());
-
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
-                content.add(DUCK_SPAWN_EGG.getDefaultStack());
-                content.add(GOOSE_SPAWN_EGG.getDefaultStack());
-            }
-        );
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(content -> {
-                content.add(DUCK_EGG.getDefaultStack());
-                content.add(GOOSE_EGG.getDefaultStack());
-                content.add(DUCK_FEATHER.getDefaultStack());
-                content.add(GOOSE_FOOT.getDefaultStack());
-            }
-        );
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
-                content.add(DUCK_EGG.getDefaultStack());
-                content.add(GOOSE_EGG.getDefaultStack());
-            }
-        );
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
-                content.add(RAW_DUCK.getDefaultStack());
-                content.add(COOKED_DUCK.getDefaultStack());
-                content.add(RAW_GOOSE.getDefaultStack());
-                content.add(COOKED_GOOSE.getDefaultStack());
-            }
-        );
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
-                content.add(DUCK_SACK.getDefaultStack());
-                content.add(EMPTY_DUCK_SACK.getDefaultStack());
-            }
-        );
     }
 
-    public static void setup(Object optionalEvent) {
+    public static void setupItemGroups(Object optionalEvent) {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(content -> {
+            content.add(DUCK_SPAWN_EGG.getDefaultStack());
+            content.add(GOOSE_SPAWN_EGG.getDefaultStack());
+        });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(content -> {
+            content.add(DUCK_EGG.getDefaultStack());
+            content.add(GOOSE_EGG.getDefaultStack());
+            content.add(DUCK_FEATHER.getDefaultStack());
+            content.add(GOOSE_FOOT.getDefaultStack());
+        });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(content -> {
+            content.add(DUCK_EGG.getDefaultStack());
+            content.add(GOOSE_EGG.getDefaultStack());
+        });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
+            content.add(RAW_DUCK.getDefaultStack());
+            content.add(COOKED_DUCK.getDefaultStack());
+            content.add(RAW_GOOSE.getDefaultStack());
+            content.add(COOKED_GOOSE.getDefaultStack());
+        });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
+            content.add(DUCK_SACK.getDefaultStack());
+            content.add(EMPTY_DUCK_SACK.getDefaultStack());
+        });
     }
 
     public static Item getDuckSpawnEgg() {
