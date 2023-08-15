@@ -11,7 +11,7 @@ public class DuckModFabric implements ModInitializer {
         DuckMod.preInit();
         ModEntityTypes.register(null);
         ModEntityTypes.registerAttributes(null);
-        ModEntityTypes.setupSpawning();
+        ModEntityTypes.setupSpawning(null);
         ModSoundEvents.register(null);
         ModItems.register(null);
         ModStatusEffects.register();

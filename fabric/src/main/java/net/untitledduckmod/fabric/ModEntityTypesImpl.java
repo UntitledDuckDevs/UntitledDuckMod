@@ -38,7 +38,7 @@ public class ModEntityTypesImpl {
         FabricDefaultAttributeRegistry.register(ModEntityTypesImpl.GOOSE, GooseEntity.getDefaultAttributes());
     }
 
-    public static void setupSpawning() {
+    public static void setupSpawning(Object optionalEvent) {
         SpawnRestriction.register(DUCK, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
         SpawnRestriction.register(GOOSE, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
         // BiomeModifications is experimental but approved

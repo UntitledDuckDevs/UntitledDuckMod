@@ -3,6 +3,7 @@ package net.untitledduckmod.forge;
 import net.minecraft.item.ItemGroups;
 import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -31,9 +32,13 @@ public class DuckModForge {
 
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event) {
-            ModEntityTypesImpl.setupSpawning();
             ModPotions.registerBrewing();
             DuckMod.postEntityInit();
+        }
+
+        @SubscribeEvent
+        public static void spawnSetting(SpawnPlacementRegisterEvent event) {
+            ModEntityTypes.setupSpawning(event);
         }
 
         @SubscribeEvent(priority = EventPriority.LOWEST)

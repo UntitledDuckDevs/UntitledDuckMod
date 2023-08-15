@@ -6,6 +6,7 @@ import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.world.Heightmap;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -45,9 +46,11 @@ public class ModEntityTypesImpl {
         }
     }
 
-    public static void setupSpawning() {
-        SpawnRestriction.register(DUCK.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
-        SpawnRestriction.register(GOOSE.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
+    public static void setupSpawning(Object optionalEvent) {
+        if (optionalEvent instanceof SpawnPlacementRegisterEvent event) {
+            event.register(DUCK.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true, SpawnPlacementRegisterEvent.Operation.OR);
+            event.register(GOOSE.get(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true, SpawnPlacementRegisterEvent.Operation.OR);
+        }
     }
 
     public static EntityType<DuckEntityForge> getDuck() {

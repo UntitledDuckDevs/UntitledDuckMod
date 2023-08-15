@@ -25,7 +25,7 @@ public class ModEntityTypes {
     }
 
     @ExpectPlatform
-    public static void setupSpawning() {
+    public static void setupSpawning(Object optionalEvent) {
         throw new AssertionError();
     }
 
