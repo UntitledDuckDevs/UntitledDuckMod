@@ -102,7 +102,7 @@ public class DuckEntity extends AnimalEntity implements GeoAnimatable {
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        setVariant((byte) random.nextInt(2)); // Randomly choose between the two variants
+        this.setVariant((byte) this.world.getRandom().nextInt(2)); // Randomly choose between the two variants
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
@@ -238,7 +238,11 @@ public class DuckEntity extends AnimalEntity implements GeoAnimatable {
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return ModEntityTypes.getDuck().create(world);
+        DuckEntity duckEntity = ModEntityTypes.getDuck().create(world);
+        if (duckEntity != null) {
+            duckEntity.setVariant((byte) this.world.getRandom().nextInt(2));
+        }
+        return duckEntity;
     }
 
     @Override
