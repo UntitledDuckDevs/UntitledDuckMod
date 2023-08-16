@@ -27,8 +27,8 @@ import static net.untitledduckmod.registration.EntityTypeBuilders.build;
 public class ModEntityTypesImpl {
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, DuckMod.MOD_ID);
 
-    public final static Supplier<EntityType<DuckEntityForge>> DUCK_FORGE_BUILDER = () -> (EntityType<DuckEntityForge>) build("duck", EntityType.Builder.create(DuckEntityForge::new, SpawnGroup.CREATURE).setDimensions(0.6f, 0.6f).maxTrackingRange(10));
-    public final static Supplier<EntityType<GooseEntityForge>> GOOSE_FORGE_BUILDER = () -> (EntityType<GooseEntityForge>) build("goose", EntityType.Builder.create(GooseEntityForge::new, SpawnGroup.CREATURE).setDimensions(0.7f, 1.2f).maxTrackingRange(10));
+    public final static Supplier<EntityType<DuckEntityForge>> DUCK_FORGE_BUILDER = () -> build("duck", EntityType.Builder.create(DuckEntityForge::new, SpawnGroup.CREATURE).setDimensions(0.6f, 0.6f).maxTrackingRange(10));
+    public final static Supplier<EntityType<GooseEntityForge>> GOOSE_FORGE_BUILDER = () -> build("goose", EntityType.Builder.create(GooseEntityForge::new, SpawnGroup.CREATURE).setDimensions(0.7f, 1.2f).maxTrackingRange(10));
     public static final RegistryObject<EntityType<DuckEntityForge>> DUCK = ENTITIES.register("duck", DUCK_FORGE_BUILDER);
     public static final RegistryObject<EntityType<DuckEggEntity>> DUCK_EGG = ENTITIES.register("duck_egg", EntityTypeBuilders.DUCK_EGG);
     public static final RegistryObject<EntityType<GooseEntityForge>> GOOSE = ENTITIES.register("goose", GOOSE_FORGE_BUILDER);
