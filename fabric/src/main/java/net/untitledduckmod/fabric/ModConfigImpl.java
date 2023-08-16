@@ -5,13 +5,15 @@ import net.untitledduckmod.ModConfig;
 import net.untitledduckmod.fabric.config.TinyConfig;
 
 public class ModConfigImpl extends TinyConfig {
-    @Comment public static Comment ducks;
+    @Comment
+    public static Comment ducks;
     @Entry
     public static int duck_spawn_weight = 6;
     @Entry
     public static int duck_group_size = 4;
 
-    @Comment public static Comment geese;
+    @Comment
+    public static Comment geese;
     @Entry
     public static int goose_spawn_weight = 4;
     @Entry

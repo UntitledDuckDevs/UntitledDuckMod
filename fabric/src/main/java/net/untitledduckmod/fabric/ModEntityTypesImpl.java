@@ -5,8 +5,9 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.ModConfig;
@@ -26,20 +27,20 @@ public class ModEntityTypesImpl {
     public static EntityType<DuckEggEntity> GOOSE_EGG;
 
     public static void register(Object optionalEvent) {
-        DUCK = Registry.register(Registry.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "duck"), EntityTypeBuilders.DUCK.get());
-        DUCK_EGG = Registry.register(Registry.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "duck_egg"), EntityTypeBuilders.DUCK_EGG.get());
-        GOOSE = Registry.register(Registry.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "goose"), EntityTypeBuilders.GOOSE.get());
-        GOOSE_EGG = Registry.register(Registry.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "goose_egg"), EntityTypeBuilders.GOOSE_EGG.get());
+        DUCK = Registry.register(Registries.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "duck"), EntityTypeBuilders.DUCK.get());
+        DUCK_EGG = Registry.register(Registries.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "duck_egg"), EntityTypeBuilders.DUCK_EGG.get());
+        GOOSE = Registry.register(Registries.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "goose"), EntityTypeBuilders.GOOSE.get());
+        GOOSE_EGG = Registry.register(Registries.ENTITY_TYPE, new Identifier(DuckMod.MOD_ID, "goose_egg"), EntityTypeBuilders.GOOSE_EGG.get());
     }
 
-    public static void registerAttributes() {
+    public static void registerAttributes(Object optionalEvent) {
         FabricDefaultAttributeRegistry.register(ModEntityTypesImpl.DUCK, DuckEntity.getDefaultAttributes());
         FabricDefaultAttributeRegistry.register(ModEntityTypesImpl.GOOSE, GooseEntity.getDefaultAttributes());
     }
 
-    public static void setupSpawning() {
-        SpawnRestriction.register(DUCK, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
-        SpawnRestriction.register(GOOSE, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a,b,c,d,e) -> true);
+    public static void setupSpawning(Object optionalEvent) {
+        SpawnRestriction.register(DUCK, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
+        SpawnRestriction.register(GOOSE, SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, (a, b, c, d, e) -> true);
         // BiomeModifications is experimental but approved
         BiomeModifications.addSpawn(context -> context.hasTag(DUCK_BIOMES), SpawnGroup.CREATURE, ModEntityTypes.getDuck(),
                 ModConfig.Duck.WEIGHT.get(),

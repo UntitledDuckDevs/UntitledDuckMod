@@ -25,42 +25,41 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.world.*;
 import net.untitledduckmod.ModEntityTypes;
 import net.untitledduckmod.ModItems;
 import net.untitledduckmod.ModSoundEvents;
 import net.untitledduckmod.duck.DuckSwimGoal;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.ParticleKeyFrameEvent;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.keyframe.event.ParticleKeyframeEvent;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Objects;
 import java.util.UUID;
 
-public class GooseEntity extends TameableEntity implements IAnimatable, Angerable, AnimationController.IParticleListener {
+public class GooseEntity extends TameableEntity implements GeoAnimatable, Angerable, AnimationController.ParticleKeyframeHandler<GooseEntity> {
     public static final String EGG_LAY_TIME_TAG = "gooseEggLayTime";
     public static final String VARIANT_TAG = "gooseVariant";
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Integer> ANGER_TIME = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final UniformIntProvider ANGER_TIME_RANGE =  UniformIntProvider.create(20, 39);
+    private static final UniformIntProvider ANGER_TIME_RANGE = UniformIntProvider.create(20, 39);
     private UUID targetUuid;
 
     public static final byte ANIMATION_IDLE = 0;
@@ -72,21 +71,21 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     public static final byte ANIMATION_EAT = 5;
     public static final byte ANIMATION_INTIMIDATE = 6;
 
-    private static final AnimationBuilder WALK_ANIM = new AnimationBuilder().addAnimation("walk", true);
-    private static final AnimationBuilder IDLE_ANIM = new AnimationBuilder().addAnimation("idle", true);
-    private static final AnimationBuilder SWIM_ANIM = new AnimationBuilder().addAnimation("swim", true);
-    private static final AnimationBuilder SWIM_IDLE_ANIM = new AnimationBuilder().addAnimation("idle_swim", true);
-    private static final AnimationBuilder PANIC_ANIM = new AnimationBuilder().addAnimation("panic", true);
-    private static final AnimationBuilder FLY_ANIM = new AnimationBuilder().addAnimation("fly", true);
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenPlay("walk");
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenPlay("idle");
+    private static final RawAnimation SWIM_ANIM = RawAnimation.begin().thenPlay("swim");
+    private static final RawAnimation SWIM_IDLE_ANIM = RawAnimation.begin().thenPlay("idle_swim");
+    private static final RawAnimation PANIC_ANIM = RawAnimation.begin().thenPlay("panic");
+    private static final RawAnimation FLY_ANIM = RawAnimation.begin().thenPlay("fly");
 
-    private static final AnimationBuilder CLEAN_ANIM = new AnimationBuilder().addAnimation("clean");
-    private static final AnimationBuilder EAT_ANIM = new AnimationBuilder().addAnimation("eat", true);
-    private static final AnimationBuilder INTIMIDATE_ANIM = new AnimationBuilder().addAnimation("intimidate", true);
+    private static final RawAnimation CLEAN_ANIM = RawAnimation.begin().thenPlay("clean");
+    private static final RawAnimation EAT_ANIM = RawAnimation.begin().thenPlay("eat");
+    private static final RawAnimation INTIMIDATE_ANIM = RawAnimation.begin().thenPlay("intimidate");
 
-    private static final AnimationBuilder HONK_ANIM = new AnimationBuilder().addAnimation("honk", true);
-    private static final AnimationBuilder BITE_ANIM = new AnimationBuilder().addAnimation("bite", true);
-    private static final AnimationBuilder SIT_ANIM = new AnimationBuilder().addAnimation("sit", true);
-    private static final AnimationBuilder CHARGE_ANIM = new AnimationBuilder().addAnimation("charge", true);
+    private static final RawAnimation HONK_ANIM = RawAnimation.begin().thenPlay("honk");
+    private static final RawAnimation BITE_ANIM = RawAnimation.begin().thenPlay("bite");
+    private static final RawAnimation SIT_ANIM = RawAnimation.begin().thenPlay("sit");
+    private static final RawAnimation CHARGE_ANIM = RawAnimation.begin().thenPlay("charge");
 
     public static final Ingredient FOOD = Ingredient.ofItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS,
             Items.KELP, Items.SEAGRASS);
@@ -94,7 +93,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     private static final Ingredient TAMING_INGREDIENT = Ingredient.ofItems(Items.KELP, Items.SEAGRASS);
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
-    private final AnimationFactory factory = new AnimationFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private int eggLayTime;
     private boolean isFlapping;
     private boolean wasSongPlaying = false;
@@ -110,7 +109,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        setVariant((byte) random.nextInt(2)); // Randomly choose between the two variants
+        this.setVariant((byte) this.world.getRandom().nextInt(2)); // Randomly choose between the two variants
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
@@ -125,13 +124,13 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     public void setTamed(boolean tamed) {
         super.setTamed(tamed);
         if (tamed) {
-            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+            Objects.requireNonNull(getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(20.0);
             setHealth(20.0F);
         } else {
-            getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(7.0);
+            Objects.requireNonNull(getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(7.0);
         }
 
-        getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(2.0);
+        Objects.requireNonNull(getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(2.0);
     }
 
     @Override
@@ -142,7 +141,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(VARIANT, (byte)0);
+        this.dataTracker.startTracking(VARIANT, (byte) 0);
         this.dataTracker.startTracking(ANIMATION, ANIMATION_IDLE);
         this.dataTracker.startTracking(ANGER_TIME, 0);
     }
@@ -195,7 +194,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     public void handleStatus(byte status) {
         if (status == 100) {
             ParticleEffect particleEffect = ParticleTypes.HAPPY_VILLAGER;
-            for(int i = 0; i < 7; ++i) {
+            for (int i = 0; i < 7; ++i) {
                 double d = this.random.nextGaussian() * 0.02D;
                 double e = this.random.nextGaussian() * 0.02D;
                 double f = this.random.nextGaussian() * 0.02D;
@@ -249,14 +248,20 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
             return;
         }
         Entity holder = newStack.getHolder();
-        if (isAngry() && holder instanceof ItemEntity) {
-            ItemEntity ie = (ItemEntity) holder;
-            UUID thrower = ie.getThrower();
+        if (holder != null && isAngry() && holder instanceof ItemEntity ie) {
+            UUID thrower = this.getThrower(ie);
             if (thrower != null) {
-               stopAnger();
+                stopAnger();
             }
         }
         super.onEquipStack(slot, oldStack, newStack);
+    }
+
+    private UUID getThrower(ItemEntity ie) {
+        NbtCompound nbt = new NbtCompound();
+        ie.writeCustomDataToNbt(nbt);
+        if (nbt.containsUuid("Thrower")) return nbt.getUuid("Thrower");
+        else return null;
     }
 
     @Override
@@ -278,7 +283,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
             }
 
             // Trigger panic animation when being attacked or being on fire
-            if (!panicked && (((getHealth() < getMaxHealth()/2) || isBaby()) && (getAttacker() != null || isOnFire()))) {
+            if (!panicked && (((getHealth() < getMaxHealth() / 2) || isBaby()) && (getAttacker() != null || isOnFire()))) {
                 setAnimation(ANIMATION_PANIC);
                 panicked = true;
             } else if (panicked && getAttacker() == null && !isOnFire()) {
@@ -325,7 +330,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                         if (!player.getAbilities().creativeMode) {
                             itemStack.decrement(1);
                         }
-                        if (tryEquip(newStack)) {
+                        if (!tryEquip(newStack).isEmpty()) {
                             stopAnger();
                         }
                     }
@@ -369,7 +374,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
             return;
         }
         // Don't pickup threw/spat items
-        if (item.getThrower() == this.getUuid()) {
+        if (this.getThrower(item) == this.getUuid()) {
             return;
         }
         super.loot(item);
@@ -381,11 +386,11 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
         this.setAngryAt(null);
         this.setTarget(null);
         this.setAngerTime(0);
-        world.sendEntityStatus(this, (byte)100);
+        world.sendEntityStatus(this, (byte) 100);
     }
 
     @Override
-    public boolean tryEquip(ItemStack equipment) {
+    public ItemStack tryEquip(ItemStack equipment) {
         EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
         ItemStack itemStack = getMainHandStack();
         if (FOOD.test(equipment) || this.canPickupItem(equipment)) {
@@ -398,9 +403,9 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
             this.equipLootStack(equipmentSlot, equipment);
             //this.onEquipStack(equipment);
-            return true;
+            return equipment;
         } else {
-            return false;
+            return ItemStack.EMPTY;
         }
     }
 
@@ -418,15 +423,18 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return ModEntityTypes.getGoose().create(world);
+        GooseEntity gooseEntity = ModEntityTypes.getGoose().create(world);
+        if (gooseEntity != null) {
+            gooseEntity.setVariant((byte) this.world.getRandom().nextInt(2));
+        }
+        return gooseEntity;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public void registerControllers(AnimationData data) {
-        AnimationController controller = new AnimationController<>(this, "controller", 2, this::predicate);
-        controller.registerParticleListener(this);
-        data.addAnimationController(controller);
+    public void registerControllers(ControllerRegistrar controllerRegistrar) {
+        AnimationController<GooseEntity> controller = new AnimationController<>(this, "controller", 2, this::predicate);
+        controller.setParticleKeyframeHandler(this);
+        controllerRegistrar.add(controller);
     }
 
     public boolean lookingAround() {
@@ -434,7 +442,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     @SuppressWarnings("rawtypes")
-    private <P extends IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         float limbSwingAmount = event.getLimbSwingAmount();
         boolean isMoving = !(limbSwingAmount > -0.05F && limbSwingAmount < 0.05F);
         boolean inWater = isTouchingWater();
@@ -451,26 +459,16 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
         byte currentAnimation = getAnimation();
         switch (currentAnimation) {
-            case ANIMATION_BITE:
+            case ANIMATION_BITE -> {
                 controller.setAnimation(BITE_ANIM);
                 animationTimer = ANIMATION_BITE_LEN;
-                break;
-            case ANIMATION_INTIMIDATE:
-                controller.setAnimation(INTIMIDATE_ANIM);
-                break;
-            case ANIMATION_EAT:
-                controller.setAnimation(EAT_ANIM);
-                break;
-            case ANIMATION_CLEAN:
-                controller.setAnimation(inWater ? SWIM_ANIM : CLEAN_ANIM);
-                break;
-            case ANIMATION_DANCE:
-                controller.setAnimation(HONK_ANIM);
-                break;
-            case ANIMATION_PANIC:
-                controller.setAnimation(PANIC_ANIM);
-                break;
-            default:
+            }
+            case ANIMATION_INTIMIDATE -> controller.setAnimation(INTIMIDATE_ANIM);
+            case ANIMATION_EAT -> controller.setAnimation(EAT_ANIM);
+            case ANIMATION_CLEAN -> controller.setAnimation(inWater ? SWIM_ANIM : CLEAN_ANIM);
+            case ANIMATION_DANCE -> controller.setAnimation(HONK_ANIM);
+            case ANIMATION_PANIC -> controller.setAnimation(PANIC_ANIM);
+            default -> {
                 if (inWater) {
                     controller.setAnimation(isMoving ? SWIM_ANIM : SWIM_IDLE_ANIM);
                 } else {
@@ -480,15 +478,20 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
                     }
                     controller.setAnimation(isMoving ? WALK_ANIM : IDLE_ANIM);
                 }
-                break;
+            }
         }
 
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object o) {
+        return this.age;
     }
 
     public void tryEating() {
@@ -496,7 +499,7 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
 
         ItemStack stack = getMainHandStack();
         stack.decrement(1);
-        playSound(getEatSound(stack), 0.5F + 0.5F * (float)this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+        playSound(getEatSound(stack), 0.5F + 0.5F * (float) this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
         if (stack.isEmpty()) {
             setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         }
@@ -587,18 +590,18 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     }
 
     @Override
-    public void summonParticle(ParticleKeyFrameEvent particleKeyFrameEvent) {
+    public void handle(ParticleKeyframeEvent particleKeyframeEvent) {
         ItemStack stack = getMainHandStack();
         if (stack == ItemStack.EMPTY) {
             return;
         }
-        for(int i = 0; i < 8; ++i) {
-            Vec3d vel = new Vec3d(((double)this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+        for (int i = 0; i < 8; ++i) {
+            Vec3d vel = new Vec3d(((double) this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
             vel = vel.rotateX(-this.getPitch() * 0.017453292F);
             vel = vel.rotateY(-this.getYaw() * 0.017453292F);
 
             Vec3d rotationVec = Vec3d.fromPolar(0, bodyYaw);
-            Vec3d pos = new Vec3d(this.getX() + rotationVec.x / 2.0D, getEyeY() - 0.2D, this.getZ() + rotationVec.z/2.0D);
+            Vec3d pos = new Vec3d(this.getX() + rotationVec.x / 2.0D, getEyeY() - 0.2D, this.getZ() + rotationVec.z / 2.0D);
             this.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z,
                     vel.x, vel.y + 0.05D, vel.z);
         }
@@ -615,5 +618,10 @@ public class GooseEntity extends TameableEntity implements IAnimatable, Angerabl
     @Override
     public boolean canSpawn(WorldView world) {
         return world.doesNotIntersectEntities(this);
+    }
+
+    @Override
+    public EntityView method_48926() {
+        return this.world;
     }
 }

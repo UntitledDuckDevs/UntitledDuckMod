@@ -1,16 +1,21 @@
 package net.untitledduckmod.forge;
 
-import net.minecraft.client.render.entity.EntityRenderers;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.untitledduckmod.ModEntityTypes;
-import net.untitledduckmod.forge.duck.DuckRenderer;
-import net.untitledduckmod.forge.goose.GooseRenderer;
+import net.untitledduckmod.duck.DuckRenderer;
+import net.untitledduckmod.goose.GooseRenderer;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class DuckModForgeClientSetup {
-    public static void setupEntityRenderers() {
-        EntityRenderers.register(ModEntityTypes.getDuck(), DuckRenderer::new);
-        EntityRenderers.register(ModEntityTypes.getDuckEgg(), FlyingItemEntityRenderer::new);
-        EntityRenderers.register(ModEntityTypes.getGoose(), GooseRenderer::new);
-        EntityRenderers.register(ModEntityTypes.getGooseEgg(), FlyingItemEntityRenderer::new);
+    @SubscribeEvent
+    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModEntityTypes.getDuck(), DuckRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.getDuckEgg(), FlyingItemEntityRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.getGoose(), GooseRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.getGooseEgg(), FlyingItemEntityRenderer::new);
     }
 }

@@ -35,11 +35,11 @@ public class DuckSackItem extends Item {
         final Direction blockSide = context.getSide();
         final Hand hand = context.getHand();
 
-        if(!world.isClient) {
+        if (!world.isClient) {
             placeCreature((ServerWorld) world, pos.offset(blockSide), context.getStack().getNbt());
             if (player != null) {
                 player.swingHand(hand);
-                if(!player.isCreative()) {
+                if (!player.isCreative()) {
                     player.setStackInHand(hand, new ItemStack(ModItems.getEmptyDuckSack()));
                 }
             }
@@ -57,12 +57,12 @@ public class DuckSackItem extends Item {
                 entityData.getCompound("EntityTag").remove("UUID");
             }
         }
-        DuckEntity newDuck = ModEntityTypes.getDuck().create(world, entityData, null, null, pos, SpawnReason.BUCKET, true, false);
+        DuckEntity newDuck = ModEntityTypes.getDuck().create(world, entityData, null, pos, SpawnReason.BUCKET, true, false);
         assert newDuck != null : "newDuck is null? This should not happen :(";
         newDuck.setFromSack(true);
         newDuck.setPos(pos.getX(), pos.getY(), pos.getZ());
 
-        newDuck.refreshPositionAndAngles((double)pos.getX() + 0.5D, (double)pos.getY() + 0.4D, (double)pos.getZ() + 0.5D, MathHelper.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
+        newDuck.refreshPositionAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.4D, (double) pos.getZ() + 0.5D, MathHelper.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
         world.spawnEntity(newDuck);
     }
 

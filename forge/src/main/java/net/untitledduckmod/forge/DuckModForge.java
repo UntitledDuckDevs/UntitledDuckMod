@@ -1,13 +1,11 @@
 package net.untitledduckmod.forge;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.potion.Potion;
-import net.minecraft.sound.SoundEvent;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import net.untitledduckmod.*;
@@ -31,19 +29,23 @@ public class DuckModForge {
 
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event) {
-            ModEntityTypesImpl.setupSpawning();
             ModPotions.registerBrewing();
             DuckMod.postEntityInit();
         }
 
+        @SubscribeEvent
+        public static void spawnSetting(SpawnPlacementRegisterEvent event) {
+            ModEntityTypes.setupSpawning(event);
+        }
+
         @SubscribeEvent(priority = EventPriority.LOWEST)
-        public static void onRegisterAttributes(final EntityAttributeCreationEvent event) {
-            ModEntityTypesImpl.registerAttributes(event);
+        public static void onRegisterAttributes(EntityAttributeCreationEvent event) {
+            ModEntityTypes.registerAttributes(event);
         }
 
         @SubscribeEvent
-        public static void clientSetup(FMLClientSetupEvent event) {
-            DuckModForgeClientSetup.setupEntityRenderers();
+        public static void buildContentsOfCreativeModeTab(CreativeModeTabEvent.BuildContents event) {
+            ModItems.setupItemGroups(event);
         }
     }
 }
