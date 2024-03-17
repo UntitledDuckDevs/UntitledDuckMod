@@ -65,4 +65,4 @@ date_order = false
 sort_commits = "oldest"
 
 # parse links to issues in the
-link_parsers = [{ pattern = "#(\\d+)", href = "https://github.com/Suel_ki/UntitledDuckMod/issues/$1"}]
+link_parsers = [{ pattern = "#(\\d+)", href = "https://github.com/Okabintaro/UntitledDuckMod/issues/$1"}]
