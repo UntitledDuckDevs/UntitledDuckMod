@@ -33,17 +33,6 @@
   "effect.untitledduckmod.intimidation": "威嚇",
   "item.minecraft.potion.effect.intimidation": "威嚇藥水",
   "item.minecraft.lingering_potion.effect.intimidation": "滯留 威嚇 藥水",
-  "item.minecraft.splash_potion.effect.intimidation": "飛濺 威嚇 藥水",
-
-  "untitledduckmod.config.title": "Untitled Duck Configuration",
-  "untitledduckmod.config.ducks": "Ducks",
-  "untitledduckmod.config.geese": "Geese",
-  "untitledduckmod.config.duck_spawn_weight": "Duck Spawn Weight",
-  "untitledduckmod.config.duck_group_size": "Duck Group Size",
-  "untitledduckmod.config.goose_spawn_weight": "Goose Spawn Weight",
-  "untitledduckmod.config.goose_group_size": "Goose Spawn Group Size",
-  "untitledduckmod.config.duck_spawn_weight.tooltip": "How often ducks spawn (the higher, the more often)",
-  "untitledduckmod.config.goose_spawn_weight.tooltip": "How often geese spawn (the higher, the more often)",
-  "untitledduckmod.config.duck_group_size.tooltip": "In what group size ducks spawn",
-  "untitledduckmod.config.goose_group_size.tooltip": "In what group size geese spawn"
+  "item.minecraft.splash_potion.effect.intimidation": "飛濺 威嚇 藥水"
 }
+

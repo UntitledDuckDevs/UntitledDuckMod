@@ -36,14 +36,23 @@
   "item.minecraft.splash_potion.effect.intimidation": "Wurftrank der Einschüchterung",
 
   "untitledduckmod.config.title": "Untitled Duck Mod Einstellungen",
+  "untitledduckmod.config.category.ducks": "Enten",
+  "untitledduckmod.config.category.geese": "Gänse",
+  "untitledduckmod.config.category.intimidation": "Einschüchterung",
   "untitledduckmod.config.ducks": "Enten",
   "untitledduckmod.config.geese": "Gänse",
   "untitledduckmod.config.duck_spawn_weight": "Enten Spawngewicht",
-  "untitledduckmod.config.duck_group_size": "Enten Gruppengröße",
+  "untitledduckmod.config.duck_min_group_size": "Enten Minimale Gruppengröße",
+  "untitledduckmod.config.duck_max_group_size": "Enten Maximale Gruppengröße",
   "untitledduckmod.config.goose_spawn_weight": "Gänsen Spawngewicht",
-  "untitledduckmod.config.goose_group_size": "Gänsen Gruppengröße",
+  "untitledduckmod.config.goose_min_group_size": "Gänsen Minimale Gruppengröße",
+  "untitledduckmod.config.goose_max_group_size": "Gänsen Maximale Gruppengröße",
+  "untitledduckmod.config.intimidation_blacklist": "Einschüchterung Schwarze Liste",
   "untitledduckmod.config.duck_spawn_weight.tooltip": "Wie oft Enten spawnen(je größer, desto öfter)",
   "untitledduckmod.config.goose_spawn_weight.tooltip": "Wie oft Gänse spawnen(je größer, desto öfter)",
-  "untitledduckmod.config.duck_group_size.tooltip": "In welcher Gruppengröße Enten spawnen",
-  "untitledduckmod.config.goose_group_size.tooltip": "In welcher Gruppengröße Gänse spawnen"
+  "untitledduckmod.config.duck_min_group_size.tooltip": "In welcher Minimale Gruppengröße Enten spawnen",
+  "untitledduckmod.config.duck_max_group_size.tooltip": "In welcher Maximale Gruppengröße Enten spawnen",
+  "untitledduckmod.config.goose_min_group_size.tooltip": "In welcher Minimale Gruppengröße Gänse spawnen",
+  "untitledduckmod.config.goose_max_group_size.tooltip": "In welcher Maximale Gruppengröße Gänse spawnen",
+  "untitledduckmod.config.intimidation_blacklist.tooltip": "Einschüchtern Effekte funktionieren nicht auf Mobs in der Liste"
 }

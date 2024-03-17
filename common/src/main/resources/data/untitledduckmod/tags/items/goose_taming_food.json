@@ -1,0 +1,7 @@
+{
+  "__comment":"Foods that can be used for taming geese",
+  "values": [
+    "minecraft:kelp",
+    "minecraft:seagrass"
+  ]
+}

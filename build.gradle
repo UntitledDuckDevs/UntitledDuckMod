@@ -1,7 +1,7 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id 'dev.architectury.loom' version "0.12.0-SNAPSHOT" apply false
-    id "me.shedaniel.unified-publishing" version "0.1.+"
+    id "architectury-plugin" version "3.4.154"
+    id "dev.architectury.loom" version "1.5.389" apply false
+    id "io.github.p03w.machete" version "2.0.1"
 }
 
 architectury {
@@ -10,27 +10,67 @@ architectury {
 
 subprojects {
     apply plugin: "dev.architectury.loom"
-    apply plugin: "me.shedaniel.unified-publishing"
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
+    apply plugin: 'idea'
+    apply plugin: 'io.github.p03w.machete'
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    repositories {
+        maven {
+            name = "Jitpack"
+            url "https://jitpack.io"
+        }
+        maven {
+            name = "Modrinth Maven"
+            url "https://api.modrinth.com/maven"
+        }
+        maven {
+            name = "Geckolib Maven"
+            url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        }
+        maven {
+            name = "Curse Maven"
+            url "https://www.cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+    }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
+        minecraft "com.mojang:minecraft:${minecraft_version}"
+        mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release = 17
+    }
+
+    machete {
+        json.enabled = false
     }
 }
 
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
 
-    archivesBaseName = rootProject.archives_base_name
+    base {
+        archivesName = rootProject.archives_base_name
+    }
+
     version = rootProject.mod_version
     group = rootProject.maven_group
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-
     repositories {
-        maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     }
 
     tasks.withType(JavaCompile) {

@@ -3,10 +3,9 @@ architectury {
 }
 
 dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "software.bernie.geckolib:geckolib-fabric-1.20.1:${rootProject.geckolib_version_forge}"
 
-    // ONLY use core package from geckolib!
-    modImplementation "software.bernie.geckolib:geckolib-fabric-1.19:${geckolib_version_fabric}"
+    modApi "curse.maven:jade-324717:${jade_id_fabric}"
 }
+

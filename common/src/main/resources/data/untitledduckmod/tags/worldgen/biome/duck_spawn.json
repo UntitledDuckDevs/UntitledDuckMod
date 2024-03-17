@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     {
       "id": "#minecraft:is_river",
@@ -7,6 +6,14 @@
     },
     {
       "id": "#c:river",
+      "required": false
+    },
+    {
+      "id": "#forge:is_swamp",
+      "required": false
+    },
+    {
+      "id": "#c:swamp",
       "required": false
     }
   ]

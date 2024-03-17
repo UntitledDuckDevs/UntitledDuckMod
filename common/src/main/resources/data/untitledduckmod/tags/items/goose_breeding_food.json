@@ -1,0 +1,9 @@
+{
+  "__comment":"Foods that can be used for goose breeding",
+  "values": [
+    "minecraft:wheat_seeds",
+    "minecraft:melon_seeds",
+    "minecraft:pumpkin_seeds",
+    "minecraft:beetroot_seeds"
+  ]
+}

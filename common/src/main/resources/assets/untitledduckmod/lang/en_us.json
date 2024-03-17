@@ -36,14 +36,23 @@
   "item.minecraft.splash_potion.effect.intimidation": "Splash Potion of Intimidation",
 
   "untitledduckmod.config.title": "Untitled Duck Configuration",
+  "untitledduckmod.config.category.ducks": "Ducks",
+  "untitledduckmod.config.category.geese": "Geese",
+  "untitledduckmod.config.category.intimidation": "Intimidation",
   "untitledduckmod.config.ducks": "Ducks",
   "untitledduckmod.config.geese": "Geese",
   "untitledduckmod.config.duck_spawn_weight": "Duck Spawn Weight",
-  "untitledduckmod.config.duck_group_size": "Duck Group Size",
+  "untitledduckmod.config.duck_min_group_size": "Duck Minimum Group Size",
+  "untitledduckmod.config.duck_max_group_size": "Duck Maximum Group Size",
   "untitledduckmod.config.goose_spawn_weight": "Goose Spawn Weight",
-  "untitledduckmod.config.goose_group_size": "Goose Spawn Group Size",
+  "untitledduckmod.config.goose_min_group_size": "Goose Minimum Spawn Group Size",
+  "untitledduckmod.config.goose_max_group_size": "Goose Maximum Spawn Group Size",
+  "untitledduckmod.config.intimidation_blacklist": "Intimidate Blacklist",
   "untitledduckmod.config.duck_spawn_weight.tooltip": "How often ducks spawn (the higher, the more often)",
   "untitledduckmod.config.goose_spawn_weight.tooltip": "How often geese spawn (the higher, the more often)",
-  "untitledduckmod.config.duck_group_size.tooltip": "In what group size ducks spawn",
-  "untitledduckmod.config.goose_group_size.tooltip": "In what group size geese spawn"
+  "untitledduckmod.config.duck_min_group_size.tooltip": "In what minimum group size ducks spawn",
+  "untitledduckmod.config.duck_max_group_size.tooltip": "In what maximum group size ducks spawn",
+  "untitledduckmod.config.goose_min_group_size.tooltip": "In what minimum group size geese spawn",
+  "untitledduckmod.config.goose_max_group_size.tooltip": "In what maximum group size geese spawn",
+  "untitledduckmod.config.intimidation_blacklist.tooltip": "Intimidate effects don't work on mobs in the list"
 }

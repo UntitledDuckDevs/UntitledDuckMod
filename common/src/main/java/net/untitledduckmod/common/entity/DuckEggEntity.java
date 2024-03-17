@@ -1,0 +1,90 @@
+package net.untitledduckmod.common.entity;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
+import net.minecraft.item.Item;
+import net.minecraft.particle.ItemStackParticleEffect;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.World;
+import net.untitledduckmod.common.init.ModEntityTypes;
+import net.untitledduckmod.common.init.ModItems;
+
+public class DuckEggEntity extends ThrownItemEntity {
+    private final EntityType<? extends PassiveEntity> mobEntityType;
+
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
+        super(entityType, world);
+        this.mobEntityType = ModEntityTypes.getDuck();
+    }
+
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z) {
+        // Used for client side rendering, so mobEntityType doesn't matter
+        super(entityType, x, y, z, world);
+        this.mobEntityType = ModEntityTypes.getDuck();
+    }
+
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, EntityType<? extends PassiveEntity> mobEntityType) {
+        // This is the only constructor used on server side that matters
+        super(entityType, owner, world);
+        this.mobEntityType = mobEntityType;
+    }
+
+    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z, EntityType<? extends PassiveEntity> mobEntityType) {
+        // Used for dispensing the item
+        super(entityType, x, y, z, world);
+        this.mobEntityType = mobEntityType;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void handleStatus(byte status) {
+        if (status == 3) {
+            for (int i = 0; i < 8; ++i) {
+                this.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, this.getStack()), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
+            }
+        }
+    }
+
+    protected void onEntityHit(EntityHitResult entityHitResult) {
+        super.onEntityHit(entityHitResult);
+        entityHitResult.getEntity().damage(this.getDamageSources().thrown(this, this.getOwner()), 0.0F);
+    }
+
+    protected void onCollision(HitResult hitResult) {
+        super.onCollision(hitResult);
+        World world = this.getWorld();
+        if (!world.isClient) {
+            if (this.random.nextInt(8) == 0) {
+                int i = 1;
+                if (this.random.nextInt(32) == 0) {
+                    i = 4;
+                }
+
+                for (int j = 0; j < i; ++j) {
+                    PassiveEntity duckEntity = mobEntityType.create(this.getWorld());
+                    if (duckEntity != null) {
+                        duckEntity.setBreedingAge(-24000);
+                        duckEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
+                        world.spawnEntity(duckEntity);
+                    }
+                }
+            }
+
+            world.sendEntityStatus(this, (byte) 3);
+            this.discard();
+        }
+    }
+
+    protected Item getDefaultItem() {
+        if (mobEntityType == ModEntityTypes.getDuck()) {
+            return ModItems.DUCK_EGG.get();
+        } else {
+            return ModItems.GOOSE_EGG.get();
+        }
+    }
+}
