@@ -66,14 +66,39 @@ components.java {
     }
 }
 
-publishing {
-    publications {
-        mavenForge(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
-            from components.java
-        }
-    }
+unifiedPublishing {
+    project {
+        displayName = "[Forge $rootProject.minecraft_version] v$project.version"
+        changelog = new File("${rootProject.rootDir.toPath().toString()}/docs/LATEST_CHANGES.md").getText('UTF-8')
+        releaseType = "beta" // Optional, use "release", "beta" or "alpha"
+        gameVersions = ["1.20.1"]
+        gameLoaders = ["forge"]
 
-    repositories {
+        mainPublication remapJar
+
+        relations {
+            depends {
+                curseforge = "geckolib"
+            }
+            optional {
+                curseforge = "jade"
+                modrinth = "jade"
+            }
+        }
+
+        if  (System.getenv("CF_TOKEN") != null) {
+            curseforge {
+                token = System.getenv("CF_TOKEN")
+                id = "451789" // Required, must be a string, ID of CurseForge project
+            }
+        }
+
+        if  (System.getenv("MODRINTH_TOKEN") != null) {
+            modrinth {
+                token = System.getenv("MODRINTH_TOKEN")
+                id = "ojFjz7JF"
+                version = "$project.version-$project.name-${rootProject.minecraft_version}"
+            }
+        }
     }
 }
