@@ -31,7 +31,7 @@ side = "BOTH"
 [[dependencies.untitledduckmod]]
 modId = "geckolib"
 mandatory = true
-versionRange = "[4.4.2,)"
+versionRange = "[4.4.4,)"
 ordering = "AFTER"
 side = "BOTH"
 

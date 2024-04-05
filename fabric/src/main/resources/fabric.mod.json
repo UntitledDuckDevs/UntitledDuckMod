@@ -41,7 +41,7 @@
     "fabric": "*",
     "fabricloader": ">=0.15.6",
     "minecraft": ">=1.20.1",
-    "geckolib": ">=4.4.2"
+    "geckolib": ">=4.4.4"
   },
   "mixins": [
     "untitledduckmod.mixins.json",
