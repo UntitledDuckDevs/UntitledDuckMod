@@ -57,5 +57,5 @@
   "untitledduckmod.config.duck_max_group_size.tooltip": "每次生成的最大鸭数量",
   "untitledduckmod.config.goose_min_group_size.tooltip": "每次生成的最大鹅数量",
   "untitledduckmod.config.goose_max_group_size.tooltip": "每次生成的最大鹅数量",
-  "untitledduckmod.config.intimidation_blacklist.tooltip": "恐吓药水效果对列表中的生物无效"
+  "untitledduckmod.config.intimidation_blacklist.tooltip": "恐吓效果对列表中的生物无效"
 }
