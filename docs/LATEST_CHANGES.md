@@ -7,7 +7,7 @@
 - Ducks can fish now([#53](https://github.com/Okabintaro/UntitledDuckMod/issues/53))
 - Tamed ducks can catch treasure when fishing
 - Ducks can now spawn in swamps too
-- Introduce #untitledduckmod:ducks_spawnable_on 和 #untitledduckmod:geese_spawnable_on tags
+- Introduce the following tags: #untitledduckmod:ducks_spawnable_on, #untitledduckmod:geese_spawnable_on, #untitledduckmod:duck_breeding_food, #untitledduckmod:goose_breeding_food, #untitledduckmod:goose_food, and #untitledduckmod:goose_taming_food
 - Added blacklist list for intimidation potion effects, mobs in this list will be unaffected by intimidation effects
 - Added Jade plugin for duck and goose laying time
 
