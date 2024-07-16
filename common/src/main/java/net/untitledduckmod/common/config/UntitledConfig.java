@@ -22,6 +22,11 @@ public class UntitledConfig {
     }
 
     @ExpectPlatform
+    public static double duckFishingChange() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static int gooseWeight() {
         throw new AssertionError();
     }

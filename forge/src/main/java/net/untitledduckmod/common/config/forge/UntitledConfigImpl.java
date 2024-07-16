@@ -13,6 +13,7 @@ public class UntitledConfigImpl {
     public static final ForgeConfigSpec.IntValue DUCK_WEIGHT;
     public static final ForgeConfigSpec.IntValue DUCK_MIN_GROUP_SIZE;
     public static final ForgeConfigSpec.IntValue DUCK_MAX_GROUP_SIZE;
+    public static final ForgeConfigSpec.DoubleValue DUCK_FISHING_CHANGE;
 
     public static final ForgeConfigSpec.IntValue GOOSE_WEIGHT;
     public static final ForgeConfigSpec.IntValue GOOSE_MIN_GROUP_SIZE;
@@ -34,6 +35,10 @@ public class UntitledConfigImpl {
                 .comment("The maximum number of ducks that should be spawned at once in a group.")
                 .worldRestart()
                 .defineInRange("duck_max_group_size", 4, 0, Integer.MAX_VALUE);
+        DUCK_FISHING_CHANGE = builder
+                .comment("Chance of ducks successfully fishing.")
+                .worldRestart()
+                .defineInRange("duck_fishing_change", 0.5D, 0.0D, 1);
         builder.pop();
 
         builder.push("goose");
@@ -68,6 +73,10 @@ public class UntitledConfigImpl {
 
     public static int duckMaxGroupSize() {
         return DUCK_MAX_GROUP_SIZE.get();
+    }
+
+    public static double duckFishingChange() {
+        return DUCK_FISHING_CHANGE.get();
     }
 
     public static int gooseWeight() {

@@ -2,6 +2,7 @@ package net.untitledduckmod.common.entity;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -15,27 +16,27 @@ import net.minecraft.world.World;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
 
-public class DuckEggEntity extends ThrownItemEntity {
+public class WaterfowlEggEntity extends ThrownItemEntity {
     private final EntityType<? extends PassiveEntity> mobEntityType;
 
-    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
+    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
         this.mobEntityType = ModEntityTypes.getDuck();
     }
 
-    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z) {
+    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z) {
         // Used for client side rendering, so mobEntityType doesn't matter
         super(entityType, x, y, z, world);
         this.mobEntityType = ModEntityTypes.getDuck();
     }
 
-    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, EntityType<? extends PassiveEntity> mobEntityType) {
+    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, EntityType<? extends PassiveEntity> mobEntityType) {
         // This is the only constructor used on server side that matters
         super(entityType, owner, world);
         this.mobEntityType = mobEntityType;
     }
 
-    public DuckEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z, EntityType<? extends PassiveEntity> mobEntityType) {
+    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z, EntityType<? extends PassiveEntity> mobEntityType) {
         // Used for dispensing the item
         super(entityType, x, y, z, world);
         this.mobEntityType = mobEntityType;
@@ -66,16 +67,16 @@ public class DuckEggEntity extends ThrownItemEntity {
                 }
 
                 for (int j = 0; j < i; ++j) {
-                    PassiveEntity duckEntity = mobEntityType.create(this.getWorld());
-                    if (duckEntity != null) {
-                        duckEntity.setBreedingAge(-24000);
-                        duckEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
-                        world.spawnEntity(duckEntity);
+                    PassiveEntity waterfowl = mobEntityType.create(this.getWorld());
+                    if (waterfowl != null) {
+                        waterfowl.setBreedingAge(-24000);
+                        waterfowl.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
+                        world.spawnEntity(waterfowl);
                     }
                 }
             }
 
-            world.sendEntityStatus(this, (byte) 3);
+            world.sendEntityStatus(this, EntityStatuses.PLAY_DEATH_SOUND_OR_ADD_PROJECTILE_HIT_PARTICLES);
             this.discard();
         }
     }

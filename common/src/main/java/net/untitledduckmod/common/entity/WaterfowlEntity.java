@@ -1,6 +1,7 @@
 package net.untitledduckmod.common.entity;
 
 import net.minecraft.entity.EntityData;
+import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -181,39 +182,42 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         // TODO: Cleanup
         ItemStack stack = player.getStackInHand(hand);
         if (this.getWorld().isClient) {
-            boolean tamable = isTamable(player, stack);
-            return tamable ? ActionResult.CONSUME : ActionResult.PASS;
+            if (this.isTamed() && !this.isOwner(player)) {
+                return ActionResult.PASS;
+            }
         } else {
-            if (isTamed()) {
+            if (isTamed() && this.isOwner(player)) {
+                if (this.isBreedingItem(stack) && this.getHealth() < this.getMaxHealth()) {
+                    this.eat(player, hand, stack);
+                    this.heal(0.5F);
+                    return ActionResult.CONSUME;
+                }
                 ActionResult actionResult = super.interactMob(player, hand);
-                if ((!actionResult.isAccepted() || this.isBaby()) && this.isOwner(player)) {
+                if ((!actionResult.isAccepted() || this.isBaby())) {
                     this.setSitting(!this.isSitting());
                     this.jumping = false;
                     this.navigation.stop();
                     this.setTarget(null);
-                    return ActionResult.SUCCESS;
                 }
-                return super.interactMob(player, hand);
-            } else {
-                if (tryTaming(player, stack)) {
-                    if (isTamableItem(stack)) {
-                        if (!player.getAbilities().creativeMode) {
-                            stack.decrement(1);
-                        }
-                        if (this.random.nextInt(3) == 0) {
-                            this.setOwner(player);
-                            this.navigation.stop();
-                            this.setTarget(null);
-                            this.setSitting(true);
-                            this.getWorld().sendEntityStatus(this, (byte) 7);
-                        } else {
-                            this.getWorld().sendEntityStatus(this, (byte) 6);
-                        }
-                        return ActionResult.SUCCESS;
+                return actionResult;
+            } else if (tryTaming(player, stack)) {
+                if (isTamable(player, stack)) {
+                    if (!player.getAbilities().creativeMode) {
+                        stack.decrement(1);
                     }
-                } else {
+                    if (this.random.nextInt(3) == 0) {
+                        this.setOwner(player);
+                        this.navigation.stop();
+                        this.setTarget(null);
+                        this.setSitting(true);
+                        this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES);
+                    } else {
+                        this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_NEGATIVE_PLAYER_REACTION_PARTICLES);
+                    }
                     return ActionResult.CONSUME;
                 }
+            } else {
+                return super.interactMob(player, hand);
             }
         }
         return super.interactMob(player, hand);
@@ -224,7 +228,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     protected abstract boolean isTamableItem(ItemStack stack);
 
     protected boolean isTamable(PlayerEntity player, ItemStack stack) {
-        return this.isOwner(player) || this.isTamed() || isTamableItem(stack) && !this.isTamed();
+        return isTamableItem(stack) && !this.isTamed();
     }
 
     @Override

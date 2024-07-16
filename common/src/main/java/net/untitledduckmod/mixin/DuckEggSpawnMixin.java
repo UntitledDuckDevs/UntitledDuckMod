@@ -1,6 +1,6 @@
 package net.untitledduckmod.mixin;
 
-import net.untitledduckmod.common.entity.DuckEggEntity;
+import net.untitledduckmod.common.entity.WaterfowlEggEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
@@ -26,7 +26,7 @@ public class DuckEggSpawnMixin {
             double x = packet.getX();
             double y = packet.getY();
             double z = packet.getZ();
-            DuckEggEntity entity = new DuckEggEntity(entityType, this.world, x, y, z);
+            WaterfowlEggEntity entity = new WaterfowlEggEntity(entityType, this.world, x, y, z);
             entity.updateTrackedPosition(x, y, z);
             entity.refreshPositionAfterTeleport(x, y, z);
             entity.setPitch((packet.getPitch() * 360) / 256.0F);

@@ -5,7 +5,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.*;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
 import net.minecraft.loot.context.LootContextParameterSet;
@@ -70,7 +69,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.function.BiConsumer;
 
 public class DuckEntity extends WaterfowlEntity implements Vibrations, AnimationController.ParticleKeyframeHandler<DuckEntity> {
@@ -292,11 +290,14 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         DuckEntity duckEntity = ModEntityTypes.getDuck().create(world);
-        if (duckEntity != null) {
-            duckEntity.setVariant((byte) this.getWorld().getRandom().nextInt(2));
-            UUID uuid = this.getOwnerUuid();
-            if (uuid != null) {
-                duckEntity.setOwnerUuid(uuid);
+        if (duckEntity != null && entity instanceof DuckEntity duck) {
+            if (this.random.nextBoolean()) {
+                duckEntity.setVariant(this.getVariant());
+            } else {
+                duckEntity.setVariant(duck.getVariant());
+            }
+            if (this.isTamed()) {
+                duckEntity.setOwnerUuid(this.getOwnerUuid());
                 duckEntity.setTamed(true);
             }
         }
@@ -483,7 +484,6 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
             LootContextParameterSet lootBuilder = new LootContextParameterSet
                     .Builder((ServerWorld)this.getWorld())
                     .add(LootContextParameters.ORIGIN, this.getPos())
-                    .add(LootContextParameters.TOOL, Items.FISHING_ROD.getDefaultStack())
                     .add(LootContextParameters.THIS_ENTITY, this)
                     .luck((float) this.getAttributeValue(EntityAttributes.GENERIC_LUCK))
                     .build(LootContextTypes.FISHING);

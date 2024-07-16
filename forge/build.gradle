@@ -28,6 +28,8 @@ dependencies {
 
     modImplementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version_forge}"
 
+    forgeRuntimeLibrary("com.eliotlash.mclib:mclib:20")
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }

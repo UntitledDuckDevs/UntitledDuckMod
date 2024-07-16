@@ -44,6 +44,7 @@
   "untitledduckmod.config.duck_spawn_weight": "Duck Spawn Weight",
   "untitledduckmod.config.duck_min_group_size": "Duck Minimum Group Size",
   "untitledduckmod.config.duck_max_group_size": "Duck Maximum Group Size",
+  "untitledduckmod.config.duck_fishing_change": "Duck Fishing Change",
   "untitledduckmod.config.goose_spawn_weight": "Goose Spawn Weight",
   "untitledduckmod.config.goose_min_group_size": "Goose Minimum Spawn Group Size",
   "untitledduckmod.config.goose_max_group_size": "Goose Maximum Spawn Group Size",
@@ -52,7 +53,10 @@
   "untitledduckmod.config.goose_spawn_weight.tooltip": "How often geese spawn (the higher, the more often)",
   "untitledduckmod.config.duck_min_group_size.tooltip": "In what minimum group size ducks spawn",
   "untitledduckmod.config.duck_max_group_size.tooltip": "In what maximum group size ducks spawn",
+  "untitledduckmod.config.duck_fishing_change.tooltip": "Chance of ducks successfully fishing",
   "untitledduckmod.config.goose_min_group_size.tooltip": "In what minimum group size geese spawn",
   "untitledduckmod.config.goose_max_group_size.tooltip": "In what maximum group size geese spawn",
-  "untitledduckmod.config.intimidation_blacklist.tooltip": "Intimidate effects don't work on mobs in the list"
+  "untitledduckmod.config.intimidation_blacklist.tooltip": "Intimidate effects don't work on mobs in the list",
+
+  "config.jade.plugin_untitledduckmod.lay_egg": "Egg laying time"
 }

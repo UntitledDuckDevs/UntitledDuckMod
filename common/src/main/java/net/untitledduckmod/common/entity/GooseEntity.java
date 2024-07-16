@@ -319,11 +319,14 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         GooseEntity gooseEntity = ModEntityTypes.getGoose().create(world);
-        if (gooseEntity != null) {
-            gooseEntity.setVariant((byte) this.getWorld().getRandom().nextInt(2));
-            UUID uuid = this.getOwnerUuid();
-            if (uuid != null) {
-                gooseEntity.setOwnerUuid(uuid);
+        if (gooseEntity != null && entity instanceof GooseEntity goose) {
+            if (this.random.nextBoolean()) {
+                gooseEntity.setVariant(this.getVariant());
+            } else {
+                gooseEntity.setVariant(goose.getVariant());
+            }
+            if (this.isTamed()) {
+                gooseEntity.setOwnerUuid(this.getOwnerUuid());
                 gooseEntity.setTamed(true);
             }
         }

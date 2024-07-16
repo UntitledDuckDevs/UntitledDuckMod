@@ -12,7 +12,7 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import net.untitledduckmod.common.entity.DuckEggEntity;
+import net.untitledduckmod.common.entity.WaterfowlEggEntity;
 
 import java.util.function.Supplier;
 
@@ -30,7 +30,7 @@ public class DuckEggItem extends Item {
         ItemStack itemStack = user.getStackInHand(hand);
         world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
         if (!world.isClient) {
-            DuckEggEntity eggEntity = new DuckEggEntity(thrownEntityType.get(), world, user, mobEntityType.get());
+            WaterfowlEggEntity eggEntity = new WaterfowlEggEntity(thrownEntityType.get(), world, user, mobEntityType.get());
             eggEntity.setItem(itemStack);
             eggEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
             world.spawnEntity(eggEntity);

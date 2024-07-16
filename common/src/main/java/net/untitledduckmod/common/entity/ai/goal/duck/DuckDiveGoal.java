@@ -1,5 +1,6 @@
 package net.untitledduckmod.common.entity.ai.goal.duck;
 
+import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.DuckEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.sound.SoundEvents;
@@ -50,8 +51,10 @@ public class DuckDiveGoal extends Goal {
         diveTime--;
         // Play splash sound 10 ticks = 0.5 seconds into the animation
         if (diveTime == 32 - 10) {
-            duck.fishing();
-            duck.playSound(SoundEvents.ENTITY_GENERIC_SPLASH, 1.0f, 1.0f);
+            if (duck.getRandom().nextDouble() < UntitledConfig.duckFishingChange()) {
+                duck.fishing();
+                duck.playSound(SoundEvents.ENTITY_GENERIC_SPLASH, 1.0f, 1.0f);
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.common.entity.DuckEntity;
 import net.untitledduckmod.common.entity.GooseEntity;
-import net.untitledduckmod.common.entity.DuckEggEntity;
+import net.untitledduckmod.common.entity.WaterfowlEggEntity;
 import net.untitledduckmod.common.platform.RegistryHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -14,15 +14,15 @@ import java.util.function.Supplier;
 public class ModEntityTypes {
 
     public final static Supplier<EntityType<DuckEntity>> DUCK;
-    public final static Supplier<EntityType<DuckEggEntity>> DUCK_EGG;
+    public final static Supplier<EntityType<WaterfowlEggEntity>> DUCK_EGG;
     public final static Supplier<EntityType<GooseEntity>> GOOSE;
-    public final static Supplier<EntityType<DuckEggEntity>> GOOSE_EGG;
+    public final static Supplier<EntityType<WaterfowlEggEntity>> GOOSE_EGG;
 
     static {
         DUCK = RegistryHelper.registerEntity("duck", () -> EntityType.Builder.create(DuckEntity::new, SpawnGroup.CREATURE).setDimensions(0.6f, 0.6f).maxTrackingRange(10).build(DuckMod.stringID("duck")));
-        DUCK_EGG = RegistryHelper.registerEntity("duck_egg", () -> EntityType.Builder.<DuckEggEntity>create(DuckEggEntity::new, SpawnGroup.MISC).setDimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).build(DuckMod.stringID("duck_egg")));
+        DUCK_EGG = RegistryHelper.registerEntity("duck_egg", () -> EntityType.Builder.<WaterfowlEggEntity>create(WaterfowlEggEntity::new, SpawnGroup.MISC).setDimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).build(DuckMod.stringID("duck_egg")));
         GOOSE = RegistryHelper.registerEntity("goose", () -> EntityType.Builder.create(GooseEntity::new, SpawnGroup.CREATURE).setDimensions(0.7f, 1.2f).maxTrackingRange(10).build(DuckMod.stringID("goose")));
-        GOOSE_EGG = RegistryHelper.registerEntity("goose_egg", () -> EntityType.Builder.<DuckEggEntity>create(DuckEggEntity::new, SpawnGroup.MISC).setDimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).build(DuckMod.stringID("goose_egg")));
+        GOOSE_EGG = RegistryHelper.registerEntity("goose_egg", () -> EntityType.Builder.<WaterfowlEggEntity>create(WaterfowlEggEntity::new, SpawnGroup.MISC).setDimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).build(DuckMod.stringID("goose_egg")));
     }
 
     // Call during mod initialization to ensure registration
@@ -43,7 +43,7 @@ public class ModEntityTypes {
         return DUCK.get();
     }
 
-    public static EntityType<DuckEggEntity> getDuckEgg() {
+    public static EntityType<WaterfowlEggEntity> getDuckEgg() {
         return DUCK_EGG.get();
     }
 
@@ -51,7 +51,7 @@ public class ModEntityTypes {
         return GOOSE.get();
     }
 
-    public static EntityType<DuckEggEntity> getGooseEgg() {
+    public static EntityType<WaterfowlEggEntity> getGooseEgg() {
         return GOOSE_EGG.get();
     }
 }
