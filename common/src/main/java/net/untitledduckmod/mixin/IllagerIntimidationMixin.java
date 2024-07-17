@@ -1,8 +1,5 @@
 package net.untitledduckmod.mixin;
 
-import net.untitledduckmod.common.config.UntitledConfig;
-import net.untitledduckmod.common.init.ModStatusEffects;
-import net.untitledduckmod.common.entity.GooseEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.FleeEntityGoal;
@@ -11,6 +8,9 @@ import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.world.World;
+import net.untitledduckmod.common.config.UntitledConfig;
+import net.untitledduckmod.common.entity.GooseEntity;
+import net.untitledduckmod.common.init.ModStatusEffects;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

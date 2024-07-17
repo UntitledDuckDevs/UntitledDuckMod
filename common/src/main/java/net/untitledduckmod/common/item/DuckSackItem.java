@@ -2,14 +2,6 @@ package net.untitledduckmod.common.item;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.RaycastContext;
-import net.untitledduckmod.common.init.ModEntityTypes;
-import net.untitledduckmod.common.init.ModSoundEvents;
-import net.untitledduckmod.common.entity.DuckEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,15 +11,23 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import net.untitledduckmod.common.init.ModItems;
 import net.minecraft.world.event.GameEvent;
+import net.untitledduckmod.common.entity.DuckEntity;
+import net.untitledduckmod.common.init.ModEntityTypes;
+import net.untitledduckmod.common.init.ModItems;
+import net.untitledduckmod.common.init.ModSoundEvents;
 
 import java.util.UUID;
 
@@ -84,29 +84,37 @@ public class DuckSackItem extends Item {
         BlockHitResult blockHitResult = raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
         if (blockHitResult.getType() != HitResult.Type.BLOCK) {
             return TypedActionResult.pass(stack);
-        } else if (!world.isClient) {
+        } else if (!(world instanceof ServerWorld)) {
+            return TypedActionResult.success(stack);
+        } else {
             BlockPos pos = blockHitResult.getBlockPos();
             if (!(world.getBlockState(pos).getBlock() instanceof FluidBlock)) {
                 return TypedActionResult.pass(stack);
-            } else if (world.canPlayerModifyAt(user, pos) && user.canPlaceOn(pos, blockHitResult.getSide(), stack)) {
+            } else if (world.canPlayerModifyAt(user, pos) &&
+                    user.canPlaceOn(pos, blockHitResult.getSide(), stack)) {
                 if (placeCreature((ServerWorld) world, pos, stack.getOrCreateNbt())) {
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
                     world.emitGameEvent(user, GameEvent.ENTITY_PLACE, pos);
-                }
 
-                ItemStack emptySack = new ItemStack(ModItems.EMPTY_DUCK_SACK.get());
-                stack.decrement(1);
-                if (stack.isEmpty()) {
-                    user.setStackInHand(hand, emptySack);
-                } else if (!user.giveItemStack(emptySack)) {
-                    user.dropItem(emptySack, false);
-                }
+                    ItemStack emptySack = new ItemStack(ModItems.EMPTY_DUCK_SACK.get());
+                    if (!user.getAbilities().creativeMode) {
+                        stack.decrement(1);
+                    }
+                    if (stack.isEmpty()) {
+                        user.setStackInHand(hand, emptySack);
+                    } else if (!user.giveItemStack(emptySack)) {
+                        user.dropItem(emptySack, false);
+                    }
 
-                world.playSound(user, pos, ModSoundEvents.DUCK_SACK_USE.get(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
-                return TypedActionResult.consume(stack);
+                    world.playSound(user, pos, ModSoundEvents.DUCK_SACK_USE.get(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
+                    return TypedActionResult.consume(stack);
+                } else {
+                    return TypedActionResult.pass(stack);
+                }
+            } else {
+                return TypedActionResult.fail(stack);
             }
         }
-        return TypedActionResult.fail(stack);
     }
 
     private boolean placeCreature(ServerWorld world, BlockPos pos, NbtCompound itemData) {

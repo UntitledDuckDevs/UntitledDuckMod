@@ -1,9 +1,9 @@
 package net.untitledduckmod.common.entity.ai.goal.duck;
 
-import net.untitledduckmod.common.config.UntitledConfig;
-import net.untitledduckmod.common.entity.DuckEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.sound.SoundEvents;
+import net.untitledduckmod.common.config.UntitledConfig;
+import net.untitledduckmod.common.entity.DuckEntity;
 
 import java.util.EnumSet;
 

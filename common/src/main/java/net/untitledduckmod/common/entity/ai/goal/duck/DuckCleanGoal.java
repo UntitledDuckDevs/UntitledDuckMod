@@ -1,7 +1,7 @@
 package net.untitledduckmod.common.entity.ai.goal.duck;
 
-import net.untitledduckmod.common.entity.DuckEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.untitledduckmod.common.entity.DuckEntity;
 
 import java.util.EnumSet;
 

@@ -1,10 +1,10 @@
 package net.untitledduckmod.common.init;
 
-import net.untitledduckmod.common.platform.RegistryHelper;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
+import net.untitledduckmod.common.platform.RegistryHelper;
 
 import java.util.function.Supplier;
 

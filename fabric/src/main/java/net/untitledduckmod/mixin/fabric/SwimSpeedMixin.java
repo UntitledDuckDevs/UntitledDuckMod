@@ -1,12 +1,12 @@
 package net.untitledduckmod.mixin.fabric;
 
-import net.untitledduckmod.common.entity.DuckEntity;
-import net.untitledduckmod.common.entity.GooseEntity;
-import net.untitledduckmod.common.init.ModEntityTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
+import net.untitledduckmod.common.entity.DuckEntity;
+import net.untitledduckmod.common.entity.GooseEntity;
+import net.untitledduckmod.common.init.ModEntityTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;

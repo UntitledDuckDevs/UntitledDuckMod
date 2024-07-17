@@ -1,19 +1,19 @@
 package net.untitledduckmod.common.init.forge;
 
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
-import net.minecraftforge.common.world.ModifiableBiomeInfo;
-import net.untitledduckmod.common.config.UntitledConfig;
-import net.untitledduckmod.common.init.ModEntityTypes;
-import net.minecraft.entity.SpawnRestriction;
-import net.minecraft.world.Heightmap;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.world.ModifiableBiomeInfo;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
+import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.DuckEntity;
 import net.untitledduckmod.common.entity.GooseEntity;
+import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModTags;
 
 public class ModEntityTypesImpl {

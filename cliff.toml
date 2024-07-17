@@ -36,7 +36,7 @@ conventional_commits = true
 filter_unconventional = true
 # regex for preprocessing the commit messages
 commit_preprocessors = [
-    { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](https://github.com/Okabintaro/UntitledDuckMod/issues/${2}))"},
+    { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "([#${2}](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/${2}))"},
 ]
 # regex for parsing and grouping commits
 commit_parsers = [
@@ -65,4 +65,4 @@ date_order = false
 sort_commits = "oldest"
 
 # parse links to issues in the
-link_parsers = [{ pattern = "#(\\d+)", href = "https://github.com/Okabintaro/UntitledDuckMod/issues/$1"}]
+link_parsers = [{ pattern = "#(\\d+)", href = "https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/$1"}]

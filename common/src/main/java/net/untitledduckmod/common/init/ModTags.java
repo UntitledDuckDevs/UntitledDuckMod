@@ -31,6 +31,7 @@ public class ModTags {
 
     public static class ItemTags {
         public static final TagKey<Item> DUCK_BREEDING_FOOD = create("duck_breeding_food");
+        public static final TagKey<Item> DUCK_TAMING_FOOD = create("duck_taming_food");
         public static final TagKey<Item> GOOSE_FOOD = create("goose_food");
         public static final TagKey<Item> GOOSE_BREEDING_FOOD = create("goose_breeding_food");
         public static final TagKey<Item> GOOSE_TAMING_FOOD = create("goose_taming_food");

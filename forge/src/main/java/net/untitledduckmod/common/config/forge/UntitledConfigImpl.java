@@ -1,9 +1,9 @@
 package net.untitledduckmod.common.config.forge;
 
 import com.google.common.collect.Lists;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 
 import java.util.List;
 

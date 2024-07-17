@@ -1,13 +1,13 @@
 package net.untitledduckmod.common.init;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.common.entity.DuckEntity;
 import net.untitledduckmod.common.entity.GooseEntity;
 import net.untitledduckmod.common.entity.WaterfowlEggEntity;
 import net.untitledduckmod.common.platform.RegistryHelper;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
 
 import java.util.function.Supplier;
 

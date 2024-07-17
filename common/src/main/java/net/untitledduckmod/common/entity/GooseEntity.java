@@ -1,14 +1,5 @@
 package net.untitledduckmod.common.entity;
 
-import net.minecraft.item.Item;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.util.math.random.Random;
-import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
-import net.untitledduckmod.common.entity.ai.goal.goose.*;
-import net.untitledduckmod.common.init.ModEntityTypes;
-import net.untitledduckmod.common.init.ModItems;
-import net.untitledduckmod.common.init.ModSoundEvents;
-import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -24,18 +15,28 @@ import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.minecraft.world.*;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
+import net.untitledduckmod.common.entity.ai.goal.goose.*;
+import net.untitledduckmod.common.init.ModEntityTypes;
+import net.untitledduckmod.common.init.ModItems;
+import net.untitledduckmod.common.init.ModSoundEvents;
 import net.untitledduckmod.common.init.ModTags;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -78,7 +79,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         this.setCanPickUpLoot(true);
     }
 
-    public static boolean checkGooseSpawnRules(EntityType<GooseEntity> duck, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
+    public static boolean checkGooseSpawnRules(EntityType<GooseEntity> goose, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
         return world.getBlockState(pos.down()).isIn(ModTags.BlockTags.GEESE_SPAWNABLE_ON) || world.getBlockState(pos.down()).getFluidState().isIn(FluidTags.WATER);
     }
 

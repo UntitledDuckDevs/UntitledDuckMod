@@ -1,14 +1,14 @@
 package net.untitledduckmod.common.init.fabric;
 
-import net.untitledduckmod.common.config.UntitledConfig;
-import net.untitledduckmod.common.entity.DuckEntity;
-import net.untitledduckmod.common.entity.GooseEntity;
-import net.untitledduckmod.common.init.ModEntityTypes;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.world.Heightmap;
+import net.untitledduckmod.common.config.UntitledConfig;
+import net.untitledduckmod.common.entity.DuckEntity;
+import net.untitledduckmod.common.entity.GooseEntity;
+import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModTags;
 
 public class ModEntityTypesImpl {

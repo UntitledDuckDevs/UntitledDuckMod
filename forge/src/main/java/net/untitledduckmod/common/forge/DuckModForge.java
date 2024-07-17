@@ -1,10 +1,5 @@
 package net.untitledduckmod.common.forge;
 
-import net.untitledduckmod.DuckMod;
-import net.untitledduckmod.common.init.ModEntityTypes;
-import net.untitledduckmod.common.init.ModItems;
-import net.untitledduckmod.common.init.forge.ModBiomeModifier;
-import net.untitledduckmod.common.platform.forge.RegistryHelperImpl;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
@@ -14,6 +9,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.common.init.ModEntityTypes;
+import net.untitledduckmod.common.init.ModItems;
+import net.untitledduckmod.common.init.forge.ModBiomeModifier;
+import net.untitledduckmod.common.platform.forge.RegistryHelperImpl;
 
 @Mod(DuckMod.MOD_ID)
 public class DuckModForge {

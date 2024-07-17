@@ -1,9 +1,6 @@
 package net.untitledduckmod.common.platform.forge;
 
 import com.mojang.serialization.Codec;
-import net.untitledduckmod.DuckMod;
-import net.untitledduckmod.common.entity.forge.DuckEntityForge;
-import net.untitledduckmod.common.entity.forge.GooseEntityForge;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.effect.StatusEffect;
@@ -15,6 +12,9 @@ import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.common.entity.forge.DuckEntityForge;
+import net.untitledduckmod.common.entity.forge.GooseEntityForge;
 
 import java.util.function.Supplier;
 

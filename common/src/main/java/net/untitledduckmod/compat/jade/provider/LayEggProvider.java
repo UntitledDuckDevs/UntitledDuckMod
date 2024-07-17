@@ -1,9 +1,9 @@
 package net.untitledduckmod.compat.jade.provider;
 
-import net.untitledduckmod.DuckMod;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.common.entity.WaterfowlEntity;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;

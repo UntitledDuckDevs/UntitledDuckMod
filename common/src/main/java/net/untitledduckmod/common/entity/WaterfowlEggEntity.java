@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.particle.ItemStackParticleEffect;
@@ -17,7 +16,7 @@ import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
 
 public class WaterfowlEggEntity extends ThrownItemEntity {
-    private final EntityType<? extends PassiveEntity> mobEntityType;
+    private final EntityType<? extends WaterfowlEntity> mobEntityType;
 
     public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
@@ -30,13 +29,13 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
         this.mobEntityType = ModEntityTypes.getDuck();
     }
 
-    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, EntityType<? extends PassiveEntity> mobEntityType) {
+    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, EntityType<? extends WaterfowlEntity> mobEntityType) {
         // This is the only constructor used on server side that matters
         super(entityType, owner, world);
         this.mobEntityType = mobEntityType;
     }
 
-    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z, EntityType<? extends PassiveEntity> mobEntityType) {
+    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z, EntityType<? extends WaterfowlEntity> mobEntityType) {
         // Used for dispensing the item
         super(entityType, x, y, z, world);
         this.mobEntityType = mobEntityType;
@@ -67,10 +66,11 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
                 }
 
                 for (int j = 0; j < i; ++j) {
-                    PassiveEntity waterfowl = mobEntityType.create(this.getWorld());
+                    WaterfowlEntity waterfowl = mobEntityType.create(this.getWorld());
                     if (waterfowl != null) {
                         waterfowl.setBreedingAge(-24000);
                         waterfowl.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
+                        waterfowl.setVariant((byte) this.getWorld().getRandom().nextInt(2)); // Randomly choose between the two variants
                         world.spawnEntity(waterfowl);
                     }
                 }

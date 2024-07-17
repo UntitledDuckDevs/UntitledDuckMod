@@ -1,11 +1,11 @@
 package net.untitledduckmod.mixin;
 
-import net.untitledduckmod.common.entity.WaterfowlEggEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.untitledduckmod.common.entity.WaterfowlEggEntity;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

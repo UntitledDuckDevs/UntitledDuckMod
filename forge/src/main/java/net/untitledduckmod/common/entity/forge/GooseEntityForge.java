@@ -1,10 +1,10 @@
 package net.untitledduckmod.common.entity.forge;
 
-import net.untitledduckmod.common.entity.GooseEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.extensions.IForgeEntity;
 import net.minecraftforge.fluids.FluidType;
+import net.untitledduckmod.common.entity.GooseEntity;
 import net.untitledduckmod.common.entity.WaterfowlEntity;
 
 public class GooseEntityForge extends GooseEntity implements IForgeEntity {

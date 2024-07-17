@@ -1,9 +1,9 @@
 package net.untitledduckmod.common.entity.ai.goal.common;
 
-import net.untitledduckmod.common.entity.DuckEntity;
-import net.untitledduckmod.common.entity.GooseEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
+import net.untitledduckmod.common.entity.DuckEntity;
+import net.untitledduckmod.common.entity.GooseEntity;
 import net.untitledduckmod.common.entity.WaterfowlEntity;
 
 import java.util.EnumSet;
@@ -32,7 +32,7 @@ public class EatGoal extends Goal {
             return false;
         }
         if (entity instanceof DuckEntity) {
-            return DuckEntity.FISHES_INGREDIENT.test(stack) || DuckEntity.BREEDING_INGREDIENT.test(stack);
+            return DuckEntity.TAMING_INGREDIENT.test(stack) || DuckEntity.BREEDING_INGREDIENT.test(stack);
         }
         return GooseEntity.FOOD.test(stack);
     }

@@ -1,7 +1,7 @@
 package net.untitledduckmod.common.entity.ai.goal.goose;
 
-import net.untitledduckmod.common.entity.GooseEntity;
 import net.minecraft.entity.ai.goal.RevengeGoal;
+import net.untitledduckmod.common.entity.GooseEntity;
 
 public class GooseRevengeGoal extends RevengeGoal {
     private final GooseEntity goose;

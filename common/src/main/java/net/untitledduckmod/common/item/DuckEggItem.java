@@ -1,7 +1,6 @@
 package net.untitledduckmod.common.item;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
@@ -13,14 +12,15 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import net.untitledduckmod.common.entity.WaterfowlEggEntity;
+import net.untitledduckmod.common.entity.WaterfowlEntity;
 
 import java.util.function.Supplier;
 
 public class DuckEggItem extends Item {
     private final Supplier<EntityType<? extends ThrownItemEntity>> thrownEntityType;
-    private final Supplier<EntityType<? extends PassiveEntity>> mobEntityType;
+    private final Supplier<EntityType<? extends WaterfowlEntity>> mobEntityType;
 
-    public DuckEggItem(Settings settings, Supplier<EntityType<? extends ThrownItemEntity>> entityType, Supplier<EntityType<? extends PassiveEntity>> mobEntityType) {
+    public DuckEggItem(Settings settings, Supplier<EntityType<? extends ThrownItemEntity>> entityType, Supplier<EntityType<? extends WaterfowlEntity>> mobEntityType) {
         super(settings);
         this.thrownEntityType = entityType;
         this.mobEntityType = mobEntityType;

@@ -1,10 +1,10 @@
 package net.untitledduckmod.common.entity.ai.goal.goose;
 
-import net.untitledduckmod.common.entity.GooseEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
+import net.untitledduckmod.common.entity.GooseEntity;
 
 import java.util.EnumSet;
 import java.util.List;

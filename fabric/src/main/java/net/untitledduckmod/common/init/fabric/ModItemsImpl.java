@@ -1,8 +1,8 @@
 package net.untitledduckmod.common.init.fabric;
 
-import net.untitledduckmod.common.init.ModItems;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.ItemGroups;
+import net.untitledduckmod.common.init.ModItems;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ModItemsImpl {

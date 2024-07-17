@@ -1,9 +1,9 @@
 package net.untitledduckmod;
 
+import net.minecraft.util.Identifier;
 import net.untitledduckmod.common.CommonSetup;
 import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.init.*;
-import net.minecraft.util.Identifier;
 
 public class DuckMod {
     public static final String MOD_ID = "untitledduckmod";

@@ -3,29 +3,9 @@ package net.untitledduckmod.common.entity;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.entity.*;
-import net.minecraft.item.Item;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContextParameterSet;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.*;
-import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
-import net.untitledduckmod.common.init.ModEntityTypes;
-import net.untitledduckmod.common.init.ModItems;
-import net.untitledduckmod.common.init.ModSoundEvents;
-import net.untitledduckmod.common.entity.ai.goal.duck.DuckCleanGoal;
-import net.untitledduckmod.common.entity.ai.goal.duck.DuckDiveGoal;
-import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -36,11 +16,22 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.LootTables;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.particle.ItemStackParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -48,12 +39,22 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.EntityPositionSource;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.PositionSource;
 import net.minecraft.world.event.Vibrations;
 import net.minecraft.world.event.listener.EntityGameEventHandler;
 import net.minecraft.world.event.listener.GameEventListener;
+import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
+import net.untitledduckmod.common.entity.ai.goal.duck.DuckCleanGoal;
+import net.untitledduckmod.common.entity.ai.goal.duck.DuckDiveGoal;
+import net.untitledduckmod.common.init.ModEntityTypes;
+import net.untitledduckmod.common.init.ModItems;
+import net.untitledduckmod.common.init.ModSoundEvents;
 import net.untitledduckmod.common.init.ModTags;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -83,7 +84,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     private static final RawAnimation DANCE_ANIM = RawAnimation.begin().thenPlay("dance");
 
     public static final Ingredient BREEDING_INGREDIENT = Ingredient.fromTag(ModTags.ItemTags.DUCK_BREEDING_FOOD);
-    public static final Ingredient FISHES_INGREDIENT = Ingredient.fromTag(ItemTags.FISHES);
+    public static final Ingredient TAMING_INGREDIENT = Ingredient.fromTag(ModTags.ItemTags.DUCK_TAMING_FOOD);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean isFromSack = false;
     private @Nullable BlockPos jukeboxPos;
@@ -283,7 +284,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     protected boolean isTamableItem(ItemStack stack) {
-        return FISHES_INGREDIENT.test(stack);
+        return TAMING_INGREDIENT.test(stack);
     }
 
     @Nullable
@@ -484,6 +485,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
             LootContextParameterSet lootBuilder = new LootContextParameterSet
                     .Builder((ServerWorld)this.getWorld())
                     .add(LootContextParameters.ORIGIN, this.getPos())
+                    .add(LootContextParameters.TOOL, Items.FISHING_ROD.getDefaultStack())
                     .add(LootContextParameters.THIS_ENTITY, this)
                     .luck((float) this.getAttributeValue(EntityAttributes.GENERIC_LUCK))
                     .build(LootContextTypes.FISHING);

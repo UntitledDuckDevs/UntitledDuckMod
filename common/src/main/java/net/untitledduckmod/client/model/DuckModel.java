@@ -1,8 +1,8 @@
 package net.untitledduckmod.client.model;
 
-import net.untitledduckmod.common.entity.DuckEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.untitledduckmod.common.entity.DuckEntity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;

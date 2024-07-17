@@ -1,6 +1,5 @@
 package net.untitledduckmod.common.platform.fabric;
 
-import net.untitledduckmod.DuckMod;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
@@ -10,6 +9,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
+import net.untitledduckmod.DuckMod;
 
 import java.util.function.Supplier;
 

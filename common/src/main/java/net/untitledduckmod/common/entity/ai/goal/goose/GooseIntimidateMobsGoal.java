@@ -1,12 +1,12 @@
 package net.untitledduckmod.common.entity.ai.goal.goose;
 
-import net.untitledduckmod.common.init.ModSoundEvents;
-import net.untitledduckmod.common.entity.GooseEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.util.math.Vec3d;
+import net.untitledduckmod.common.entity.GooseEntity;
+import net.untitledduckmod.common.init.ModSoundEvents;
 
 import java.util.EnumSet;
 

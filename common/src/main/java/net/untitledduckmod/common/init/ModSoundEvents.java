@@ -1,7 +1,7 @@
 package net.untitledduckmod.common.init;
 
-import net.untitledduckmod.common.platform.RegistryHelper;
 import net.minecraft.sound.SoundEvent;
+import net.untitledduckmod.common.platform.RegistryHelper;
 
 import java.util.function.Supplier;
 

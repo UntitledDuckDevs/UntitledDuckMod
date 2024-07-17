@@ -1,11 +1,11 @@
 package net.untitledduckmod.common.init;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.item.FoodComponent;
+import net.minecraft.item.Item;
 import net.untitledduckmod.common.item.DuckEggItem;
 import net.untitledduckmod.common.item.DuckSackItem;
 import net.untitledduckmod.common.platform.RegistryHelper;
-import net.minecraft.item.FoodComponent;
-import net.minecraft.item.Item;
 
 import java.util.function.Supplier;
 
