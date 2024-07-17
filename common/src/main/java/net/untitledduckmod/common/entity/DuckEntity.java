@@ -35,6 +35,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -48,10 +49,9 @@ import net.minecraft.world.event.PositionSource;
 import net.minecraft.world.event.Vibrations;
 import net.minecraft.world.event.listener.EntityGameEventHandler;
 import net.minecraft.world.event.listener.GameEventListener;
+import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
-import net.untitledduckmod.common.entity.ai.goal.duck.DuckCleanGoal;
-import net.untitledduckmod.common.entity.ai.goal.duck.DuckDiveGoal;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
 import net.untitledduckmod.common.init.ModSoundEvents;
@@ -68,6 +68,7 @@ import software.bernie.geckolib.core.keyframe.event.ParticleKeyframeEvent;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -211,8 +212,8 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
         this.goalSelector.add(4, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
         this.goalSelector.add(5, new FollowParentGoal(this, 1.1D));
         this.goalSelector.add(6, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
-        this.goalSelector.add(6, new DuckCleanGoal(this));
-        this.goalSelector.add(6, new DuckDiveGoal(this));
+        this.goalSelector.add(6, new CleanGoal(this));
+        this.goalSelector.add(6, new DiveGoal(this));
         this.goalSelector.add(7, new WanderAroundGoal(this, 1.0D));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
@@ -277,10 +278,6 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
             return ActionResult.success(this.getWorld().isClient);
         }
         return super.interactMob(player, hand);
-    }
-
-    protected boolean tryTaming(PlayerEntity player, ItemStack stack) {
-        return true;
     }
 
     protected boolean isTamableItem(ItemStack stack) {
@@ -551,6 +548,102 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
                 return true;
             } else {
                 return false;
+            }
+        }
+    }
+
+    static class CleanGoal extends Goal {
+        private static final int ANIMATION_LENGTH = 32;
+        private final DuckEntity duck;
+        private int cleanTime;
+        private int nextCleanTime;
+
+        public CleanGoal(DuckEntity duck) {
+            this.duck = duck;
+            this.setControls(EnumSet.of(Control.LOOK, Control.MOVE));
+            nextCleanTime = duck.age + (10 * 20 + duck.getRandom().nextInt(10) * 20);
+        }
+
+        @Override
+        public boolean canStart() {
+            // Don't clean if not near player
+            if (nextCleanTime > duck.age || duck.getDespawnCounter() >= 100 || duck.getAnimation() != DuckEntity.ANIMATION_IDLE) {
+                return false;
+            }
+            return duck.getRandom().nextInt(40) == 0;
+        }
+
+        @Override
+        public void start() {
+            cleanTime = ANIMATION_LENGTH;
+            duck.setAnimation(DuckEntity.ANIMATION_CLEAN);
+            nextCleanTime = duck.age + (10 * 20 + duck.getRandom().nextInt(10) * 20);
+        }
+
+        @Override
+        public void stop() {
+            duck.setAnimation(DuckEntity.ANIMATION_IDLE);
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return cleanTime >= 0;
+        }
+
+        @Override
+        public void tick() {
+            cleanTime--;
+        }
+    }
+
+    static class DiveGoal extends Goal {
+        private static final int ANIMATION_LENGTH = 32;
+        private final DuckEntity duck;
+        private int diveTime;
+        private int nextDiveTime;
+
+        public DiveGoal(DuckEntity duck) {
+            this.duck = duck;
+            this.setControls(EnumSet.of(Control.LOOK, Control.MOVE));
+            nextDiveTime = duck.age + (8 * 20 + duck.getRandom().nextInt(10) * 20);
+        }
+
+        @Override
+        public boolean canStart() {
+            // Don't dive if not in water
+            if (nextDiveTime > duck.age || duck.getDespawnCounter() >= 100 || !duck.isTouchingWater() || duck.getAnimation() != DuckEntity.ANIMATION_IDLE) {
+                return false;
+            }
+            return duck.getRandom().nextInt(40) == 0 && duck.getMainHandStack().isEmpty();
+        }
+
+        @Override
+        public void start() {
+            //System.out.printf("[%d:%d] Start diving\n", nextDiveTime, duck.age);
+            diveTime = ANIMATION_LENGTH;
+            duck.setAnimation(DuckEntity.ANIMATION_DIVE);
+            nextDiveTime = duck.age + (8 * 20 + duck.getRandom().nextInt(10) * 20);
+        }
+
+        @Override
+        public void stop() {
+            duck.setAnimation(DuckEntity.ANIMATION_IDLE);
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return diveTime >= 0;
+        }
+
+        @Override
+        public void tick() {
+            diveTime--;
+            // Play splash sound 10 ticks = 0.5 seconds into the animation
+            if (diveTime == 32 - 10) {
+                if (duck.getRandom().nextDouble() < UntitledConfig.duckFishingChange()) {
+                    duck.fishing();
+                }
+                duck.playSound(SoundEvents.ENTITY_GENERIC_SPLASH, 1.0f, 1.0f);
             }
         }
     }
