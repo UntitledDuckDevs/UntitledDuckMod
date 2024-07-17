@@ -182,8 +182,10 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         // TODO: Cleanup
         ItemStack stack = player.getStackInHand(hand);
         if (this.getWorld().isClient) {
-            if (this.isTamed() && !this.isOwner(player)) {
-                return ActionResult.PASS;
+            if (this.isTamed() && this.isOwner(player)) {
+                return ActionResult.SUCCESS;
+            } else {
+                return !this.isBreedingItem(stack) || !(this.getHealth() < this.getMaxHealth()) && this.isTamed() ? ActionResult.PASS : ActionResult.SUCCESS;
             }
         } else {
             if (isTamed() && this.isOwner(player)) {
@@ -201,34 +203,33 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
                 }
                 return actionResult;
             } else if (tryTaming(player, stack)) {
-                if (isTamable(player, stack)) {
-                    if (!player.getAbilities().creativeMode) {
-                        stack.decrement(1);
-                    }
-                    if (this.random.nextInt(3) == 0) {
-                        this.setOwner(player);
-                        this.navigation.stop();
-                        this.setTarget(null);
-                        this.setSitting(true);
-                        this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES);
-                    } else {
-                        this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_NEGATIVE_PLAYER_REACTION_PARTICLES);
-                    }
-                    return ActionResult.CONSUME;
+                if (!player.getAbilities().creativeMode) {
+                    stack.decrement(1);
                 }
+                if (this.random.nextInt(3) == 0) {
+                    this.setOwner(player);
+                    this.navigation.stop();
+                    this.setTarget(null);
+                    this.setSitting(true);
+                    this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES);
+                } else {
+                    this.getWorld().sendEntityStatus(this, EntityStatuses.ADD_NEGATIVE_PLAYER_REACTION_PARTICLES);
+                }
+                return ActionResult.CONSUME;
             } else {
                 return super.interactMob(player, hand);
             }
         }
-        return super.interactMob(player, hand);
     }
 
-    protected abstract boolean tryTaming(PlayerEntity player, ItemStack stack);
+    protected boolean tryTaming(PlayerEntity player, ItemStack stack) {
+        return this.isTamable(player, stack);
+    }
 
     protected abstract boolean isTamableItem(ItemStack stack);
 
     protected boolean isTamable(PlayerEntity player, ItemStack stack) {
-        return isTamableItem(stack) && !this.isTamed();
+        return this.isTamableItem(stack) && !this.isTamed();
     }
 
     @Override

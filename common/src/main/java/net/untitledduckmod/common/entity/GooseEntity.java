@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -12,6 +13,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.Angerable;
+import net.minecraft.entity.mob.IllagerEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,6 +27,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
@@ -33,7 +36,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
-import net.untitledduckmod.common.entity.ai.goal.goose.*;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
 import net.untitledduckmod.common.init.ModSoundEvents;
@@ -49,8 +51,11 @@ import software.bernie.geckolib.core.keyframe.event.ParticleKeyframeEvent;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.EnumSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class GooseEntity extends WaterfowlEntity implements Angerable, AnimationController.ParticleKeyframeHandler<GooseEntity> {
     private static final TrackedData<Integer> ANGER_TIME = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -145,16 +150,16 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new GooseEscapeDangerGoal(this, 1.7D));
 
-        this.goalSelector.add(2, new GooseIntimidateMobsGoal(this));
+        this.goalSelector.add(2, new IntimidateMobsGoal(this));
 
         this.goalSelector.add(3, new AnimalMateGoal(this, 1.0D));
         this.goalSelector.add(4, new SitGoal(this));
 
-        this.goalSelector.add(3, new EatGoal(this));
+        this.goalSelector.add(4, new EatGoal(this));
 
-        this.goalSelector.add(4, new GooseStealItemGoal(this));
+        this.goalSelector.add(4, new StealItemGoal(this));
 
-        this.goalSelector.add(5, new GoosePickupFoodGoal(this));
+        this.goalSelector.add(5, new PickupFoodGoal(this));
         this.goalSelector.add(6, new GooseMeleeAttackGoal(this, 1.5D, true));
 
         this.goalSelector.add(7, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
@@ -163,7 +168,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         this.goalSelector.add(9, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
 
         // Idle behaviour when there is nothing too urgent
-        this.goalSelector.add(9, new GooseCleanGoal(this));
+        this.goalSelector.add(9, new CleanGoal(this));
 
         this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(10, new WanderAroundGoal(this, 1.0D));
@@ -242,7 +247,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             }
             return false;
         }
-        return true;
+        return super.tryTaming(player, stack);
     }
 
     protected boolean isTamableItem(ItemStack stack) {
@@ -488,10 +493,313 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     public boolean wantsToPickupItem() {
-        return !isSitting();
+        return !isSitting() && getAttacker() == null && getTarget() == null;
     }
 
     public boolean isHungry() {
         return isAngry() || super.isHungry();
     }
+
+    static class CleanGoal extends Goal {
+        private static final int ANIMATION_LENGTH = 32;
+        private final GooseEntity goose;
+        private int cleanTime;
+        private int nextCleanTime;
+
+        public CleanGoal(GooseEntity goose) {
+            this.goose = goose;
+            this.setControls(EnumSet.of(Control.LOOK, Control.MOVE));
+            nextCleanTime = goose.age + (10 * 20 + goose.getRandom().nextInt(10) * 20);
+        }
+
+        @Override
+        public boolean canStart() {
+            // Don't clean if not near player
+            if (nextCleanTime > goose.age || goose.getDespawnCounter() >= 100 || goose.getAnimation() != GooseEntity.ANIMATION_IDLE) {
+                return false;
+            }
+            return goose.getRandom().nextInt(40) == 0;
+        }
+
+        @Override
+        public void start() {
+            cleanTime = ANIMATION_LENGTH;
+            goose.setAnimation(GooseEntity.ANIMATION_CLEAN);
+            nextCleanTime = goose.age + (10 * 20 + goose.getRandom().nextInt(10) * 20);
+        }
+
+        @Override
+        public void stop() {
+            goose.setAnimation(GooseEntity.ANIMATION_IDLE);
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return cleanTime >= 0;
+        }
+
+        @Override
+        public void tick() {
+            cleanTime--;
+        }
+    }
+
+    static class GooseEscapeDangerGoal extends EscapeDangerGoal {
+        private final GooseEntity goose;
+
+        public GooseEscapeDangerGoal(GooseEntity goose, double speed) {
+            super(goose, speed);
+            this.goose = goose;
+        }
+
+        @Override
+        public boolean canStart() {
+            return ((goose.getHealth() < goose.getMaxHealth() / 2) || goose.isBaby()) && super.canStart();
+        }
+    }
+
+    static class IntimidateMobsGoal extends Goal {
+        private static final int STARTING_DELAY = 10;
+        private static final int ANIMATION_LENGTH = 25;
+        private static final double INTIMIDATE_DISTANCE = 12;
+        private final GooseEntity goose;
+        private int animationTime;
+        private int delayTime;
+        private int cooldown;
+        protected Entity targetEntity;
+        private Vec3d originalLocation;
+
+        public IntimidateMobsGoal(GooseEntity goose) {
+            this.setControls(EnumSet.of(Control.LOOK, Control.MOVE));
+            this.goose = goose;
+        }
+
+        @Override
+        public boolean canStart() {
+            // Check if creeper nearby
+            if (cooldown-- > 0) {
+                return false;
+            }
+            if (goose.age % 5 == 0) {
+                targetEntity = this.goose.getWorld().getClosestEntity(IllagerEntity.class, TargetPredicate.createAttackable(), goose, goose.getX(), goose.getY(), goose.getZ(), goose.getBoundingBox().expand(INTIMIDATE_DISTANCE, 3, INTIMIDATE_DISTANCE));
+                return targetEntity != null;
+            }
+            return false;
+        }
+
+        @Override
+        public void start() {
+            goose.getNavigation().stop();
+            animationTime = ANIMATION_LENGTH;
+            delayTime = STARTING_DELAY;
+
+            originalLocation = goose.getPos();
+            goose.getNavigation().startMovingTo(targetEntity, 1.2);
+        }
+
+        @Override
+        public void stop() {
+            goose.setAnimation(GooseEntity.ANIMATION_IDLE);
+            goose.getNavigation().startMovingTo(originalLocation.x, originalLocation.y, originalLocation.z, 1.2);
+            cooldown = 20;
+            targetEntity = null;
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return targetEntity.isAlive() && goose.squaredDistanceTo(originalLocation) <= INTIMIDATE_DISTANCE * INTIMIDATE_DISTANCE && animationTime >= 0;
+        }
+
+        @Override
+        public void tick() {
+            goose.getLookControl().lookAt(targetEntity.getX(), targetEntity.getEyeY(), targetEntity.getZ());
+            if (delayTime > 0) {
+                delayTime--;
+                if (delayTime == 0) {
+                    goose.getNavigation().stop();
+                    goose.setAnimation(GooseEntity.ANIMATION_INTIMIDATE);
+                    goose.playSound(ModSoundEvents.GOOSE_HONK.get(), 1.0f, 1.0f);
+                }
+                return;
+            }
+            animationTime--;
+        }
+    }
+
+    static class GooseMeleeAttackGoal extends MeleeAttackGoal {
+        private final GooseEntity goose;
+
+        public GooseMeleeAttackGoal(GooseEntity gooseEntity, double speed, boolean pauseWhenIdle) {
+            super(gooseEntity, speed, pauseWhenIdle);
+            this.goose = gooseEntity;
+        }
+
+        private static final int ANIMATION_LEN = GooseEntity.ANIMATION_BITE_LEN;
+        private static final int ANIMATION_ATTACK = 5; // Point in animation where to attack, counted from back
+        private int animationTimer = 0;
+
+        @Override
+        public boolean canStart() {
+            return !goose.isBaby() && !goose.isTouchingWater() && super.canStart();
+        }
+
+        @Override
+        protected void attack(LivingEntity target, double squaredDistance) {
+            double d = this.getSquaredMaxAttackDistance(target);
+            if (squaredDistance <= d && animationTimer <= 0) {
+                goose.setAnimation(GooseEntity.ANIMATION_BITE);
+                animationTimer = ANIMATION_LEN;
+                goose.playSound(ModSoundEvents.GOOSE_HONK.get(), 0.8f, 1.2f);
+            }
+            if (animationTimer > 0) {
+                animationTimer--;
+                if (animationTimer == ANIMATION_ATTACK) {
+                    this.mob.tryAttack(target);
+                }
+                if (animationTimer == 0) {
+                    goose.setAnimation(GooseEntity.ANIMATION_IDLE);
+                }
+            }
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            goose.setAnimation(GooseEntity.ANIMATION_IDLE);
+            animationTimer = 0;
+        }
+    }
+
+    static class PickupFoodGoal extends Goal {
+        public static final double SPEED = 1.3D;
+        private final GooseEntity goose;
+
+        public PickupFoodGoal(GooseEntity goose) {
+            this.goose = goose;
+            this.setControls(EnumSet.of(Goal.Control.MOVE));
+        }
+
+        private static final Predicate<ItemEntity> PICKABLE_DROP_FILTER = (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && GooseEntity.FOOD.test(itemEntity.getStack());
+
+        public boolean canStart() {
+            if (goose.isBaby() || !goose.getEquippedStack(EquipmentSlot.MAINHAND).isEmpty()) {
+                return false;
+            } else {
+                if (!goose.wantsToPickupItem()) {
+                    return false;
+                } else if (goose.getRandom().nextInt(10) != 0) {
+                    return false;
+                } else {
+                    List<ItemEntity> list = goose.getWorld().getEntitiesByClass(ItemEntity.class, goose.getBoundingBox().expand(8.0D, 8.0D, 8.0D), PICKABLE_DROP_FILTER);
+                    return !list.isEmpty() && goose.getEquippedStack(EquipmentSlot.MAINHAND).isEmpty();
+                }
+            }
+        }
+
+        public void tick() {
+            ItemStack itemStack = goose.getEquippedStack(EquipmentSlot.MAINHAND);
+            if (itemStack.isEmpty()) {
+                start();
+            }
+        }
+
+        public void start() {
+            List<ItemEntity> list = goose.getWorld().getEntitiesByClass(ItemEntity.class, goose.getBoundingBox().expand(8.0D, 8.0D, 8.0D), PICKABLE_DROP_FILTER);
+            if (!list.isEmpty()) {
+                goose.getNavigation().startMovingTo(list.get(0), SPEED);
+            }
+        }
+    }
+
+    static class GooseRevengeGoal extends RevengeGoal {
+        private final GooseEntity goose;
+
+        public GooseRevengeGoal(GooseEntity goose) {
+            super(goose);
+            this.goose = goose;
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return goose.getTarget() != null && super.shouldContinue();
+        }
+    }
+
+    static class StealItemGoal extends Goal {
+        private static final double SPEED = 1.3D;
+        private final GooseEntity goose;
+
+        PlayerEntity targetPlayer;
+        int nextStealTime;
+        private ItemStack playerHandStack;
+
+        public StealItemGoal(GooseEntity goose) {
+            this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+            this.goose = goose;
+            nextStealTime = goose.age + goose.getRandom().nextInt(20 * 60) + 20 * 60;
+        }
+
+        @Override
+        public boolean canStart() {
+            // Only wild geese with nothing in their beak(main hand) will attempt to steal items from you
+            if (goose.isBaby() || goose.isTamed() || !goose.getMainHandStack().isEmpty()) {
+                return false;
+            }
+            if (goose.age <= nextStealTime) {
+                return false;
+            }
+            // Throttle starts
+            if (goose.getRandom().nextInt(10) != 0) {
+                return false;
+            }
+            targetPlayer = goose.getWorld().getClosestPlayer(goose.getX(), goose.getY(), goose.getZ(), 10.0D, true);
+            if (targetPlayer == null) {
+                nextStealTime = goose.age + goose.getRandom().nextInt(10 * 20) + 10 * 20;
+                return false;
+            }
+
+            playerHandStack = targetPlayer.getMainHandStack();
+            return GooseEntity.FOOD.test(playerHandStack);
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            if (targetPlayer == null) {
+                return false;
+            }
+
+            playerHandStack = targetPlayer.getMainHandStack();
+            return GooseEntity.FOOD.test(playerHandStack);
+        }
+
+        @Override
+        public void start() {
+            goose.getNavigation().startMovingTo(targetPlayer, SPEED);
+        }
+
+        @Override
+        public void stop() {
+            nextStealTime = goose.age + goose.getRandom().nextInt(20 * 60) + 20 * 60;
+            targetPlayer = null;
+        }
+
+        @Override
+        public void tick() {
+            if (goose.distanceTo(targetPlayer) <= 2.0f) {
+                ItemStack stolenItemStack = playerHandStack.copy();
+                stolenItemStack.setCount(1);
+                if (!goose.tryEquip(stolenItemStack).isEmpty()) {
+                    playerHandStack.decrement(1);
+                }
+
+                goose.setStackInHand(Hand.MAIN_HAND, stolenItemStack);
+
+                stop();
+            } else {
+                // Continue going to the player
+                goose.getNavigation().startMovingTo(targetPlayer, SPEED);
+            }
+        }
+    }
+
 }
