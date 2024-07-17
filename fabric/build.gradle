@@ -1,5 +1,6 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'fabric-loom' version '1.5.8'
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 architectury {
@@ -7,25 +8,32 @@ architectury {
     fabric()
 }
 
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
+repositories {
+    maven {
+        name "Terraformers Maven"
+        url "https://maven.terraformersmc.com/releases/"
+    }
+}
+
 configurations {
     common
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentFabric.extendsFrom common
 }
-repositories {
-    maven { url "https://maven.terraformersmc.com/releases" }
-}
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version_fabric}"
 
-    modImplementation "software.bernie.geckolib:geckolib-fabric-1.19:${rootProject.geckolib_version_fabric}"
-    modImplementation "com.terraformersmc:modmenu:${rootProject.mod_menu_version}"
-    //modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
-	//modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    modApi "com.terraformersmc:modmenu:${modmenu_version}"
+    modApi "curse.maven:jade-324717:${jade_id_fabric}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
@@ -43,18 +51,14 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "${rootProject.minecraft_version}-fabric"
-}
-
-jar {
-    classifier "dev"
+    archiveClassifier = "fabric-${minecraft_version}"
 }
 
 sourcesJar {
@@ -74,7 +78,7 @@ unifiedPublishing {
         displayName = "[Fabric $rootProject.minecraft_version] v$project.version"
         changelog = new File("${rootProject.rootDir.toPath().toString()}/docs/LATEST_CHANGES.md").getText('UTF-8')
         releaseType = "beta" // Optional, use "release", "beta" or "alpha"
-        gameVersions = ["1.19.2"]
+        gameVersions = ["1.20.1"]
         gameLoaders = ["fabric"]
 
         mainPublication remapJar
@@ -90,6 +94,10 @@ unifiedPublishing {
             optional {
                 curseforge = "modmenu"
                 modrinth = "modmenu"
+            }
+            optional {
+                curseforge = "jade"
+                modrinth = "jade"
             }
         }
 

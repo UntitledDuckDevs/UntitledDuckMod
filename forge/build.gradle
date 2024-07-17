@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 architectury {
@@ -9,21 +9,26 @@ architectury {
 
 loom {
     forge {
-        mixinConfig "untitledduckmod.mixins.json"
+        mixinConfig "${mod_id}.mixins.json"
     }
 }
 
 configurations {
     common
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_version}"
-    modImplementation "software.bernie.geckolib:geckolib-forge-1.19:${rootProject.geckolib_version_forge}"
+    forge "net.minecraftforge:forge:${forge_version}"
+
+    modApi "curse.maven:jade-324717:${jade_id_forge}"
+
+    modImplementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version_forge}"
+
+    forgeRuntimeLibrary("com.eliotlash.mclib:mclib:20")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
@@ -42,17 +47,13 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "${rootProject.minecraft_version}-forge"
-}
-
-jar {
-    classifier "dev"
+    archiveClassifier = "forge-${minecraft_version}"
 }
 
 sourcesJar {
@@ -72,7 +73,7 @@ unifiedPublishing {
         displayName = "[Forge $rootProject.minecraft_version] v$project.version"
         changelog = new File("${rootProject.rootDir.toPath().toString()}/docs/LATEST_CHANGES.md").getText('UTF-8')
         releaseType = "beta" // Optional, use "release", "beta" or "alpha"
-        gameVersions = ["1.19.2"]
+        gameVersions = ["1.20.1"]
         gameLoaders = ["forge"]
 
         mainPublication remapJar
@@ -80,6 +81,10 @@ unifiedPublishing {
         relations {
             depends {
                 curseforge = "geckolib"
+            }
+            optional {
+                curseforge = "jade"
+                modrinth = "jade"
             }
         }
 
