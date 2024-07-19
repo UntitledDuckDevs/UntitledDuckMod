@@ -35,6 +35,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.FollowParentGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
