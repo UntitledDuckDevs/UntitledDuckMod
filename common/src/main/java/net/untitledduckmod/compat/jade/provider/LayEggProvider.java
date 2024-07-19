@@ -26,9 +26,12 @@ public enum LayEggProvider implements IEntityComponentProvider, IServerDataProvi
 
     @Override
     public void appendServerData(NbtCompound tag, EntityAccessor accessor) {
-       if (accessor.getEntity() instanceof WaterfowlEntity entity) {
-           tag.putInt("NextEggIn", entity.getEggLayTime());
-       }
+        int max = 24000 * 2;
+        if (accessor.getEntity() instanceof WaterfowlEntity entity) {
+            if (!entity.isBaby() && entity.getEggLayTime() < max) {
+                tag.putInt("NextEggIn", entity.getEggLayTime());
+            }
+        }
     }
 
     @Override

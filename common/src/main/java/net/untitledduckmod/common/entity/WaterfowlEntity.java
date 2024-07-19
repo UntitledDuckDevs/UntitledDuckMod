@@ -181,13 +181,13 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         // TODO: Cleanup
         ItemStack stack = player.getStackInHand(hand);
-        if (this.getWorld().isClient) {
+        if (this.getWorld().isClient && (!this.isBaby() || !this.isBreedingItem(stack))) {
             if (this.isTamed() && this.isOwner(player)) {
                 return ActionResult.SUCCESS;
             } else {
-                return !this.isBreedingItem(stack) || !(this.getHealth() < this.getMaxHealth()) && this.isTamed() ? ActionResult.PASS : ActionResult.SUCCESS;
+                return !isTamableItem(stack) || !(this.getHealth() < this.getMaxHealth()) && this.isTamed() ? ActionResult.PASS : ActionResult.SUCCESS;
             }
-        } else {
+        }  else {
             if (isTamed() && this.isOwner(player)) {
                 if (this.isBreedingItem(stack) && this.getHealth() < this.getMaxHealth()) {
                     this.eat(player, hand, stack);

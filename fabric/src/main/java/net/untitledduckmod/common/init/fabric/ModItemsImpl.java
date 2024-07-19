@@ -2,6 +2,7 @@ package net.untitledduckmod.common.init.fabric;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 import net.untitledduckmod.common.init.ModItems;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -22,10 +23,10 @@ public class ModItemsImpl {
             content.add(ModItems.GOOSE_EGG.get());
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
-            content.add(ModItems.RAW_DUCK.get());
-            content.add(ModItems.COOKED_DUCK.get());
-            content.add(ModItems.RAW_GOOSE.get());
-            content.add(ModItems.COOKED_GOOSE.get());
+            content.addAfter(Items.COOKED_RABBIT, ModItems.COOKED_DUCK.get());
+            content.addAfter(Items.COOKED_RABBIT, ModItems.RAW_DUCK.get());
+            content.addAfter(Items.COOKED_RABBIT, ModItems.COOKED_GOOSE.get());
+            content.addAfter(Items.COOKED_RABBIT, ModItems.RAW_GOOSE.get());
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
             content.add(ModItems.DUCK_SACK.get());

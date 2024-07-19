@@ -26,7 +26,7 @@ dependencies {
 
     modApi "curse.maven:jade-324717:${jade_id_forge}"
 
-    modImplementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version_forge}"
+    modImplementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}"
 
     forgeRuntimeLibrary("com.eliotlash.mclib:mclib:20")
 
