@@ -59,19 +59,20 @@ public class DuckSackItem extends Item {
 
                 if (placeCreature((ServerWorld) world, placePos, stack.getOrCreateNbt())) {
                     world.emitGameEvent(user, GameEvent.ENTITY_PLACE, pos);
-                }
 
-                ItemStack emptySack = new ItemStack(ModItems.EMPTY_DUCK_SACK.get());
-                if (!user.getAbilities().creativeMode) {
-                    stack.decrement(1);
-                }
-                if (stack.isEmpty()) {
-                    user.setStackInHand(hand, emptySack);
-                } else if (!user.giveItemStack(emptySack)) {
-                    user.dropItem(emptySack, false);
-                }
+                    ItemStack emptySack = new ItemStack(ModItems.EMPTY_DUCK_SACK.get());
+                    if (!user.getAbilities().creativeMode) {
+                        stack.decrement(1);
+                    }
+                    if (stack.isEmpty()) {
+                        user.setStackInHand(hand, emptySack);
+                    } else if (!user.giveItemStack(emptySack)) {
+                        user.dropItem(emptySack, false);
+                    }
 
-                world.playSound(user, pos, ModSoundEvents.DUCK_SACK_USE.get(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
+                    world.playSound(user, pos, ModSoundEvents.DUCK_SACK_USE.get(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
+                    return ActionResult.CONSUME;
+                }
             }
             return ActionResult.CONSUME;
         }

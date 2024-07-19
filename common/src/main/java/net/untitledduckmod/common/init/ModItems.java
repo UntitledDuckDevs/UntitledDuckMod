@@ -3,7 +3,7 @@ package net.untitledduckmod.common.init;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
-import net.untitledduckmod.common.item.DuckEggItem;
+import net.untitledduckmod.common.item.WaterfowlEggItem;
 import net.untitledduckmod.common.item.DuckSackItem;
 import net.untitledduckmod.common.platform.RegistryHelper;
 
@@ -35,11 +35,11 @@ public class ModItems {
         RAW_GOOSE = RegistryHelper.registerItem("raw_goose", () -> new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.6F).meat().build())));
         COOKED_GOOSE = RegistryHelper.registerItem("cooked_goose", () -> new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(1.0F).meat().build())));
         // Item
-        DUCK_EGG = RegistryHelper.registerItem("duck_egg", () -> new DuckEggItem(new Item.Settings().maxCount(16), ModEntityTypes::getDuckEgg, ModEntityTypes::getDuck));
+        DUCK_EGG = RegistryHelper.registerItem("duck_egg", () -> new WaterfowlEggItem(new Item.Settings().maxCount(16), ModEntityTypes::getDuckEgg, ModEntityTypes::getDuck));
         DUCK_FEATHER = RegistryHelper.registerItem("duck_feather", () -> new Item(new Item.Settings()));
         DUCK_SACK = RegistryHelper.registerItem("duck_sack", () -> new DuckSackItem(new Item.Settings()));
         EMPTY_DUCK_SACK = RegistryHelper.registerItem("empty_duck_sack", () -> new Item(new Item.Settings()));
-        GOOSE_EGG = RegistryHelper.registerItem("goose_egg", () -> new DuckEggItem(new Item.Settings().maxCount(16), ModEntityTypes::getGooseEgg, ModEntityTypes::getGoose));
+        GOOSE_EGG = RegistryHelper.registerItem("goose_egg", () -> new WaterfowlEggItem(new Item.Settings().maxCount(16), ModEntityTypes::getGooseEgg, ModEntityTypes::getGoose));
         GOOSE_FOOT = RegistryHelper.registerItem("goose_foot", () -> new Item(new Item.Settings()));
     }
 

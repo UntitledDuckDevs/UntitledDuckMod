@@ -4,6 +4,10 @@
     "minecraft:wheat_seeds",
     "minecraft:melon_seeds",
     "minecraft:pumpkin_seeds",
-    "minecraft:beetroot_seeds"
+    "minecraft:beetroot_seeds",
+    {
+      "id": "#c:seeds",
+      "required": false
+    }
   ]
 }

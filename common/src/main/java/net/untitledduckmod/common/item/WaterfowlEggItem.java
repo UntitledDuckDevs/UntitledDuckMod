@@ -16,11 +16,11 @@ import net.untitledduckmod.common.entity.WaterfowlEntity;
 
 import java.util.function.Supplier;
 
-public class DuckEggItem extends Item {
+public class WaterfowlEggItem extends Item {
     private final Supplier<EntityType<? extends ThrownItemEntity>> thrownEntityType;
     private final Supplier<EntityType<? extends WaterfowlEntity>> mobEntityType;
 
-    public DuckEggItem(Settings settings, Supplier<EntityType<? extends ThrownItemEntity>> entityType, Supplier<EntityType<? extends WaterfowlEntity>> mobEntityType) {
+    public WaterfowlEggItem(Settings settings, Supplier<EntityType<? extends ThrownItemEntity>> entityType, Supplier<EntityType<? extends WaterfowlEntity>> mobEntityType) {
         super(settings);
         this.thrownEntityType = entityType;
         this.mobEntityType = mobEntityType;
