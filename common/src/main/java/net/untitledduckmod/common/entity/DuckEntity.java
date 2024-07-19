@@ -51,6 +51,7 @@ import net.minecraft.world.event.listener.EntityGameEventHandler;
 import net.minecraft.world.event.listener.GameEventListener;
 import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.FollowParentGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
@@ -221,6 +222,9 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
     @Override
     public boolean isBreedingItem(ItemStack stack) {
+        if (this.isTamed()) {
+            return TAMING_INGREDIENT.test(stack) || BREEDING_INGREDIENT.test(stack);
+        }
         return BREEDING_INGREDIENT.test(stack);
     }
 
@@ -514,7 +518,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
         @Override
         public boolean accepts(ServerWorld world, BlockPos pos, GameEvent event, GameEvent.Emitter emitter) {
-            return true;
+            return !DuckEntity.this.isAiDisabled();
         }
 
         @Override
