@@ -9,6 +9,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.common.world.BiomeModifier;
@@ -53,11 +54,11 @@ public class RegistryHelperImpl {
         return SOUND_EVENTS.register(name, () -> SoundEvent.of(DuckMod.id(name)));
     }
 
-    public static <T extends Potion> Supplier<T> registerPotion(String name, Supplier<T> potion) {
+    public static RegistryEntry<Potion> registerPotion(String name, Supplier<Potion> potion) {
         return POTIONS.register(name, potion);
     }
 
-    public static <T extends StatusEffect> Supplier<T> registerStatusEffect(String name, Supplier<T> statusEffect) {
+    public static RegistryEntry<StatusEffect> registerStatusEffect(String name, Supplier<StatusEffect> statusEffect) {
         return STATUS_EFFECTS.register(name, statusEffect);
     }
 

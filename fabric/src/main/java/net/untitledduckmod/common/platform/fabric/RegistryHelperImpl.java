@@ -1,6 +1,5 @@
 package net.untitledduckmod.common.platform.fabric;
 
-import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
@@ -9,11 +8,11 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.untitledduckmod.DuckMod;
 
 import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 public class RegistryHelperImpl {
     public static <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {
@@ -39,13 +38,11 @@ public class RegistryHelperImpl {
         return () -> registry;
     }
 
-    public static <T extends Potion> Supplier<T> registerPotion(String name, Supplier<T> potion) {
-        var registry = Registry.register(Registries.POTION, DuckMod.id(name), potion.get());
-        return () -> registry;
+    public static RegistryEntry<Potion> registerPotion(String name, Supplier<Potion> potion) {
+        return Registry.registerReference(Registries.POTION, DuckMod.id(name), potion.get());
     }
 
-    public static <T extends StatusEffect> Supplier<T> registerStatusEffect(String name, Supplier<T> statusEffect) {
-        var registry = Registry.register(Registries.STATUS_EFFECT, DuckMod.id(name), statusEffect.get());
-        return () -> registry;
+    public static RegistryEntry<StatusEffect> registerStatusEffect(String name, Supplier<StatusEffect> statusEffect) {
+        return Registry.registerReference(Registries.STATUS_EFFECT, DuckMod.id(name), statusEffect.get());
     }
 }

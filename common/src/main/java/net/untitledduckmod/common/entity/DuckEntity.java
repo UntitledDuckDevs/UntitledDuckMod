@@ -56,13 +56,16 @@ import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.FollowParentGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
-import net.untitledduckmod.common.init.*;
+import net.untitledduckmod.common.init.ModEntityTypes;
+import net.untitledduckmod.common.init.ModItems;
+import net.untitledduckmod.common.init.ModSoundEvents;
+import net.untitledduckmod.common.init.ModTags;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.animation.keyframe.event.ParticleKeyframeEvent;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
