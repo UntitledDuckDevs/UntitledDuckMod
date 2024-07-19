@@ -4,7 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
-import software.bernie.geckolib.GeckoLib;
+import net.untitledduckmod.common.init.fabric.ModPotionsImpl;
 
 public class DuckModFabric implements ModInitializer {
     @Override
@@ -13,7 +13,7 @@ public class DuckModFabric implements ModInitializer {
         ModEntityTypes.registerAttributes(null);
         ModEntityTypes.setupSpawning(null);
         ModItems.setupItemGroups(null);
-        GeckoLib.initialize();
+        ModPotionsImpl.registerRecipes();
         DuckMod.postInit();
         DuckMod.postEntityInit();
     }

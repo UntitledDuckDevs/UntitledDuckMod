@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "untitledduckmod:raw_duck",
+    "untitledduckmod:raw_goose",
+    "untitledduckmod:cooked_duck",
+    "untitledduckmod:cooked_goose"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "untitledduckmod:raw_goose"
+  },
+  "result": {
+    "id": "untitledduckmod:cooked_goose"
+  },
+  "experience": 0.55,
+  "cookingtime": 100
+}

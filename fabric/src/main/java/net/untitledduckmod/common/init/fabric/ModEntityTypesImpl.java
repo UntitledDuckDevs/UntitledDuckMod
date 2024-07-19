@@ -3,6 +3,7 @@ package net.untitledduckmod.common.init.fabric;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnLocationTypes;
 import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.world.Heightmap;
 import net.untitledduckmod.common.config.UntitledConfig;
@@ -19,8 +20,8 @@ public class ModEntityTypesImpl {
     }
 
     public static void setupSpawning(Object optionalEvent) {
-        SpawnRestriction.register(ModEntityTypes.getDuck(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, DuckEntity::checkDuckSpawnRules);
-        SpawnRestriction.register(ModEntityTypes.getGoose(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GooseEntity::checkGooseSpawnRules);
+        SpawnRestriction.register(ModEntityTypes.getDuck(), SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, DuckEntity::checkDuckSpawnRules);
+        SpawnRestriction.register(ModEntityTypes.getGoose(), SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GooseEntity::checkGooseSpawnRules);
         // BiomeModifications is experimental but approved
         BiomeModifications.addSpawn(context -> context.hasTag(ModTags.BiomeTags.DUCK_BIOMES), SpawnGroup.CREATURE, ModEntityTypes.getDuck(),
                 UntitledConfig.duckWeight(),

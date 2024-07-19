@@ -1,0 +1,15 @@
+{
+  "__comment":"Foods that can be used for duck breeding",
+  "values": [
+    "minecraft:wheat_seeds",
+    "minecraft:melon_seeds",
+    "minecraft:pumpkin_seeds",
+    "minecraft:beetroot_seeds",
+    "minecraft:pitcher_pod",
+    "minecraft:torchflower_seeds",
+    {
+      "id": "#c:seeds",
+      "required": false
+    }
+  ]
+}

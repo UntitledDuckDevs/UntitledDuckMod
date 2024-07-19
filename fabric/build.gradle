@@ -29,7 +29,7 @@ configurations {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version_fabric}"
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
 
     modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
     modApi "com.terraformersmc:modmenu:${modmenu_version}"
@@ -78,7 +78,7 @@ unifiedPublishing {
         displayName = "[Fabric $rootProject.minecraft_version] v$project.version"
         changelog = new File("${rootProject.rootDir.toPath().toString()}/docs/LATEST_CHANGES.md").getText('UTF-8')
         releaseType = "beta" // Optional, use "release", "beta" or "alpha"
-        gameVersions = ["1.20.1"]
+        gameVersions = ["1.21"]
         gameLoaders = ["fabric"]
 
         mainPublication remapJar

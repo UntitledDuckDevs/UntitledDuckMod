@@ -23,8 +23,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.Objects;
 
@@ -63,16 +63,16 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         this.setVariant((byte) this.getWorld().getRandom().nextInt(2)); // Randomly choose between the two variants
-        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+        return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(VARIANT, (byte) 0);
-        this.dataTracker.startTracking(ANIMATION, ANIMATION_IDLE);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(VARIANT, (byte) 0);
+        builder.add(ANIMATION, ANIMATION_IDLE);
     }
 
     @Override
@@ -92,8 +92,8 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     }
 
     @Override
-    public void setTamed(boolean tamed) {
-        super.setTamed(tamed);
+    public void setTamed(boolean tamed, boolean updateAttributes) {
+        super.setTamed(tamed, updateAttributes);
         if (tamed) {
             Objects.requireNonNull(getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(20.0);
             setHealth(20.0F);
@@ -181,11 +181,11 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         // TODO: Cleanup
         ItemStack stack = player.getStackInHand(hand);
-        if (this.getWorld().isClient) {
+        if (this.getWorld().isClient && (!this.isBaby() || !this.isBreedingItem(stack))) {
             if (this.isTamed() && this.isOwner(player)) {
                 return ActionResult.SUCCESS;
             } else {
-                return !this.isBreedingItem(stack) || !(this.getHealth() < this.getMaxHealth()) && this.isTamed() ? ActionResult.PASS : ActionResult.SUCCESS;
+                return !isTamableItem(stack) || !(this.getHealth() < this.getMaxHealth()) && this.isTamed() ? ActionResult.PASS : ActionResult.SUCCESS;
             }
         } else {
             if (isTamed() && this.isOwner(player)) {
@@ -256,11 +256,6 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     @Override
     public double getTick(Object o) {
         return this.age;
-    }
-
-    @Override
-    public EntityView method_48926() {
-        return this.getWorld();
     }
 
     public int getEggLayTime() {

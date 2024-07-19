@@ -2,6 +2,8 @@ package net.untitledduckmod.common.item;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -57,23 +59,22 @@ public class DuckSackItem extends Item {
                     placePos = pos.offset(blockSide);
                 }
 
-                if (placeCreature((ServerWorld) world, placePos, stack.getOrCreateNbt())) {
+                if (placeCreature((ServerWorld) world, placePos, stack.getOrDefault(DataComponentTypes.ENTITY_DATA, NbtComponent.DEFAULT))) {
                     world.emitGameEvent(user, GameEvent.ENTITY_PLACE, pos);
-                }
 
-                ItemStack emptySack = new ItemStack(ModItems.EMPTY_DUCK_SACK.get());
-                if (!user.getAbilities().creativeMode) {
-                    stack.decrement(1);
-                }
-                if (stack.isEmpty()) {
-                    user.setStackInHand(hand, emptySack);
-                } else if (!user.giveItemStack(emptySack)) {
-                    user.dropItem(emptySack, false);
-                }
+                    ItemStack emptySack = new ItemStack(ModItems.EMPTY_DUCK_SACK.get());
+                    user.incrementStat(Stats.USED.getOrCreateStat(this));
+                    stack.decrementUnlessCreative(1, user);
+                    if (stack.isEmpty()) {
+                        user.setStackInHand(hand, emptySack);
+                    } else if (!user.giveItemStack(emptySack)) {
+                        user.dropItem(emptySack, false);
+                    }
 
-                world.playSound(user, pos, ModSoundEvents.DUCK_SACK_USE.get(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
+                    world.playSound(user, pos, ModSoundEvents.DUCK_SACK_USE.get(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
+                    return ActionResult.CONSUME;
+                }
             }
-            return ActionResult.CONSUME;
         }
         return ActionResult.SUCCESS;
     }
@@ -92,14 +93,12 @@ public class DuckSackItem extends Item {
                 return TypedActionResult.pass(stack);
             } else if (world.canPlayerModifyAt(user, pos) &&
                     user.canPlaceOn(pos, blockHitResult.getSide(), stack)) {
-                if (placeCreature((ServerWorld) world, pos, stack.getOrCreateNbt())) {
+                if (placeCreature((ServerWorld) world, pos, stack.getOrDefault(DataComponentTypes.ENTITY_DATA, NbtComponent.DEFAULT))) {
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
                     world.emitGameEvent(user, GameEvent.ENTITY_PLACE, pos);
 
                     ItemStack emptySack = new ItemStack(ModItems.EMPTY_DUCK_SACK.get());
-                    if (!user.getAbilities().creativeMode) {
-                        stack.decrement(1);
-                    }
+                    stack.decrementUnlessCreative(1, user);
                     if (stack.isEmpty()) {
                         user.setStackInHand(hand, emptySack);
                     } else if (!user.giveItemStack(emptySack)) {
@@ -117,8 +116,8 @@ public class DuckSackItem extends Item {
         }
     }
 
-    private boolean placeCreature(ServerWorld world, BlockPos pos, NbtCompound itemData) {
-        NbtCompound entityData = itemData.getCompound("EntityTag");
+    private boolean placeCreature(ServerWorld world, BlockPos pos, NbtComponent itemData) {
+        NbtCompound entityData = itemData.copyNbt();
         // Remove uuid when there already is a creature with same uuid.
         // This makes it possible to use the duck sack in creative, cloning every tag except the uuid.
         if (entityData.containsUuid(Entity.UUID_KEY)) {
@@ -146,11 +145,14 @@ public class DuckSackItem extends Item {
 
     @Override
     public Text getName(ItemStack stack) {
-        if (stack.hasNbt()) {
-            NbtCompound itemData = stack.getNbt();
-            if (itemData != null && itemData.contains("EntityTag") && itemData.getCompound("EntityTag").contains("CustomName")) {
-                Text duckName = Text.Serializer.fromJson(itemData.getCompound("EntityTag").getString("CustomName"));
-                return Text.translatable("item.untitledduckmod.duck_sack.named", duckName);
+        if (stack.contains(DataComponentTypes.ENTITY_DATA)) {
+            NbtComponent itemData = stack.getComponents().get(DataComponentTypes.ENTITY_DATA);
+            if (itemData != null) {
+                NbtCompound duckData = itemData.copyNbt();
+                if (duckData.contains("CustomName")) {
+                    Text duckName = Text.of(duckData.getString("CustomName"));
+                    return Text.translatable("item.untitledduckmod.duck_sack.named", duckName);
+                }
             }
         }
         return super.getName(stack);

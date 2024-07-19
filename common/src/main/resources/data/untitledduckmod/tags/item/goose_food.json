@@ -1,0 +1,7 @@
+{
+  "__comment":"Can be used to trade items with geese, calm geese, or provide food for geese (when injured, they will eat the food held in their beaks to heal)",
+  "values": [
+    "#untitledduckmod:goose_breeding_food",
+    "#untitledduckmod:goose_taming_food"
+  ]
+}

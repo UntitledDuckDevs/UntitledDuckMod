@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "untitledduckmod:raw_goose"
-  },
-  "result": "untitledduckmod:cooked_goose",
-  "experience": 0.55,
-  "cookingtime": 200
-}

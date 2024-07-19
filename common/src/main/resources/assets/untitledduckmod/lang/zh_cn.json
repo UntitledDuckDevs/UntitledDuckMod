@@ -38,6 +38,16 @@
   "modmenu.nameTranslation.untitledduckmod": "无题鸭",
   "modmenu.descriptionTranslation.untitledduckmod": "添加了鸭和鹅",
 
+  "tag.block.untitledduckmod.ducks_spawnable_on": "鸭可生成在",
+  "tag.block.untitledduckmod.geese_spawnable_on": "鹅可生成在",
+
+  "tag.item.untitledduckmod.goose_food": "鹅的食物",
+  "tag.item.untitledduckmod.goose_breeding_food": "繁殖鹅的食物",
+  "tag.item.untitledduckmod.goose_taming_food": "驯服鹅的食物",
+  "tag.item.untitledduckmod.duck_food": "鸭的食物",
+  "tag.item.untitledduckmod.duck_breeding_food": "繁殖鸭的食物",
+  "tag.item.untitledduckmod.duck_taming_food": "驯服鸭的食物",
+
   "untitledduckmod.config.title": "无题鸭配置",
   "untitledduckmod.config.category.ducks": "鸭",
   "untitledduckmod.config.category.geese": "鹅",

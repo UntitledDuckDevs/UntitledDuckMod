@@ -5,7 +5,7 @@
       "required": false
     },
     {
-      "id": "#c:river",
+      "id": "#c:is_river",
       "required": false
     }
   ]

@@ -1,0 +1,14 @@
+{
+  "__comment":"Foods that can be used for taming ducks",
+  "values": [
+    "#minecraft:fishes",
+    {
+      "id": "#c:foods/raw_fish",
+      "required": false
+    },
+    {
+      "id": "#c:foods/cooked_fish",
+      "required": false
+    }
+  ]
+}

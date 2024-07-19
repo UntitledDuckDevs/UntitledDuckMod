@@ -3,9 +3,9 @@ package net.untitledduckmod.client.model;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.untitledduckmod.common.entity.DuckEntity;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
@@ -34,7 +34,7 @@ public class DuckModel extends GeoModel<DuckEntity> {
     public void setCustomAnimations(DuckEntity animatable, long instanceId, AnimationState<DuckEntity> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
 
-        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        GeoBone head = this.getAnimationProcessor().getBone("head");
         if (animatable.lookingAround() && head != null) {
             EntityModelData extraData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
             head.setRotX(extraData.headPitch() * MathHelper.RADIANS_PER_DEGREE);
