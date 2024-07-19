@@ -54,6 +54,7 @@ import net.minecraft.world.event.listener.EntityGameEventHandler;
 import net.minecraft.world.event.listener.GameEventListener;
 import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.FollowParentGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.untitledduckmod.common.init.*;
 import org.jetbrains.annotations.Nullable;
