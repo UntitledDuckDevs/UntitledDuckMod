@@ -41,14 +41,11 @@ import net.untitledduckmod.common.init.ModItems;
 import net.untitledduckmod.common.init.ModSoundEvents;
 import net.untitledduckmod.common.init.ModTags;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.keyframe.event.ParticleKeyframeEvent;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.keyframe.event.ParticleKeyframeEvent;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
@@ -96,15 +93,15 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     @Override
-    public void setTamed(boolean tamed) {
-        super.setTamed(tamed);
+    public void setTamed(boolean tamed, boolean updateAttributes) {
+        super.setTamed(tamed, updateAttributes);
         Objects.requireNonNull(getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(2.0);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(ANGER_TIME, 0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(ANGER_TIME, 0);
     }
 
     @Override
@@ -165,7 +162,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         this.goalSelector.add(7, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
         this.goalSelector.add(8, new FollowParentGoal(this, 1.1D));
 
-        this.goalSelector.add(9, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
+        this.goalSelector.add(9, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F));
 
         // Idle behaviour when there is nothing too urgent
         this.goalSelector.add(9, new CleanGoal(this));
@@ -181,7 +178,13 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
     @Override
     public boolean isBreedingItem(ItemStack stack) {
-        return !isAngry() && BREEDING_INGREDIENT.test(stack);
+        if (isAngry()) {
+            return false;
+        }
+        if (this.isTamed()) {
+            return TAMING_INGREDIENT.test(stack) || BREEDING_INGREDIENT.test(stack);
+        }
+        return BREEDING_INGREDIENT.test(stack);
     }
 
     @Override
@@ -333,14 +336,14 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             }
             if (this.isTamed()) {
                 gooseEntity.setOwnerUuid(this.getOwnerUuid());
-                gooseEntity.setTamed(true);
+                gooseEntity.setTamed(true, true);
             }
         }
         return gooseEntity;
     }
 
     @Override
-    public void registerControllers(ControllerRegistrar controllerRegistrar) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         AnimationController<GooseEntity> controller = new AnimationController<>(this, "controller", 2, this::predicate);
         controller.setParticleKeyframeHandler(this);
         controllerRegistrar.add(controller);
@@ -421,7 +424,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         if (droppedStack == null) {
             return null;
         }
-        droppedStack.setThrower(this.getUuid());
+        droppedStack.setThrower(this);
         return droppedStack;
     }
 
@@ -644,9 +647,8 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         }
 
         @Override
-        protected void attack(LivingEntity target, double squaredDistance) {
-            double d = this.getSquaredMaxAttackDistance(target);
-            if (squaredDistance <= d && animationTimer <= 0) {
+        protected void attack(LivingEntity target) {
+            if (!canAttack(target) && animationTimer <= 0) {
                 goose.setAnimation(GooseEntity.ANIMATION_BITE);
                 animationTimer = ANIMATION_LEN;
                 goose.playSound(ModSoundEvents.GOOSE_HONK.get(), 0.8f, 1.2f);
@@ -706,7 +708,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         public void start() {
             List<ItemEntity> list = goose.getWorld().getEntitiesByClass(ItemEntity.class, goose.getBoundingBox().expand(8.0D, 8.0D, 8.0D), PICKABLE_DROP_FILTER);
             if (!list.isEmpty()) {
-                goose.getNavigation().startMovingTo(list.get(0), SPEED);
+                goose.getNavigation().startMovingTo(list.getFirst(), SPEED);
             }
         }
     }

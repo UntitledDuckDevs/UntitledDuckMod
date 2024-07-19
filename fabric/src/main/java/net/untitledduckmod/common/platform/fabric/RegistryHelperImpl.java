@@ -1,5 +1,6 @@
 package net.untitledduckmod.common.platform.fabric;
 
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
@@ -12,6 +13,7 @@ import net.minecraft.sound.SoundEvent;
 import net.untitledduckmod.DuckMod;
 
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class RegistryHelperImpl {
     public static <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {

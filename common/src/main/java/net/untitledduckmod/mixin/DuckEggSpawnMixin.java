@@ -31,10 +31,10 @@ public class DuckEggSpawnMixin {
             entity.refreshPositionAfterTeleport(x, y, z);
             entity.setPitch((packet.getPitch() * 360) / 256.0F);
             entity.setYaw((packet.getYaw() * 360) / 256.0F);
-            int id = packet.getId();
+            int id = packet.getEntityId();
             entity.setId(id);
             entity.setUuid(packet.getUuid());
-            this.world.addEntity(id, entity);
+            this.world.addEntity(entity);
         }
     }
 

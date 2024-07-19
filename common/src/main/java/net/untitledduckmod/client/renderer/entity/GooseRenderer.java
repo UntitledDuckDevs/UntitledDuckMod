@@ -25,17 +25,18 @@ public class GooseRenderer extends GeoEntityRenderer<GooseEntity> {
     }
 
     @Override
-    public void preRender(MatrixStack poseStack, GooseEntity animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(MatrixStack poseStack, GooseEntity animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         if (animatable.isBaby()) {
             this.withScale(0.7f);
         } else {
             this.withScale(1.0f);
         }
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
     @Override
-    public void renderRecursively(MatrixStack poseStack, GooseEntity animatable, GeoBone bone, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(MatrixStack poseStack, GooseEntity animatable, GeoBone bone, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
         ItemStack mainHand = animatable.getMainHandStack();
         if (bone.getName().equals("beak") && !mainHand.isEmpty()) {
             poseStack.push();
@@ -46,9 +47,6 @@ public class GooseRenderer extends GeoEntityRenderer<GooseEntity> {
 
             heldItemRenderer.renderItem(animatable, mainHand, ModelTransformationMode.GROUND, false, poseStack, bufferSource, packedLight);
             poseStack.pop();
-
-            buffer = bufferSource.getBuffer(RenderLayer.getEntityCutout(this.getTexture(animatable)));
         }
-        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

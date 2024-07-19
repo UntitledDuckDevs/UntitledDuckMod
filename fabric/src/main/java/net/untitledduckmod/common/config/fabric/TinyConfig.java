@@ -28,10 +28,12 @@ SOFTWARE.
 * */
 package net.untitledduckmod.common.config.fabric;
 
+import com.google.common.collect.Lists;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -310,7 +312,7 @@ public abstract class TinyConfig {
             this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> {
                 loadValues();
                 Objects.requireNonNull(client).setScreen(parent);
-            }).dimensions(this.width / 2 - 154, this.height - 28, 150, 20).build());
+            }).dimensions(this.width / 2 - 154, this.height - 26, 150, 20).build());
             done = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, (button) -> {
                 for (EntryInfo info : entries)
                     if (info.id.equals(modid)) {
@@ -320,13 +322,13 @@ public abstract class TinyConfig {
                     }
                 write(modid);
                 Objects.requireNonNull(client).setScreen(parent);
-            }).dimensions(this.width / 2 + 4, this.height - 28, 150, 20).build());
+            }).dimensions(this.width / 2 + 4, this.height - 26, 150, 20).build());
 
-            this.list = new MidnightConfigListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
-            if (this.client != null && this.client.world != null) this.list.setRenderBackground(false);
+            this.list = new MidnightConfigListWidget(this.client, this.width, this.height - 57, 24, 25);
             this.addSelectableChild(this.list);
 
             fillList();
+            if (tabs.size() > 1) list.renderHeaderSeparator = false;
             reload = true;
         }
         public void fillList() {
@@ -402,31 +404,36 @@ public abstract class TinyConfig {
         }
         @Override
         public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-            this.renderBackground(context);
+            super.render(context,mouseX,mouseY,delta);
             this.list.render(context, mouseX, mouseY, delta);
 
-            if (tabs.size() < 2) context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 15, 0xFFFFFF);
-            super.render(context,mouseX,mouseY,delta);
+            if (tabs.size() < 2)
+                context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 10, 0xFFFFFF);
         }
     }
     @Environment(EnvType.CLIENT)
     public static class MidnightConfigListWidget extends ElementListWidget<ButtonEntry> {
-        TextRenderer textRenderer;
-
-        public MidnightConfigListWidget(MinecraftClient minecraftClient, int i, int j, int k, int l, int m) {
-            super(minecraftClient, i, j, k, l, m);
-            this.centerListVertically = false;
-            textRenderer = minecraftClient.textRenderer;
+        boolean renderHeaderSeparator = true;
+        public MidnightConfigListWidget(MinecraftClient client, int width, int height, int y, int itemHeight) {
+            super(client, width, height, y, itemHeight);
         }
         @Override
-        public int getScrollbarPositionX() { return this.width -7; }
+        public int getScrollbarX() { return this.width -7; }
+
+        @Override
+        protected void drawHeaderAndFooterSeparators(DrawContext context) {
+            if (renderHeaderSeparator) super.drawHeaderAndFooterSeparators(context);
+            else {
+                RenderSystem.enableBlend();
+                context.drawTexture(this.client.world == null ? Screen.FOOTER_SEPARATOR_TEXTURE : Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE, this.getX(), this.getBottom(), 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+                RenderSystem.disableBlend();
+            }
+        }
 
         public void addButton(List<ClickableWidget> buttons, Text text, EntryInfo info) {
             this.addEntry(new ButtonEntry(buttons, text, info));
         }
-        public void clear() {
-            this.clearEntries();
-        }
+        public void clear() { this.clearEntries(); }
         @Override
         public int getRowWidth() { return 10000; }
     }
@@ -435,31 +442,27 @@ public abstract class TinyConfig {
         public final List<ClickableWidget> buttons;
         private final Text text;
         public final EntryInfo info;
-        private final List<ClickableWidget> children = new ArrayList<>();
+        public boolean centered = false;
         public static final Map<ClickableWidget, Text> buttonsWithText = new HashMap<>();
 
-        private ButtonEntry(List<ClickableWidget> buttons, Text text, EntryInfo info) {
-            if (!buttons.isEmpty()) buttonsWithText.put(buttons.get(0),text);
+        public ButtonEntry(List<ClickableWidget> buttons, Text text, EntryInfo info) {
+            if (!buttons.isEmpty()) buttonsWithText.put(buttons.getFirst(),text);
             this.buttons = buttons;
             this.text = text;
             this.info = info;
-            children.addAll(buttons);
+            if (info != null) this.centered = info.centered;
         }
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             buttons.forEach(b -> { b.setY(y); b.render(context, mouseX, mouseY, tickDelta); });
             if (text != null && (!text.getString().contains("spacer") || !buttons.isEmpty())) {
-                if (info.centered) context.drawTextWithShadow(textRenderer, text, MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - (textRenderer.getWidth(text) / 2), y + 5, 0xFFFFFF);
-                else {
-                    int wrappedY = y;
-                    for(Iterator<OrderedText> iterator = textRenderer.wrapLines(text, (buttons.size() > 1 ? buttons.get(1).getX()-24 : MinecraftClient.getInstance().getWindow().getScaledWidth() - 24)).iterator(); iterator.hasNext(); wrappedY += 9) {
-                        OrderedText orderedText = iterator.next();
-                        context.drawTextWithShadow(textRenderer, orderedText, 12, wrappedY + 5, 0xFFFFFF);
-                    }
+                int wrappedY = y;
+                for(Iterator<OrderedText> textIterator = textRenderer.wrapLines(text, (buttons.size() > 1 ? buttons.get(1).getX()-24 : MinecraftClient.getInstance().getWindow().getScaledWidth() - 24)).iterator(); textIterator.hasNext(); wrappedY += 9) {
+                    context.drawTextWithShadow(textRenderer, textIterator.next(), (centered) ? (MinecraftClient.getInstance().getWindow().getScaledWidth() / 2 - (textRenderer.getWidth(text) / 2)) : 12, wrappedY + 5, 0xFFFFFF);
                 }
             }
         }
-        public List<? extends Element> children() {return children;}
-        public List<? extends Selectable> selectableChildren() {return children;}
+        public List<? extends Element> children() {return Lists.newArrayList(buttons);}
+        public List<? extends Selectable> selectableChildren() {return Lists.newArrayList(buttons);}
     }
     public static class MidnightSliderWidget extends SliderWidget {
         private final EntryInfo info; private final Entry e;

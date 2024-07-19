@@ -1,6 +1,6 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.5-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
     id "io.github.p03w.machete" version "2.0.1"
     id "me.shedaniel.unified-publishing" version "0.1.+"
 }
@@ -38,12 +38,15 @@ subprojects {
 
     dependencies {
         minecraft "com.mojang:minecraft:${minecraft_version}"
-        mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+        mappings loom.layered {
+            it.mappings("net.fabricmc:yarn:${yarn_mappings}:v2")
+            it.mappings("dev.architectury:yarn-mappings-patch-neoforge:${neo_yarn_patch}")
+        }
     }
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
-        options.release = 17
+        options.release = 21
     }
 
     machete {
@@ -71,7 +74,7 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = 17
+        options.release = 21
     }
 
     java {

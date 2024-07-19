@@ -39,9 +39,9 @@
   },
   "depends": {
     "fabric": "*",
-    "fabricloader": ">=0.15.6",
-    "minecraft": ">=1.20.1",
-    "geckolib": ">=4.4.4"
+    "fabricloader": ">=0.15.11",
+    "minecraft": ">=1.21",
+    "geckolib": ">=4.5.6"
   },
   "mixins": [
     "untitledduckmod.mixins.json",
