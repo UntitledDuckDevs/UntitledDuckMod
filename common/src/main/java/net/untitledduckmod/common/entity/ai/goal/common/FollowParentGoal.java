@@ -10,15 +10,15 @@ public class FollowParentGoal extends net.minecraft.entity.ai.goal.FollowParentG
         this.entity = entity;
     }
 
-    public final boolean cannotFollowOwner() {
+    public final boolean cannotFollow() {
         return entity.isSitting() || entity.hasVehicle() || entity.mightBeLeashed();
     }
 
     public boolean canStart() {
-        return !cannotFollowOwner() && super.canStart();
+        return !cannotFollow() && super.canStart();
     }
 
     public boolean shouldContinue() {
-        return !this.cannotFollowOwner() && super.shouldContinue();
+        return !this.cannotFollow() && super.shouldContinue();
     }
 }

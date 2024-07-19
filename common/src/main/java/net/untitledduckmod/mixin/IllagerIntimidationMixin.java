@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.GooseEntity;
 import net.untitledduckmod.common.init.ModStatusEffects;
-import net.untitledduckmod.common.platform.RegistryHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,7 +26,7 @@ public class IllagerIntimidationMixin extends HostileEntity {
     private void addGoals(CallbackInfo info) {
         String entityID = Registries.ENTITY_TYPE.getId(this.getType()).toString();
         if (!UntitledConfig.intimidationBlacklist().contains(entityID)) {
-            this.goalSelector.add(0, new FleeEntityGoal<>(this, LivingEntity.class, entity -> entity.hasStatusEffect(RegistryHelper.getEntry(ModStatusEffects.intimidation.get())), 12.0F, 1.0D, 1.1D, EntityPredicates.EXCEPT_SPECTATOR::test));
+            this.goalSelector.add(0, new FleeEntityGoal<>(this, LivingEntity.class, entity -> entity.hasStatusEffect(ModStatusEffects.intimidation), 12.0F, 1.0D, 1.1D, EntityPredicates.EXCEPT_SPECTATOR::test));
         }
         this.goalSelector.add(0, new FleeEntityGoal<>(this, GooseEntity.class, 10.0F, 1.0D, 1.1D));
     }

@@ -35,9 +35,6 @@
   "item.minecraft.lingering_potion.effect.intimidation": "Lingering Potion of Intimidation",
   "item.minecraft.splash_potion.effect.intimidation": "Splash Potion of Intimidation",
 
-  "tag.block.untitledduckmod.ducks_spawnable_on": "Ducks Spawnable On",
-  "tag.block.untitledduckmod.geese_spawnable_on": "Geese Spawnable On",
-
   "tag.item.untitledduckmod.goose_food": "Goose Food",
   "tag.item.untitledduckmod.goose_breeding_food": "Goose Breeding Food",
   "tag.item.untitledduckmod.goose_taming_food": "Goose Taming Food",

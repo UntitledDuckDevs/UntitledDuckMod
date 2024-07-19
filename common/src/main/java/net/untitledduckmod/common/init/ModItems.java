@@ -3,8 +3,8 @@ package net.untitledduckmod.common.init;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.item.Item;
-import net.untitledduckmod.common.item.WaterfowlEggItem;
 import net.untitledduckmod.common.item.DuckSackItem;
+import net.untitledduckmod.common.item.WaterfowlEggItem;
 import net.untitledduckmod.common.platform.RegistryHelper;
 
 import java.util.function.Supplier;
