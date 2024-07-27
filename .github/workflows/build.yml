@@ -5,7 +5,7 @@ name: Build Mod and create release draft
 
 on:
   push:
-    branches: [ master, "1.18", "1.19" ]
+    branches: [ master, "1.18", "1.19", "1.20" ]
   pull_request:
   workflow_dispatch:
 
@@ -20,11 +20,11 @@ jobs:
       with:
         java-version: 17
         distribution: 'temurin'
-    - uses: gradle/gradle-build-action@v2.2.2
-      with:
-        cache-disabled: true
     - name: Build with Gradle
-      run: ./gradlew --info --no-daemon build
+      uses: gradle/gradle-build-action@v2
+        with:
+          cache-disabled: true
+          arguments: build --stacktrace --no-daemon
     - name: Upload Mod as artifact
       uses: actions/upload-artifact@v3
       with:
