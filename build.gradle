@@ -14,10 +14,6 @@ subprojects {
     apply plugin: 'io.github.p03w.machete'
     apply plugin: "me.shedaniel.unified-publishing"
 
-    loom {
-        silentMojangMappingsLicense()
-    }
-
     repositories {
         maven {
             name = "Jitpack"
