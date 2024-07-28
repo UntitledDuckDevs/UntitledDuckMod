@@ -51,14 +51,14 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier = "dev-shadow"
+    classifier = "dev-shadow"
 }
 
 remapJar {
     injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier = "fabric-${minecraft_version}"
+    classifier = "fabric-${minecraft_version}"
 }
 
 sourcesJar {
