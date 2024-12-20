@@ -67,7 +67,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-        this.setVariant((byte) this.getWorld().getRandom().nextInt(2)); // Randomly choose between the two variants
+        this.setVariant((byte) this.getRandom().nextInt(2)); // Randomly choose between the two variants
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 

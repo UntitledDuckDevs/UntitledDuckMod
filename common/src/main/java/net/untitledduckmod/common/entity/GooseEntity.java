@@ -649,7 +649,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
         @Override
         protected void attack(LivingEntity target) {
-            if (!canAttack(target) && animationTimer <= 0) {
+            if (canAttack(target) && animationTimer <= 0) {
                 goose.setAnimation(GooseEntity.ANIMATION_BITE);
                 animationTimer = ANIMATION_LEN;
                 goose.playSound(ModSoundEvents.GOOSE_HONK.get(), 0.8f, 1.2f);
