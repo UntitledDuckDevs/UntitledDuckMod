@@ -1,5 +1,7 @@
 package net.untitledduckmod.common.entity;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
@@ -25,6 +27,7 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import net.untitledduckmod.common.config.UntitledConfig;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -133,14 +136,15 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public void tryEating() {
         assert !this.getWorld().isClient();
 
-        ItemStack stack = getMainHandStack();
+        ItemStack stack = getMainHandStack();;
         stack.decrement(1);
         playSound(getEatSound(stack), 0.5F + 0.5F * (float) this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
         if (stack.isEmpty()) {
             setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         }
         if (isHungry()) {
-            heal(0.5f);
+            FoodComponent food = stack.get(DataComponentTypes.FOOD);
+            heal(food != null ? food.nutrition() : UntitledConfig.foodHealingValue());
         }
     }
 
@@ -193,8 +197,9 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         } else {
             if (isTamed() && this.isOwner(player)) {
                 if (this.isBreedingItem(stack) && this.getHealth() < this.getMaxHealth()) {
+                    FoodComponent food = stack.get(DataComponentTypes.FOOD);
                     this.eat(player, hand, stack);
-                    this.heal(0.5F);
+                    heal(food != null ? food.nutrition() : UntitledConfig.foodHealingValue());
                     return ActionResult.CONSUME;
                 }
                 ActionResult actionResult = super.interactMob(player, hand);

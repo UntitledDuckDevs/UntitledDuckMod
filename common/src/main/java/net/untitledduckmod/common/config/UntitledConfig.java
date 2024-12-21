@@ -42,6 +42,11 @@ public class UntitledConfig {
     }
 
     @ExpectPlatform
+    public static float foodHealingValue() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static List<? extends String> intimidationBlacklist() {
         throw new AssertionError();
     }
