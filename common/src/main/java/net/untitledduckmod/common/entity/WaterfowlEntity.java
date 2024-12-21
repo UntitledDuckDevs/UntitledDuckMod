@@ -22,6 +22,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.*;
+import net.untitledduckmod.common.config.UntitledConfig;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -64,7 +65,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        this.setVariant((byte) this.getWorld().getRandom().nextInt(2)); // Randomly choose between the two variants
+        this.setVariant((byte) this.getRandom().nextInt(2)); // Randomly choose between the two variants
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
@@ -131,13 +132,14 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         assert !this.getWorld().isClient();
 
         ItemStack stack = getMainHandStack();
+        Item item = stack.getItem();
         stack.decrement(1);
         playSound(getEatSound(stack), 0.5F + 0.5F * (float) this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
         if (stack.isEmpty()) {
             setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         }
         if (isHungry()) {
-            heal(0.5f);
+            heal(item.getFoodComponent() != null ? item.getFoodComponent().getHunger() : UntitledConfig.foodHealingValue());
         }
     }
 
@@ -181,6 +183,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         // TODO: Cleanup
         ItemStack stack = player.getStackInHand(hand);
+        Item item = stack.getItem();
         if (this.getWorld().isClient && (!this.isBaby() || !this.isBreedingItem(stack))) {
             if (this.isTamed() && this.isOwner(player)) {
                 return ActionResult.SUCCESS;
@@ -189,9 +192,10 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
             }
         }  else {
             if (isTamed() && this.isOwner(player)) {
+
                 if (this.isBreedingItem(stack) && this.getHealth() < this.getMaxHealth()) {
                     this.eat(player, hand, stack);
-                    this.heal(0.5F);
+                    this.heal(item.getFoodComponent() != null ? item.getFoodComponent().getHunger() : UntitledConfig.foodHealingValue());
                     return ActionResult.CONSUME;
                 }
                 ActionResult actionResult = super.interactMob(player, hand);

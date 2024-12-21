@@ -6,6 +6,9 @@ import net.untitledduckmod.DuckMod;
 import java.util.List;
 
 public class UntitledConfigImpl extends TinyConfig {
+    @Entry(category = "common", min = 0F, max = 100F)
+    public static float food_healing_value = 0.5F;
+
     @Entry(category = "ducks")
     public static int duck_spawn_weight = 6;
     @Entry(category = "ducks")
@@ -51,6 +54,10 @@ public class UntitledConfigImpl extends TinyConfig {
 
     public static int gooseMaxGroupSize() {
         return goose_max_group_size;
+    }
+
+    public static float foodHealingValue() {
+        return food_healing_value;
     }
 
     public static List<? extends String> intimidationBlacklist() {
