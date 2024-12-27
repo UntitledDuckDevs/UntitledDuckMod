@@ -18,6 +18,9 @@ public class UntitledConfigImpl {
     public static final ModConfigSpec.IntValue GOOSE_WEIGHT;
     public static final ModConfigSpec.IntValue GOOSE_MIN_GROUP_SIZE;
     public static final ModConfigSpec.IntValue GOOSE_MAX_GROUP_SIZE;
+
+    public static final ModConfigSpec.ConfigValue<Float> FOOD_HEALING_VALUE;
+
     public static final ModConfigSpec.ConfigValue<List<? extends String>>  INTIMIDATION_BLACKLIST;
 
     static {
@@ -52,6 +55,12 @@ public class UntitledConfigImpl {
         GOOSE_MAX_GROUP_SIZE = builder.comment("The maximum number of geese that should be spawned at once in a group.")
                 .worldRestart()
                 .defineInRange("goose_max_group_size", 4, 0, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("common");
+        FOOD_HEALING_VALUE = builder.comment("Food can heal the health value of duck & goose")
+                .worldRestart()
+                .defineInRange("food_healing_value", 0.5F, 0F, 100F, Float.class);
         builder.pop();
 
         builder.push("intimidation");
@@ -89,6 +98,10 @@ public class UntitledConfigImpl {
 
     public static int gooseMaxGroupSize() {
         return GOOSE_MAX_GROUP_SIZE.get();
+    }
+
+    public static float foodHealingValue() {
+        return FOOD_HEALING_VALUE.get();
     }
 
     public static List<? extends String> intimidationBlacklist() {
