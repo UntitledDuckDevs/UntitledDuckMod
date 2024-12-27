@@ -1,6 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.5-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
+    id "io.github.p03w.machete" version "2.0.1"
     id "me.shedaniel.unified-publishing" version "0.1.+"
 }
 
@@ -11,10 +12,6 @@ architectury {
 subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "me.shedaniel.unified-publishing"
-
-    loom {
-        silentMojangMappingsLicense()
-    }
 
     repositories {
         maven {
