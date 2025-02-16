@@ -1,8 +1,7 @@
-## Version ["v0.8.0"] - 2024-12-21
+## Version ["v0.8.1"] - 2025-2-16
 
 ### Features
-- Add config foodHealingValue
+Add Spanish translation by [@TheLegendofSaram](https://github.com/TheLegendofSaram)
 
 ### Bug fixes
-- Fix c2me conflict([#93](https://github.com/Okabintaro/UntitledDuckMod/issues/93))
-- Fix ([#94](https://github.com/Okabintaro/UntitledDuckMod/issues/94))
+- Fix [#100](https://github.com/Okabintaro/UntitledDuckMod/issues/100) and [#101](https://github.com/Okabintaro/UntitledDuckMod/issues/101)
