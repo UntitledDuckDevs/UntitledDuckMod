@@ -136,7 +136,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public void tryEating() {
         assert !this.getWorld().isClient();
 
-        ItemStack stack = getMainHandStack();;
+        ItemStack stack = getMainHandStack();
         stack.decrement(1);
         playSound(getEatSound(stack), 0.5F + 0.5F * (float) this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
         if (stack.isEmpty()) {
