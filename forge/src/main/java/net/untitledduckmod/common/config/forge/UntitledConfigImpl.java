@@ -19,7 +19,7 @@ public class UntitledConfigImpl {
     public static final ForgeConfigSpec.IntValue GOOSE_MIN_GROUP_SIZE;
     public static final ForgeConfigSpec.IntValue GOOSE_MAX_GROUP_SIZE;
 
-    public static final ForgeConfigSpec.ConfigValue<Float> FOOD_HEALING_VALUE;
+    public static final ForgeConfigSpec.DoubleValue FOOD_HEALING_VALUE;
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>>  INTIMIDATION_BLACKLIST;
 
@@ -60,7 +60,7 @@ public class UntitledConfigImpl {
         builder.push("common");
         FOOD_HEALING_VALUE = builder.comment("Food can heal the health value of duck & goose")
                 .worldRestart()
-                .defineInRange("food_healing_value", 0.5F, 0F, 100F, Float.class);
+                .defineInRange("food_healing_value", 0.5D, 0D, 100D);
         builder.pop();
 
         builder.push("intimidation");
@@ -101,7 +101,11 @@ public class UntitledConfigImpl {
     }
 
     public static float foodHealingValue() {
-        return FOOD_HEALING_VALUE.get();
+        try {
+            return FOOD_HEALING_VALUE.get().floatValue();
+        } catch (Exception e) {
+            return 0.5F;
+        }
     }
 
     public static List<? extends String> intimidationBlacklist() {
