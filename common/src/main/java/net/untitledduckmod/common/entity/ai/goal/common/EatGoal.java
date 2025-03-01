@@ -32,9 +32,9 @@ public class EatGoal extends Goal {
             return false;
         }
         if (entity instanceof DuckEntity) {
-            return DuckEntity.TAMING_INGREDIENT.test(stack) || DuckEntity.BREEDING_INGREDIENT.test(stack);
+            return DuckEntity.getFoodIngredient().test(stack);
         }
-        return GooseEntity.FOOD.test(stack);
+        return GooseEntity.getFoodIngredient().test(stack);
     }
 
     @Override

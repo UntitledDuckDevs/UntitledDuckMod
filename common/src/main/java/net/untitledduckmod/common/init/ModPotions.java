@@ -15,7 +15,7 @@ public class ModPotions {
     public final static RegistryEntry<Potion> LONG_INTIMIDATION;
 
     static {
-        INTIMIDATION = RegistryHelper.registerPotion("intimidation", () -> new Potion(new StatusEffectInstance(ModStatusEffects.intimidation, 3600)));
+        INTIMIDATION = RegistryHelper.registerPotion("intimidation", () -> new Potion("intimidation", new StatusEffectInstance(ModStatusEffects.intimidation, 3600)));
         LONG_INTIMIDATION = RegistryHelper.registerPotion("long_intimidation", () -> new Potion("intimidation", new StatusEffectInstance(ModStatusEffects.intimidation, 9600)));
     }
 

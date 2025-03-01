@@ -5,9 +5,9 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.HeldItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.math.RotationAxis;
 import net.untitledduckmod.client.model.GooseModel;
 import net.untitledduckmod.common.entity.GooseEntity;
@@ -20,7 +20,7 @@ public class GooseRenderer extends GeoEntityRenderer<GooseEntity> {
 
     public GooseRenderer(EntityRendererFactory.Context context) {
         super(context, new GooseModel());
-        this.heldItemRenderer = context.getHeldItemRenderer();
+        this.heldItemRenderer = context.getRenderDispatcher().getHeldItemRenderer();
         this.shadowRadius = 0.3f;
     }
 

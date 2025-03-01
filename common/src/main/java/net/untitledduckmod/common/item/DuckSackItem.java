@@ -6,6 +6,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,6 @@ import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -80,17 +80,17 @@ public class DuckSackItem extends Item {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         BlockHitResult blockHitResult = raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
         if (blockHitResult.getType() != HitResult.Type.BLOCK) {
-            return TypedActionResult.pass(stack);
+            return ActionResult.PASS;
         } else if (!(world instanceof ServerWorld)) {
-            return TypedActionResult.success(stack);
+            return ActionResult.SUCCESS;
         } else {
             BlockPos pos = blockHitResult.getBlockPos();
             if (!(world.getBlockState(pos).getBlock() instanceof FluidBlock)) {
-                return TypedActionResult.pass(stack);
+                return ActionResult.PASS;
             } else if (world.canPlayerModifyAt(user, pos) &&
                     user.canPlaceOn(pos, blockHitResult.getSide(), stack)) {
                 if (placeCreature((ServerWorld) world, pos, stack.getOrDefault(DataComponentTypes.ENTITY_DATA, NbtComponent.DEFAULT))) {
@@ -106,12 +106,12 @@ public class DuckSackItem extends Item {
                     }
 
                     world.playSound(user, pos, ModSoundEvents.DUCK_SACK_USE.get(), SoundCategory.NEUTRAL, 1.0F, 1.0F);
-                    return TypedActionResult.consume(stack);
+                    return ActionResult.CONSUME;
                 } else {
-                    return TypedActionResult.pass(stack);
+                    return ActionResult.PASS;
                 }
             } else {
-                return TypedActionResult.fail(stack);
+                return ActionResult.FAIL;
             }
         }
     }
@@ -132,7 +132,7 @@ public class DuckSackItem extends Item {
             entityData.putString(Entity.ID_KEY, EntityType.getId(ModEntityTypes.getDuck()).toString());
         }
 
-        return EntityType.getEntityFromNbt(entityData, world).map((newDuck) -> {
+        return EntityType.getEntityFromNbt(entityData, world, SpawnReason.BUCKET).map((newDuck) -> {
             if (newDuck instanceof DuckEntity duck) {
                 duck.readNbt(entityData);
                 duck.setFromSack(true);

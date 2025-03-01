@@ -10,8 +10,8 @@ public class DuckMod {
 
     public static void preInit() {
         UntitledConfig.setup();
-        ModItems.init();
         ModEntityTypes.init();
+        ModItems.init();
         ModSoundEvents.init();
         ModStatusEffects.init();
         ModPotions.init();

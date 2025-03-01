@@ -5,10 +5,13 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
@@ -23,21 +26,21 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
         this.mobEntityType = ModEntityTypes.getDuck();
     }
 
-    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z) {
+    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, ItemStack stack, double x, double y, double z) {
         // Used for client side rendering, so mobEntityType doesn't matter
-        super(entityType, x, y, z, world);
+        super(entityType, x, y, z, world, stack);
         this.mobEntityType = ModEntityTypes.getDuck();
     }
 
-    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, EntityType<? extends WaterfowlEntity> mobEntityType) {
+    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, LivingEntity owner, ItemStack stack, EntityType<? extends WaterfowlEntity> mobEntityType) {
         // This is the only constructor used on server side that matters
-        super(entityType, owner, world);
+        super(entityType, owner, world, stack);
         this.mobEntityType = mobEntityType;
     }
 
-    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, double x, double y, double z, EntityType<? extends WaterfowlEntity> mobEntityType) {
+    public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world, ItemStack stack, double x, double y, double z, EntityType<? extends WaterfowlEntity> mobEntityType) {
         // Used for dispensing the item
-        super(entityType, x, y, z, world);
+        super(entityType, x, y, z, world, stack);
         this.mobEntityType = mobEntityType;
     }
 
@@ -52,7 +55,9 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
 
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
-        entityHitResult.getEntity().damage(this.getDamageSources().thrown(this, this.getOwner()), 0.0F);
+        if (this.getWorld() instanceof ServerWorld serverWorld) {
+            entityHitResult.getEntity().damage(serverWorld, this.getDamageSources().thrown(this, this.getOwner()), 0.0F);
+        }
     }
 
     protected void onCollision(HitResult hitResult) {
@@ -66,7 +71,7 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
                 }
 
                 for (int j = 0; j < i; ++j) {
-                    WaterfowlEntity waterfowl = mobEntityType.create(this.getWorld());
+                    WaterfowlEntity waterfowl = mobEntityType.create(this.getWorld(), SpawnReason.TRIGGERED);
                     if (waterfowl != null) {
                         waterfowl.setBreedingAge(-24000);
                         waterfowl.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);

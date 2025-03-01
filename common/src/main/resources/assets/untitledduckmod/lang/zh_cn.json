@@ -59,6 +59,7 @@
   "untitledduckmod.config.goose_min_group_size": "鹅群最小生成数量",
   "untitledduckmod.config.goose_max_group_size": "鹅群最大生成数量",
   "untitledduckmod.config.intimidation_blacklist": "恐吓黑名单",
+  "untitledduckmod.config.food_healing_value.tooltip": "食物恢复的鸭和鹅的生命值",
   "untitledduckmod.config.duck_spawn_weight.tooltip": "鸭生成频率（越高，越频繁）",
   "untitledduckmod.config.goose_spawn_weight.tooltip": "鹅生成频率（越高，越频繁）",
   "untitledduckmod.config.duck_min_group_size.tooltip": "每次生成的最少鸭数量",
@@ -67,6 +68,8 @@
   "untitledduckmod.config.goose_min_group_size.tooltip": "每次生成的最大鹅数量",
   "untitledduckmod.config.goose_max_group_size.tooltip": "每次生成的最大鹅数量",
   "untitledduckmod.config.intimidation_blacklist.tooltip": "恐吓效果对列表中的生物无效",
+  "untitledduckmod.config.duck_tamed_not_follow.tooltip": "驯服后不再跟随（游荡）",
+  "untitledduckmod.config.goose_tamed_not_follow.tooltip": "驯服后不再跟随（游荡）",
 
   "config.jade.plugin_untitledduckmod.lay_egg": "产卵时间"
 }

@@ -18,7 +18,7 @@ public abstract class SwimSpeedMixin extends Entity {
     }
 
     @ModifyArg(
-            method = "travel",
+            method = "travelInFluid",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;updateVelocity(FLnet/minecraft/util/math/Vec3d;)V", ordinal = 0),
             index = 0
     )
