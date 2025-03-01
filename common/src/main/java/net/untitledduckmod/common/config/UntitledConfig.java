@@ -27,6 +27,11 @@ public class UntitledConfig {
     }
 
     @ExpectPlatform
+    public static boolean duckTamedNotFollow() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static int gooseWeight() {
         throw new AssertionError();
     }
@@ -38,6 +43,11 @@ public class UntitledConfig {
 
     @ExpectPlatform
     public static int gooseMaxGroupSize() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean gooseTamedNotFollow() {
         throw new AssertionError();
     }
 

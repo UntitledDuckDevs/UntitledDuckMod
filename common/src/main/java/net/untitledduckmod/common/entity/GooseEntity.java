@@ -14,7 +14,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.IllagerEntity;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -24,6 +23,7 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -34,8 +34,10 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
-import net.untitledduckmod.common.entity.ai.goal.common.FollowParentGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.WFollowOwnerGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.WFollowParentGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
@@ -69,10 +71,6 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     private static final RawAnimation BITE_ANIM = RawAnimation.begin().thenPlay("bite");
     private static final RawAnimation CHARGE_ANIM = RawAnimation.begin().thenPlay("charge");
 
-    public static final Ingredient FOOD = Ingredient.fromTag(ModTags.ItemTags.GOOSE_FOOD);
-    private static final Ingredient BREEDING_INGREDIENT = Ingredient.fromTag(ModTags.ItemTags.GOOSE_BREEDING_FOOD);
-    private static final Ingredient TAMING_INGREDIENT = Ingredient.fromTag(ModTags.ItemTags.GOOSE_TAMING_FOOD);
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean wasSongPlaying = false;
     private int animationTimer = 0;
@@ -87,16 +85,16 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     public static DefaultAttributeContainer.Builder getDefaultAttributes() {
-        return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 7.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0D);
+        return WaterfowlEntity.createAnimalAttributes()
+                .add(EntityAttributes.MAX_HEALTH, 7.0D)
+                .add(EntityAttributes.MOVEMENT_SPEED, 0.2D)
+                .add(EntityAttributes.ATTACK_DAMAGE, 2.0D);
     }
 
     @Override
     public void setTamed(boolean tamed, boolean updateAttributes) {
         super.setTamed(tamed, updateAttributes);
-        Objects.requireNonNull(getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(2.0);
+        Objects.requireNonNull(getAttributeInstance(EntityAttributes.ATTACK_DAMAGE)).setBaseValue(2.0);
     }
 
     @Override
@@ -143,6 +141,18 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         super.handleStatus(status);
     }
 
+    public static Ingredient getFoodIngredient() {
+        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_FOOD));
+    }
+
+    public static Ingredient getBreedingIngredient() {
+        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_BREEDING_FOOD));
+    }
+
+    public static Ingredient getTamingIngredient() {
+        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_TAMING_FOOD));
+    }
+
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
@@ -160,10 +170,10 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         this.goalSelector.add(5, new PickupFoodGoal(this));
         this.goalSelector.add(6, new GooseMeleeAttackGoal(this, 1.5D, true));
 
-        this.goalSelector.add(7, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
-        this.goalSelector.add(8, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.add(7, new TemptGoal(this, 1.0D, getBreedingIngredient(), false));
+        this.goalSelector.add(8, new WFollowParentGoal(this, 1.1D));
 
-        this.goalSelector.add(9, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F));
+        this.goalSelector.add(9, new WFollowOwnerGoal(this, 1.6D, 10.0F, 2.0F));
 
         // Idle behaviour when there is nothing too urgent
         this.goalSelector.add(9, new CleanGoal(this));
@@ -183,9 +193,9 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             return false;
         }
         if (this.isTamed()) {
-            return TAMING_INGREDIENT.test(stack) || BREEDING_INGREDIENT.test(stack);
+            return getTamingIngredient().test(stack) || getBreedingIngredient().test(stack);
         }
-        return BREEDING_INGREDIENT.test(stack);
+        return getBreedingIngredient().test(stack);
     }
 
     @Override
@@ -237,15 +247,15 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     protected boolean tryTaming(PlayerEntity player, ItemStack stack) {
-        if (isAngry()) {
+        if (isAngry() && this.getWorld() instanceof ServerWorld world) {
             // Peace goose when angry with food
-            if (FOOD.test(stack)) {
+            if (getFoodIngredient().test(stack)) {
                 ItemStack newStack = stack.copy();
                 newStack.setCount(1);
                 if (!player.getAbilities().creativeMode) {
                     stack.decrement(1);
                 }
-                if (!tryEquip(newStack).isEmpty()) {
+                if (!tryEquip(world, newStack).isEmpty()) {
                     stopAnger();
                 }
             }
@@ -255,7 +265,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     protected boolean isTamableItem(ItemStack stack) {
-        return TAMING_INGREDIENT.test(stack);
+        return getTamingIngredient().test(stack);
     }
 
     protected boolean isTamable(PlayerEntity player, ItemStack stack) {
@@ -276,12 +286,12 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     @Override
-    public ItemStack tryEquip(ItemStack equipment) {
+    public ItemStack tryEquip(ServerWorld world, ItemStack equipment) {
         EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
         ItemStack itemStack = getMainHandStack();
-        if (FOOD.test(equipment) || this.canPickupItem(equipment)) {
+        if (getFoodIngredient().test(equipment) || this.canPickupItem(equipment)) {
             if (!itemStack.isEmpty()) {
-                ItemEntity itemEntity = this.dropStack(itemStack);
+                ItemEntity itemEntity = this.dropStack(world, itemStack);
                 if (itemEntity != null) {
                     itemEntity.setPickupDelay(40);
                 }
@@ -295,19 +305,19 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     @Override
-    protected void loot(ItemEntity item) {
+    protected void loot(ServerWorld world, ItemEntity item) {
         // Don't pick up threw/spat items
         if (this.getThrower(item) == this.getUuid()) {
             return;
         }
-        super.loot(item);
+        super.loot(world, item);
     }
 
     @Override
     public boolean canPickupItem(ItemStack stack) {
         ItemStack mainHandStack = getMainHandStack();
 
-        if ((!FOOD.test(mainHandStack) && FOOD.test(stack))) {
+        if ((!getFoodIngredient().test(mainHandStack) && getFoodIngredient().test(stack))) {
             return true;
         }
         if (mainHandStack.isEmpty()) {
@@ -328,7 +338,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        GooseEntity gooseEntity = ModEntityTypes.getGoose().create(world);
+        GooseEntity gooseEntity = ModEntityTypes.getGoose().create(world, SpawnReason.BREEDING);
         if (gooseEntity != null && entity instanceof GooseEntity goose) {
             if (this.random.nextBoolean()) {
                 gooseEntity.setVariant(this.getVariant());
@@ -420,8 +430,8 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
     @Nullable
     @Override
-    public ItemEntity dropStack(ItemStack stack, float yOffset) {
-        ItemEntity droppedStack = super.dropStack(stack, yOffset);
+    public ItemEntity dropStack(ServerWorld world, ItemStack stack, float yOffset) {
+        ItemEntity droppedStack = super.dropStack(world, stack, yOffset);
         if (droppedStack == null) {
             return null;
         }
@@ -502,6 +512,11 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
     public boolean isHungry() {
         return isAngry() || super.isHungry();
+    }
+
+    @Override
+    public boolean tamedNotFollowOwner() {
+        return UntitledConfig.gooseTamedNotFollow();
     }
 
     static class CleanGoal extends Goal {
@@ -585,7 +600,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
                 return false;
             }
             if (goose.age % 5 == 0) {
-                targetEntity = this.goose.getWorld().getClosestEntity(IllagerEntity.class, TargetPredicate.createAttackable(), goose, goose.getX(), goose.getY(), goose.getZ(), goose.getBoundingBox().expand(INTIMIDATE_DISTANCE, 3, INTIMIDATE_DISTANCE));
+                targetEntity = getServerWorld(this.goose).getClosestEntity(IllagerEntity.class, TargetPredicate.createAttackable(), goose, goose.getX(), goose.getY(), goose.getZ(), goose.getBoundingBox().expand(INTIMIDATE_DISTANCE, 3, INTIMIDATE_DISTANCE));
                 return targetEntity != null;
             }
             return false;
@@ -657,7 +672,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             if (animationTimer > 0) {
                 animationTimer--;
                 if (animationTimer == ANIMATION_ATTACK) {
-                    this.mob.tryAttack(target);
+                    this.mob.tryAttack(getServerWorld(this.goose), target);
                 }
                 if (animationTimer == 0) {
                     goose.setAnimation(GooseEntity.ANIMATION_IDLE);
@@ -682,7 +697,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             this.setControls(EnumSet.of(Goal.Control.MOVE));
         }
 
-        private static final Predicate<ItemEntity> PICKABLE_DROP_FILTER = (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && GooseEntity.FOOD.test(itemEntity.getStack());
+        private static final Predicate<ItemEntity> PICKABLE_DROP_FILTER = (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && GooseEntity.getFoodIngredient().test(itemEntity.getStack());
 
         public boolean canStart() {
             if (goose.isBaby() || !goose.getEquippedStack(EquipmentSlot.MAINHAND).isEmpty()) {
@@ -762,7 +777,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             }
 
             playerHandStack = targetPlayer.getMainHandStack();
-            return GooseEntity.FOOD.test(playerHandStack);
+            return GooseEntity.getFoodIngredient().test(playerHandStack);
         }
 
         @Override
@@ -772,7 +787,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             }
 
             playerHandStack = targetPlayer.getMainHandStack();
-            return GooseEntity.FOOD.test(playerHandStack);
+            return GooseEntity.getFoodIngredient().test(playerHandStack);
         }
 
         @Override
@@ -791,7 +806,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             if (goose.distanceTo(targetPlayer) <= 2.0f) {
                 ItemStack stolenItemStack = playerHandStack.copy();
                 stolenItemStack.setCount(1);
-                if (!goose.tryEquip(stolenItemStack).isEmpty()) {
+                if (!goose.tryEquip(getServerWorld(goose), stolenItemStack).isEmpty()) {
                     playerHandStack.decrement(1);
                 }
 

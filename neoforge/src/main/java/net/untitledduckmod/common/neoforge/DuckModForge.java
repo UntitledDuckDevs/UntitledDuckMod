@@ -19,11 +19,11 @@ import net.untitledduckmod.common.platform.neoforge.RegistryHelperImpl;
 @Mod(DuckMod.MOD_ID)
 public class DuckModForge {
 
-    public DuckModForge(IEventBus bus, Dist dist) {
+    public DuckModForge(IEventBus bus) {
         DuckMod.preInit();
         ModBiomeModifier.init();
-        RegistryHelperImpl.ITEMS.register(bus);
         RegistryHelperImpl.ENTITY_TYPES.register(bus);
+        RegistryHelperImpl.ITEMS.register(bus);
         RegistryHelperImpl.SOUND_EVENTS.register(bus);
         RegistryHelperImpl.BIOME_MODIFIERS.register(bus);
         RegistryHelperImpl.STATUS_EFFECTS.register(bus);

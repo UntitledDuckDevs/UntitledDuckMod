@@ -15,7 +15,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -23,15 +22,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
+import net.minecraft.loot.context.LootWorldContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.MinecraftServer;
@@ -54,7 +54,8 @@ import net.minecraft.world.event.listener.EntityGameEventHandler;
 import net.minecraft.world.event.listener.GameEventListener;
 import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
-import net.untitledduckmod.common.entity.ai.goal.common.FollowParentGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.WFollowOwnerGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.WFollowParentGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
@@ -85,8 +86,6 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     private static final RawAnimation DIVE_ANIM = RawAnimation.begin().thenPlay("dive").thenPlay("idle_swim");
     private static final RawAnimation DANCE_ANIM = RawAnimation.begin().thenPlay("dance");
 
-    public static final Ingredient BREEDING_INGREDIENT = Ingredient.fromTag(ModTags.ItemTags.DUCK_BREEDING_FOOD);
-    public static final Ingredient TAMING_INGREDIENT = Ingredient.fromTag(ModTags.ItemTags.DUCK_TAMING_FOOD);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean isFromSack = false;
     private @Nullable BlockPos jukeboxPos;
@@ -102,16 +101,16 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     public static DefaultAttributeContainer.Builder getDefaultAttributes() {
-        return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 7.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2D)
-                .add(EntityAttributes.GENERIC_LUCK);
+        return WaterfowlEntity.createAnimalAttributes()
+                .add(EntityAttributes.MAX_HEALTH, 7.0D)
+                .add(EntityAttributes.MOVEMENT_SPEED, 0.2D)
+                .add(EntityAttributes.LUCK, 2.0D);
     }
 
     @Override
     public void setTamed(boolean tamed, boolean updateAttributes) {
         super.setTamed(tamed, updateAttributes);
-        Objects.requireNonNull(getAttributeInstance(EntityAttributes.GENERIC_LUCK)).setBaseValue(2.0);
+        Objects.requireNonNull(getAttributeInstance(EntityAttributes.LUCK)).setBaseValue(2.0);
     }
 
     public static boolean checkDuckSpawnRules(EntityType<DuckEntity> duck, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
@@ -203,6 +202,18 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
         }
     }
 
+    public static Ingredient getFoodIngredient() {
+        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.DUCK_FOOD));
+    }
+
+    public static Ingredient getBreedingIngredient() {
+        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.DUCK_BREEDING_FOOD));
+    }
+
+    public static Ingredient getTamingIngredient() {
+        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.DUCK_TAMING_FOOD));
+    }
+
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
@@ -210,9 +221,9 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
         this.goalSelector.add(2, new AnimalMateGoal(this, 1.0D));
         this.goalSelector.add(2, new EatGoal(this));
         this.goalSelector.add(3, new SitGoal(this));
-        this.goalSelector.add(4, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
-        this.goalSelector.add(5, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.add(6, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F));
+        this.goalSelector.add(4, new TemptGoal(this, 1.0D, getBreedingIngredient(), false));
+        this.goalSelector.add(5, new WFollowParentGoal(this, 1.1D));
+        this.goalSelector.add(6, new WFollowOwnerGoal(this, 1.6D, 10.0F, 2.0F));
         this.goalSelector.add(6, new CleanGoal(this));
         this.goalSelector.add(6, new DiveGoal(this));
         this.goalSelector.add(7, new WanderAroundGoal(this, 1.0D));
@@ -223,9 +234,9 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     @Override
     public boolean isBreedingItem(ItemStack stack) {
         if (this.isTamed()) {
-            return TAMING_INGREDIENT.test(stack) || BREEDING_INGREDIENT.test(stack);
+            return getTamingIngredient().test(stack) || getBreedingIngredient().test(stack);
         }
-        return BREEDING_INGREDIENT.test(stack);
+        return getBreedingIngredient().test(stack);
     }
 
     @Override
@@ -275,19 +286,19 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
             }
 
             discard();
-            return ActionResult.success(this.getWorld().isClient);
+            return ActionResult.SUCCESS;
         }
         return super.interactMob(player, hand);
     }
 
     protected boolean isTamableItem(ItemStack stack) {
-        return TAMING_INGREDIENT.test(stack);
+        return getTamingIngredient().test(stack);
     }
 
     @Nullable
     @Override
     public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        DuckEntity duckEntity = ModEntityTypes.getDuck().create(world);
+        DuckEntity duckEntity = ModEntityTypes.getDuck().create(world, SpawnReason.BREEDING);
         if (duckEntity != null && entity instanceof DuckEntity duck) {
             if (this.random.nextBoolean()) {
                 duckEntity.setVariant(this.getVariant());
@@ -423,13 +434,13 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     @Override
-    public ItemStack tryEquip(ItemStack equipment) {
+    public ItemStack tryEquip(ServerWorld world, ItemStack equipment) {
         EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
         ItemStack itemStack = getMainHandStack();
 
         if (canPickupItem(equipment)) {
             if (!itemStack.isEmpty()) {
-                ItemEntity itemEntity = this.dropStack(itemStack);
+                ItemEntity itemEntity = this.dropStack(world, itemStack);
                 if (itemEntity != null) {
                     itemEntity.setPickupDelay(40);
                 }
@@ -443,11 +454,11 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     @Override
-    protected void loot(ItemEntity item) {
+    protected void loot(ServerWorld world, ItemEntity item) {
         // Tamed duck should not be traded with non-owners
         if (this.isTamed() && !this.getMainHandStack().isEmpty() && item.getOwner() != null && !item.getOwner().getUuid().equals(this.getOwnerUuid()))
             return;
-        super.loot(item);
+        super.loot(world, item);
     }
 
     @Override
@@ -479,15 +490,15 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     public void fishing() {
         MinecraftServer server = this.getWorld().getServer();
         if (!this.getWorld().isClient && server != null) {
-            LootContextParameterSet lootBuilder = new LootContextParameterSet
-                    .Builder((ServerWorld)this.getWorld())
+            ServerWorld world = (ServerWorld) this.getWorld();
+            LootWorldContext lootWorldContext = new LootWorldContext.Builder(world)
                     .add(LootContextParameters.ORIGIN, this.getPos())
                     .add(LootContextParameters.TOOL, Items.FISHING_ROD.getDefaultStack())
                     .add(LootContextParameters.THIS_ENTITY, this)
-                    .luck((float) this.getAttributeValue(EntityAttributes.GENERIC_LUCK))
+                    .luck((float) this.getAttributeValue(EntityAttributes.LUCK))
                     .build(LootContextTypes.FISHING);
             LootTable lootTable = server.getReloadableRegistries().getLootTable(LootTables.FISHING_GAMEPLAY);
-            List<ItemStack> list = lootTable.generateLoot(lootBuilder);
+            List<ItemStack> list = lootTable.generateLoot(lootWorldContext);
             for (ItemStack stack : list) {
                 if (this.isTamed() || isTamableItem(stack)) {
                     this.setStackInHand(Hand.MAIN_HAND, stack);
@@ -496,6 +507,11 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
                 }
             }
         }
+    }
+
+    @Override
+    public boolean tamedNotFollowOwner() {
+        return UntitledConfig.duckTamedNotFollow();
     }
 
     private class VibrationCallback implements Vibrations.Callback {

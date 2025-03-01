@@ -10,8 +10,8 @@ public class DuckModFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         DuckMod.preInit();
-        ModEntityTypes.registerAttributes(null);
         ModEntityTypes.setupSpawning(null);
+        ModEntityTypes.registerAttributes(null);
         ModItems.setupItemGroups(null);
         ModPotionsImpl.registerRecipes();
         DuckMod.postInit();

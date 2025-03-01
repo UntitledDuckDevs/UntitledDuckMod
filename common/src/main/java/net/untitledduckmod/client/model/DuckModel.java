@@ -3,21 +3,23 @@ package net.untitledduckmod.client.model;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.untitledduckmod.common.entity.DuckEntity;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
+import software.bernie.geckolib.renderer.GeoRenderer;
 
 public class DuckModel extends GeoModel<DuckEntity> {
 
     @Override
-    public Identifier getModelResource(DuckEntity object) {
+    public Identifier getModelResource(DuckEntity animatable, @Nullable GeoRenderer<DuckEntity> renderer) {
         return ModelIdentifiers.DUCK_MODEL_LOCATION;
     }
 
     @Override
-    public Identifier getTextureResource(DuckEntity animatable) {
+    public Identifier getTextureResource(DuckEntity animatable, @Nullable GeoRenderer<DuckEntity> renderer) {
         if (animatable.isBaby()) {
             return ModelIdentifiers.DUCKLING_TEXTURE;
         } else {

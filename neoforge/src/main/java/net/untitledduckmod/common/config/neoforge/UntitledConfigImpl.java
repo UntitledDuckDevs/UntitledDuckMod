@@ -14,12 +14,14 @@ public class UntitledConfigImpl {
     public static final ModConfigSpec.IntValue DUCK_MIN_GROUP_SIZE;
     public static final ModConfigSpec.IntValue DUCK_MAX_GROUP_SIZE;
     public static final ModConfigSpec.DoubleValue DUCK_FISHING_CHANGE;
+    public static final ModConfigSpec.BooleanValue DUCK_TAMED_NOT_FOLLOW;
 
     public static final ModConfigSpec.IntValue GOOSE_WEIGHT;
     public static final ModConfigSpec.IntValue GOOSE_MIN_GROUP_SIZE;
     public static final ModConfigSpec.IntValue GOOSE_MAX_GROUP_SIZE;
+    public static final ModConfigSpec.BooleanValue GOOSE_TAMED_NOT_FOLLOW;
 
-    public static final ModConfigSpec.ConfigValue<Float> FOOD_HEALING_VALUE;
+    public static final ModConfigSpec.DoubleValue FOOD_HEALING_VALUE;
 
     public static final ModConfigSpec.ConfigValue<List<? extends String>>  INTIMIDATION_BLACKLIST;
 
@@ -42,6 +44,10 @@ public class UntitledConfigImpl {
                 .comment("Chance of ducks successfully fishing.")
                 .worldRestart()
                 .defineInRange("duck_fishing_change", 0.5D, 0.0D, 1);
+        DUCK_TAMED_NOT_FOLLOW = builder
+                .comment("No more following behavior when tamed.")
+                .worldRestart()
+                .define("duck_tamed_no_follow", false);
         builder.pop();
 
         builder.push("goose");
@@ -55,12 +61,16 @@ public class UntitledConfigImpl {
         GOOSE_MAX_GROUP_SIZE = builder.comment("The maximum number of geese that should be spawned at once in a group.")
                 .worldRestart()
                 .defineInRange("goose_max_group_size", 4, 0, Integer.MAX_VALUE);
+        GOOSE_TAMED_NOT_FOLLOW = builder
+                .comment("No more following behavior when tamed.")
+                .worldRestart()
+                .define("goose_tamed_no_follow", false);
         builder.pop();
 
         builder.push("common");
         FOOD_HEALING_VALUE = builder.comment("Food can heal the health value of duck & goose")
                 .worldRestart()
-                .defineInRange("food_healing_value", 0.5F, 0F, 100F, Float.class);
+                .defineInRange("food_healing_value", 0.5D, 0D, 100D);
         builder.pop();
 
         builder.push("intimidation");
@@ -88,6 +98,10 @@ public class UntitledConfigImpl {
         return DUCK_FISHING_CHANGE.get();
     }
 
+    public static boolean duckTamedNotFollow() {
+        return DUCK_TAMED_NOT_FOLLOW.get();
+    }
+
     public static int gooseWeight() {
         return GOOSE_WEIGHT.get();
     }
@@ -100,8 +114,16 @@ public class UntitledConfigImpl {
         return GOOSE_MAX_GROUP_SIZE.get();
     }
 
+    public static boolean gooseTamedNotFollow() {
+        return GOOSE_TAMED_NOT_FOLLOW.get();
+    }
+
     public static float foodHealingValue() {
-        return FOOD_HEALING_VALUE.get();
+        try {
+            return FOOD_HEALING_VALUE.get().floatValue();
+        } catch (Exception e) {
+            return 0.5F;
+        }
     }
 
     public static List<? extends String> intimidationBlacklist() {

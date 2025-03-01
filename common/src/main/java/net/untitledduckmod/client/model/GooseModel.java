@@ -3,23 +3,24 @@ package net.untitledduckmod.client.model;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.untitledduckmod.common.entity.GooseEntity;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
+import software.bernie.geckolib.renderer.GeoRenderer;
 
 import java.util.Objects;
 
-
 public class GooseModel extends GeoModel<GooseEntity> {
     @Override
-    public Identifier getModelResource(GooseEntity object) {
+    public Identifier getModelResource(GooseEntity animatable, @Nullable GeoRenderer<GooseEntity> renderer) {
         return ModelIdentifiers.GOOSE_MODEL_LOCATION;
     }
 
     @Override
-    public Identifier getTextureResource(GooseEntity entity) {
+    public Identifier getTextureResource(GooseEntity entity, @Nullable GeoRenderer<GooseEntity> renderer) {
         if (entity.isBaby()) {
             return ModelIdentifiers.GOSLING_TEXTURE;
         } else {

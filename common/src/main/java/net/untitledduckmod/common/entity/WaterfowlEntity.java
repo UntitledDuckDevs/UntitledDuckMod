@@ -19,7 +19,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
@@ -101,10 +103,10 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public void setTamed(boolean tamed, boolean updateAttributes) {
         super.setTamed(tamed, updateAttributes);
         if (tamed) {
-            Objects.requireNonNull(getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(20.0);
+            Objects.requireNonNull(getAttributeInstance(EntityAttributes.MAX_HEALTH)).setBaseValue(20.0);
             setHealth(20.0F);
         } else {
-            Objects.requireNonNull(getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(7.0);
+            Objects.requireNonNull(getAttributeInstance(EntityAttributes.MAX_HEALTH)).setBaseValue(7.0);
         }
     }
 
@@ -136,9 +138,9 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public void tryEating() {
         assert !this.getWorld().isClient();
 
-        ItemStack stack = getMainHandStack();;
+        ItemStack stack = getMainHandStack();
         stack.decrement(1);
-        playSound(getEatSound(stack), 0.5F + 0.5F * (float) this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
+        playSound(SoundEvents.ENTITY_GENERIC_EAT.value(), 0.5F + 0.5F * (float) this.random.nextInt(2), (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
         if (stack.isEmpty()) {
             setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
         }
@@ -160,11 +162,11 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public void tickMovement() {
         super.tickMovement();
 
-        if (!this.getWorld().isClient) {
+        if (this.getWorld() instanceof ServerWorld world) {
             // Lay egg
             if (isAlive() && !isBaby() && --eggLayTime <= 0) {
                 this.playSound(this.getLayEggSound(), 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-                this.dropItem(this.getEggItem());
+                this.dropItem(world, this.getEggItem());
                 this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
             }
 
@@ -256,9 +258,9 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean damage(ServerWorld world, DamageSource source, float amount) {
         this.setSitting(false);
-        return super.damage(source, amount);
+        return super.damage(world, source, amount);
     }
 
     @Override
@@ -268,6 +270,10 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
 
     public int getEggLayTime() {
         return this.eggLayTime;
+    }
+
+    public boolean tamedNotFollowOwner() {
+        return false;
     }
 
 }

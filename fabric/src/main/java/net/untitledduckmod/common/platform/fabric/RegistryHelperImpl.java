@@ -8,24 +8,28 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.untitledduckmod.DuckMod;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class RegistryHelperImpl {
-    public static <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {
-        T registry = Registry.register(Registries.ITEM, DuckMod.id(name), item.get());
+    public static <T extends Item> Supplier<T> registerItem(String name, Function<Item.Settings, T> factory, Item.Settings settings) {
+        RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, DuckMod.id(name));
+        T item = factory.apply(settings.registryKey(key));
+        T registry = Registry.register(Registries.ITEM, key, item);
         return () -> registry;
     }
 
-    public static <T extends Item> Supplier<T> registerSpawnEggItem
+    public static Supplier<SpawnEggItem> registerSpawnEggItem
             (
-            String name, Supplier<? extends EntityType<? extends MobEntity>> type,
-            int primaryColor, int secondaryColor, Item.Settings settings
+            String name, Supplier<? extends EntityType<? extends MobEntity>> type
             ) {
-        return (Supplier<T>) registerItem(name, () -> new SpawnEggItem(type.get(), primaryColor, secondaryColor, settings));
+        return registerItem(name, (settings) -> new SpawnEggItem(type.get(), settings), new Item.Settings());
     }
 
     public static <T extends EntityType<?>> Supplier<T> registerEntity(String name, Supplier<T> entityType) {
