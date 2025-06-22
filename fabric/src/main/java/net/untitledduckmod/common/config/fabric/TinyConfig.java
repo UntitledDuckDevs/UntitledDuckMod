@@ -29,16 +29,14 @@ SOFTWARE.
 package net.untitledduckmod.common.config.fabric;
 
 import com.google.common.collect.Lists;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -57,6 +55,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 import net.untitledduckmod.DuckMod;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,6 +69,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -126,10 +126,20 @@ public abstract class TinyConfig {
     public static final Map<String, Class<? extends TinyConfig>> configClass = new HashMap<>();
     private static Path path;
 
+    public static class Serializer implements JsonDeserializer<Identifier>, JsonSerializer<Identifier> {
+        public Identifier deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            return Identifier.of(JsonHelper.asString(jsonElement, "location"));
+        }
+
+        public JsonElement serialize(Identifier identifier, Type type, JsonSerializationContext jsonSerializationContext) {
+            return new JsonPrimitive(identifier.toString());
+        }
+    }
+
     private static final Gson gson = new GsonBuilder()
             .excludeFieldsWithModifiers(Modifier.TRANSIENT).excludeFieldsWithModifiers(Modifier.PRIVATE)
             .addSerializationExclusionStrategy(new HiddenAnnotationExclusionStrategy())
-            .registerTypeAdapter(Identifier.class, new Identifier.Serializer())
+            .registerTypeAdapter(Identifier.class, new Serializer())
             .setPrettyPrinting().create();
 
     public static @Nullable Object getDefaultValue(String modid, String entry) {
@@ -472,10 +482,11 @@ public abstract class TinyConfig {
 
         @Override
         protected void drawHeaderAndFooterSeparators(DrawContext context) {
-            if (renderHeaderSeparator) super.drawHeaderAndFooterSeparators(context);
-            else { RenderSystem.enableBlend();
-                context.drawTexture(RenderLayer::getGuiTextured, this.client.world == null ? Screen.FOOTER_SEPARATOR_TEXTURE : Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE, this.getX(), this.getBottom(), 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
-                RenderSystem.disableBlend(); }
+            if (renderHeaderSeparator)
+                super.drawHeaderAndFooterSeparators(context);
+            else {
+                context.drawTexture(RenderPipelines.GUI_TEXTURED, this.client.world == null ? Screen.FOOTER_SEPARATOR_TEXTURE : Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE, this.getX(), this.getBottom(), 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
+            }
         }
         public void addButton(List<ClickableWidget> buttons, Text text, EntryInfo info) { this.addEntry(new ButtonEntry(buttons, text, info)); }
         public void clear() { this.clearEntries(); }
