@@ -10,11 +10,11 @@ public class WFollowOwnerGoal extends net.minecraft.entity.ai.goal.FollowOwnerGo
     }
 
     public boolean canStart() {
-        return !entity.tamedNotFollowOwner() && super.canStart();
+        return entity.tamedFollowOwner() && super.canStart();
     }
 
     public boolean shouldContinue() {
-        return !this.entity.tamedNotFollowOwner() && super.shouldContinue();
+        return this.entity.tamedFollowOwner() && super.shouldContinue();
     }
 
 }

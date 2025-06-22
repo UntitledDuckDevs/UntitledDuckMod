@@ -1,10 +1,8 @@
 package net.untitledduckmod.common.entity;
 
-import com.mojang.logging.LogUtils;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Dynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.*;
@@ -25,9 +23,6 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.context.LootWorldContext;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
@@ -39,6 +34,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.NbtReadView;
+import net.minecraft.storage.NbtWriteView;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -62,12 +61,14 @@ import net.untitledduckmod.common.init.ModItems;
 import net.untitledduckmod.common.init.ModSoundEvents;
 import net.untitledduckmod.common.init.ModTags;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationTest;
 import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.keyframe.event.ParticleKeyframeEvent;
+import software.bernie.geckolib.animation.keyframe.event.KeyFrameEvent;
+import software.bernie.geckolib.animation.keyframe.event.data.ParticleKeyframeData;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
@@ -75,8 +76,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public class DuckEntity extends WaterfowlEntity implements Vibrations, AnimationController.ParticleKeyframeHandler<DuckEntity> {
-    private static final Logger LOGGER = LogUtils.getLogger();
+public class DuckEntity extends WaterfowlEntity implements Vibrations, AnimationController.KeyframeEventHandler<DuckEntity, ParticleKeyframeData> {
     public static final String IS_FROM_SACK_TAG = "isFromSack";
 
     private static final TrackedData<Boolean> DANCING = DataTracker.registerData(DuckEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -124,20 +124,24 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
-        tag.putBoolean(IS_FROM_SACK_TAG, isFromSack);
-        DataResult<NbtElement> result = ListenerData.CODEC.encodeStart(NbtOps.INSTANCE, this.vibrationListenerData);
-        result.resultOrPartial(LOGGER::error).ifPresent((nbtElement) -> tag.put("listener", nbtElement));
+    public void writeCustomData(WriteView view) {
+        super.writeCustomData(view);
+        view.putBoolean(IS_FROM_SACK_TAG, isFromSack);
+
+        if (view instanceof NbtWriteView nbtWriteView) {
+            nbtWriteView.put("listener", ListenerData.CODEC, this.vibrationListenerData);
+        }
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
-        setFromSack(tag.getBoolean(IS_FROM_SACK_TAG));
-        if (tag.contains("listener", NbtElement.COMPOUND_TYPE)) {
-            DataResult<ListenerData> result = ListenerData.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, tag.getCompound("listener")));
-            result.resultOrPartial(LOGGER::error).ifPresent((listenerData) -> this.vibrationListenerData = listenerData);
+    public void readCustomData(ReadView view) {
+        super.readCustomData(view);
+
+        setFromSack(view.getBoolean(IS_FROM_SACK_TAG, false));
+        if (view instanceof NbtReadView nbtReadView) {
+            var listenerData = nbtReadView.read("listener", ListenerData.CODEC);
+
+            listenerData.ifPresent(data -> this.vibrationListenerData = data);
         }
     }
 
@@ -203,15 +207,15 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     public static Ingredient getFoodIngredient() {
-        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.DUCK_FOOD));
+        return Ingredient.ofTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.DUCK_FOOD));
     }
 
     public static Ingredient getBreedingIngredient() {
-        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.DUCK_BREEDING_FOOD));
+        return Ingredient.ofTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.DUCK_BREEDING_FOOD));
     }
 
     public static Ingredient getTamingIngredient() {
-        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.DUCK_TAMING_FOOD));
+        return Ingredient.ofTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.DUCK_TAMING_FOOD));
     }
 
     @Override
@@ -268,12 +272,12 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         ItemStack stackInHand = player.getStackInHand(hand);
         if (stackInHand.getItem() == ModItems.EMPTY_DUCK_SACK.get()) {
-            NbtCompound duckData = new NbtCompound();
-            if (saveSelfNbt(duckData)) {
+            NbtWriteView duckData = NbtWriteView.create(errorReporter);
+            if (saveSelfData(duckData)) {
                 stackInHand.decrementUnlessCreative(1, player);
 
                 ItemStack duckSack = new ItemStack(ModItems.DUCK_SACK.get());
-                duckSack.set(DataComponentTypes.ENTITY_DATA, NbtComponent.of(duckData));
+                duckSack.set(DataComponentTypes.ENTITY_DATA, NbtComponent.of(duckData.getNbt()));
 
                 if (stackInHand.isEmpty()) {
                     player.setStackInHand(hand, duckSack);
@@ -306,7 +310,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
                 duckEntity.setVariant(duck.getVariant());
             }
             if (this.isTamed()) {
-                duckEntity.setOwnerUuid(this.getOwnerUuid());
+                duckEntity.setOwner(this.getOwnerReference());
                 duckEntity.setTamed(true, true);
             }
         }
@@ -315,7 +319,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        AnimationController<DuckEntity> controller = new AnimationController<>(this, "controller", 2, this::predicate);
+        AnimationController<DuckEntity> controller = new AnimationController<>("controller", 2, this::predicate);
         controller.setParticleKeyframeHandler(this);
         controllerRegistrar.add(controller);
     }
@@ -330,12 +334,13 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
         return ModItems.DUCK_EGG.get();
     }
 
-    @SuppressWarnings("rawtypes")
-    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
-        float limbSwingAmount = event.getLimbSwingAmount();
+    @SuppressWarnings("SameReturnValue")
+    private <P extends GeoAnimatable> PlayState predicate(AnimationTest<P> event) {
+        var livingRenderState = (LivingEntityRenderState)event.renderState();
+        float limbSwingAmount = livingRenderState.limbSwingAmplitude;
         boolean isMoving = !(limbSwingAmount > -0.05F && limbSwingAmount < 0.05F);
         boolean inWater = isTouchingWater();
-        AnimationController<P> controller = event.getController();
+        AnimationController<P> controller = event.controller();
         if (isFlapping) {
             controller.setAnimation(FLY_ANIM);
             return PlayState.CONTINUE;
@@ -403,7 +408,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     @Override
-    public void handle(ParticleKeyframeEvent particleKeyframeEvent) {
+    public void handle(KeyFrameEvent<DuckEntity, ParticleKeyframeData> event) {
         ItemStack stack = getMainHandStack();
         if (stack == ItemStack.EMPTY) {
             return;
@@ -415,7 +420,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
             Vec3d rotationVec = Vec3d.fromPolar(0, bodyYaw);
             Vec3d pos = new Vec3d(this.getX() + rotationVec.x / 2.0D, getEyeY() - 0.2D, this.getZ() + rotationVec.z / 2.0D);
-            this.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z,
+            this.getWorld().addParticleClient(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z,
                     vel.x, vel.y + 0.05D, vel.z);
         }
     }
@@ -456,7 +461,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     @Override
     protected void loot(ServerWorld world, ItemEntity item) {
         // Tamed duck should not be traded with non-owners
-        if (this.isTamed() && !this.getMainHandStack().isEmpty() && item.getOwner() != null && !item.getOwner().getUuid().equals(this.getOwnerUuid()))
+        if (this.isTamed() && !this.getMainHandStack().isEmpty() && item.getOwner() != null && !item.getOwner().equals(this.getOwner()))
             return;
         super.loot(world, item);
     }
@@ -510,8 +515,8 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     @Override
-    public boolean tamedNotFollowOwner() {
-        return UntitledConfig.duckTamedNotFollow();
+    public boolean tamedFollowOwner() {
+        return !UntitledConfig.duckTamedNotFollow();
     }
 
     private class VibrationCallback implements Vibrations.Callback {
