@@ -21,7 +21,10 @@ public enum LayEggProvider implements IEntityComponentProvider, IServerDataProvi
         if (!accessor.getServerData().contains("NextEggIn")) {
             return;
         }
-        tooltip.add(Text.translatable("jade.nextEgg", IThemeHelper.get().seconds(accessor.getServerData().getInt("NextEggIn"), accessor.tickRate())));
+
+        var nextEggIn = accessor.getServerData().getInt("NextEggIn").orElse(12000);
+
+        tooltip.add(Text.translatable("jade.nextEgg", IThemeHelper.get().seconds(nextEggIn, accessor.tickRate())));
     }
 
     @Override
