@@ -15,8 +15,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.stat.Stats;
+import net.minecraft.storage.NbtReadView;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -30,6 +32,7 @@ import net.untitledduckmod.common.entity.DuckEntity;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
 import net.untitledduckmod.common.init.ModSoundEvents;
+import net.untitledduckmod.common.NbtUuidHelper;
 
 import java.util.UUID;
 
@@ -91,7 +94,7 @@ public class DuckSackItem extends Item {
             BlockPos pos = blockHitResult.getBlockPos();
             if (!(world.getBlockState(pos).getBlock() instanceof FluidBlock)) {
                 return ActionResult.PASS;
-            } else if (world.canPlayerModifyAt(user, pos) &&
+            } else if (world.canEntityModifyAt(user, pos) &&
                     user.canPlaceOn(pos, blockHitResult.getSide(), stack)) {
                 if (placeCreature((ServerWorld) world, pos, stack.getOrDefault(DataComponentTypes.ENTITY_DATA, NbtComponent.DEFAULT))) {
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
@@ -120,27 +123,38 @@ public class DuckSackItem extends Item {
         NbtCompound entityData = itemData.copyNbt();
         // Remove uuid when there already is a creature with same uuid.
         // This makes it possible to use the duck sack in creative, cloning every tag except the uuid.
-        if (entityData.containsUuid(Entity.UUID_KEY)) {
-            UUID uuid = entityData.getUuid(Entity.UUID_KEY);
+        if (NbtUuidHelper.containsUuid(entityData, Entity.UUID_KEY)) {
+            UUID uuid = NbtUuidHelper.getUuid(entityData, Entity.UUID_KEY);
             if (world.getEntity(uuid) != null) {
                 entityData.remove(Entity.UUID_KEY);
             }
         }
 
         // This makes it possible to use duck sack with an empty nbt
+        var entityType = EntityType.getId(ModEntityTypes.getDuck()).toString();
+
         if (!entityData.contains(Entity.ID_KEY)) {
-            entityData.putString(Entity.ID_KEY, EntityType.getId(ModEntityTypes.getDuck()).toString());
+            entityData.putString(Entity.ID_KEY, entityType);
         }
 
-        return EntityType.getEntityFromNbt(entityData, world, SpawnReason.BUCKET).map((newDuck) -> {
+        var errorReporter = new ErrorReporter.Logging(() -> entityType, DuckEntity.LOGGER);
+        var nbtReadView = NbtReadView.create(errorReporter, world.getRegistryManager(), entityData);
+        var optional = EntityType.getEntityFromData(nbtReadView, world, SpawnReason.BUCKET);
+
+        if (optional.isPresent()) {
+            var newDuck = optional.get();
+
             if (newDuck instanceof DuckEntity duck) {
-                duck.readNbt(entityData);
+                duck.readData(nbtReadView);
                 duck.setFromSack(true);
                 duck.refreshPositionAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.4D, (double) pos.getZ() + 0.5D, MathHelper.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
                 world.spawnEntity(duck);
+
+                return true;
             }
-            return newDuck;
-        }).isPresent();
+        }
+
+        return false;
     }
 
     @Override
@@ -150,7 +164,7 @@ public class DuckSackItem extends Item {
             if (itemData != null) {
                 NbtCompound duckData = itemData.copyNbt();
                 if (duckData.contains("CustomName")) {
-                    Text duckName = Text.of(duckData.getString("CustomName"));
+                    Text duckName = Text.of(duckData.getString("CustomName").orElse("duck"));
                     return Text.translatable("item.untitledduckmod.duck_sack.named", duckName);
                 }
             }
