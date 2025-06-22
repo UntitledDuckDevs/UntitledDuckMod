@@ -6,18 +6,10 @@
     "CCC"
   ],
   "key": {
-    "A": {
-      "item": "minecraft:milk_bucket"
-    },
-    "B": {
-      "item": "minecraft:sugar"
-    },
-    "C": {
-      "item": "minecraft:wheat"
-    },
-    "E": {
-      "item": "untitledduckmod:duck_egg"
-    }
+    "A": "minecraft:milk_bucket",
+    "B": "minecraft:sugar",
+    "C": "minecraft:wheat",
+    "E": "untitledduckmod:duck_egg"
   },
   "result": {
     "id": "minecraft:cake"
