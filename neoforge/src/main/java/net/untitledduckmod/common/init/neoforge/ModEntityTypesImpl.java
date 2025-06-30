@@ -34,10 +34,10 @@ public class ModEntityTypesImpl {
 
     public static void addBiomeSpawns(RegistryEntry<Biome> biome, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (biome.isIn(ModTags.BiomeTags.DUCK_BIOMES)) {
-            builder.getMobSpawnSettings().getSpawner(SpawnGroup.CREATURE).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getDuck(), UntitledConfig.duckWeight(), UntitledConfig.duckMinGroupSize(), UntitledConfig.duckMaxGroupSize()));
+            builder.getMobSpawnSettings().getSpawner(SpawnGroup.CREATURE).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getDuck(), UntitledConfig.duckMinGroupSize(), UntitledConfig.duckMaxGroupSize()), UntitledConfig.duckWeight());
         }
         if (biome.isIn(ModTags.BiomeTags.GOOSE_BIOMES)) {
-            builder.getMobSpawnSettings().getSpawner(SpawnGroup.CREATURE).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getGoose(), UntitledConfig.gooseWeight(), UntitledConfig.gooseMinGroupSize(), UntitledConfig.gooseMaxGroupSize()));
+            builder.getMobSpawnSettings().getSpawner(SpawnGroup.CREATURE).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getGoose(), UntitledConfig.gooseMinGroupSize(), UntitledConfig.gooseMaxGroupSize()), UntitledConfig.gooseWeight());
         }
     }
 
