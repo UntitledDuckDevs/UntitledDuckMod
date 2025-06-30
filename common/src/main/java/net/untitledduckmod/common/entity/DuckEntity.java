@@ -1,10 +1,9 @@
 package net.untitledduckmod.common.entity;
 
 import com.mojang.logging.LogUtils;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Dynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.*;
@@ -32,6 +31,7 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.MinecraftServer;
@@ -65,9 +65,12 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationTest;
 import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.keyframe.event.ParticleKeyframeEvent;
+import software.bernie.geckolib.animation.keyframe.event.KeyFrameEvent;
+import software.bernie.geckolib.animation.keyframe.event.data.ParticleKeyframeData;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
@@ -75,7 +78,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public class DuckEntity extends WaterfowlEntity implements Vibrations, AnimationController.ParticleKeyframeHandler<DuckEntity> {
+public class DuckEntity extends WaterfowlEntity implements Vibrations, AnimationController.KeyframeEventHandler<DuckEntity, ParticleKeyframeData> {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String IS_FROM_SACK_TAG = "isFromSack";
 
@@ -127,18 +130,16 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     public void writeCustomDataToNbt(NbtCompound tag) {
         super.writeCustomDataToNbt(tag);
         tag.putBoolean(IS_FROM_SACK_TAG, isFromSack);
-        DataResult<NbtElement> result = ListenerData.CODEC.encodeStart(NbtOps.INSTANCE, this.vibrationListenerData);
-        result.resultOrPartial(LOGGER::error).ifPresent((nbtElement) -> tag.put("listener", nbtElement));
+        RegistryOps<NbtElement> registryOps = this.getRegistryManager().getOps(NbtOps.INSTANCE);
+        tag.put("listener", ListenerData.CODEC, registryOps, this.vibrationListenerData);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound tag) {
         super.readCustomDataFromNbt(tag);
-        setFromSack(tag.getBoolean(IS_FROM_SACK_TAG));
-        if (tag.contains("listener", NbtElement.COMPOUND_TYPE)) {
-            DataResult<ListenerData> result = ListenerData.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, tag.getCompound("listener")));
-            result.resultOrPartial(LOGGER::error).ifPresent((listenerData) -> this.vibrationListenerData = listenerData);
-        }
+        setFromSack(tag.getBoolean(IS_FROM_SACK_TAG).orElse(false));
+        RegistryOps<NbtElement> registryOps = this.getRegistryManager().getOps(NbtOps.INSTANCE);
+        this.vibrationListenerData = tag.get("listener", ListenerData.CODEC, registryOps).orElseGet(Vibrations.ListenerData::new);
     }
 
     @Override
@@ -306,7 +307,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
                 duckEntity.setVariant(duck.getVariant());
             }
             if (this.isTamed()) {
-                duckEntity.setOwnerUuid(this.getOwnerUuid());
+                duckEntity.setOwner(this.getOwner());
                 duckEntity.setTamed(true, true);
             }
         }
@@ -315,7 +316,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        AnimationController<DuckEntity> controller = new AnimationController<>(this, "controller", 2, this::predicate);
+        AnimationController<DuckEntity> controller = new AnimationController<>("controller", 2, this::predicate);
         controller.setParticleKeyframeHandler(this);
         controllerRegistrar.add(controller);
     }
@@ -330,12 +331,13 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
         return ModItems.DUCK_EGG.get();
     }
 
-    @SuppressWarnings("rawtypes")
-    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
-        float limbSwingAmount = event.getLimbSwingAmount();
+    @SuppressWarnings("SameReturnValue")
+    private <P extends GeoAnimatable> PlayState predicate(AnimationTest<P> event) {
+        var livingRenderState = (LivingEntityRenderState)event.renderState();
+        float limbSwingAmount = livingRenderState.limbSwingAmplitude;
         boolean isMoving = !(limbSwingAmount > -0.05F && limbSwingAmount < 0.05F);
         boolean inWater = isTouchingWater();
-        AnimationController<P> controller = event.getController();
+        AnimationController<P> controller = event.controller();
         if (isFlapping) {
             controller.setAnimation(FLY_ANIM);
             return PlayState.CONTINUE;
@@ -403,7 +405,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     @Override
-    public void handle(ParticleKeyframeEvent particleKeyframeEvent) {
+    public void handle(KeyFrameEvent<DuckEntity, ParticleKeyframeData> event) {
         ItemStack stack = getMainHandStack();
         if (stack == ItemStack.EMPTY) {
             return;
@@ -415,7 +417,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
             Vec3d rotationVec = Vec3d.fromPolar(0, bodyYaw);
             Vec3d pos = new Vec3d(this.getX() + rotationVec.x / 2.0D, getEyeY() - 0.2D, this.getZ() + rotationVec.z / 2.0D);
-            this.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z,
+            this.getWorld().addParticleClient(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z,
                     vel.x, vel.y + 0.05D, vel.z);
         }
     }
@@ -456,7 +458,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     @Override
     protected void loot(ServerWorld world, ItemEntity item) {
         // Tamed duck should not be traded with non-owners
-        if (this.isTamed() && !this.getMainHandStack().isEmpty() && item.getOwner() != null && !item.getOwner().getUuid().equals(this.getOwnerUuid()))
+        if (this.isTamed() && !this.getMainHandStack().isEmpty() && item.getOwner() != null && !item.getOwner().equals(this.getOwner()))
             return;
         super.loot(world, item);
     }
@@ -510,8 +512,8 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     @Override
-    public boolean tamedNotFollowOwner() {
-        return UntitledConfig.duckTamedNotFollow();
+    public boolean tamedFollowOwner() {
+        return !UntitledConfig.gooseTamedNotFollow();
     }
 
     private class VibrationCallback implements Vibrations.Callback {
