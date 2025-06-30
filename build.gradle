@@ -11,7 +11,6 @@ architectury {
 
 subprojects {
     apply plugin: "dev.architectury.loom"
-    apply plugin: 'io.github.p03w.machete'
     apply plugin: "me.shedaniel.unified-publishing"
 
     loom {
@@ -29,10 +28,6 @@ subprojects {
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
         options.release = 21
-    }
-
-    machete {
-        json.enabled = false
     }
 }
 
