@@ -1,8 +1,6 @@
 {
   "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "untitledduckmod:raw_duck"
-  },
+  "ingredient": "untitledduckmod:raw_duck",
   "result": {
     "id": "untitledduckmod:cooked_duck"
   },

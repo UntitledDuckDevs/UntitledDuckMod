@@ -1,8 +1,6 @@
 {
   "type": "minecraft:smoking",
-  "ingredient": {
-    "item": "untitledduckmod:raw_goose"
-  },
+  "ingredient": "untitledduckmod:raw_goose",
   "result": {
     "id": "untitledduckmod:cooked_goose"
   },
