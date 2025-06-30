@@ -9,7 +9,7 @@ import net.untitledduckmod.client.renderer.entity.DuckRenderer;
 import net.untitledduckmod.client.renderer.entity.GooseRenderer;
 import net.untitledduckmod.common.init.ModEntityTypes;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class DuckModForgeClientSetup {
 
     @SubscribeEvent

@@ -1,31 +1,28 @@
 package net.untitledduckmod.client.model;
 
+import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.common.entity.GooseEntity;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
-import software.bernie.geckolib.renderer.GeoRenderer;
+import net.untitledduckmod.common.entity.WaterfowlEntity;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
 import java.util.Objects;
 
-public class GooseModel extends GeoModel<GooseEntity> {
-    @Override
-    public Identifier getModelResource(GooseEntity animatable, @Nullable GeoRenderer<GooseEntity> renderer) {
-        return ModelIdentifiers.GOOSE_MODEL_LOCATION;
+public class GooseModel extends WaterfowlModel<GooseEntity> {
+
+    public GooseModel() {
+        super(Identifier.of(DuckMod.MOD_ID, "goose"));
     }
 
     @Override
-    public Identifier getTextureResource(GooseEntity entity, @Nullable GeoRenderer<GooseEntity> renderer) {
-        if (entity.isBaby()) {
-            return ModelIdentifiers.GOSLING_TEXTURE;
-        } else {
-            if (entity.hasCustomName()) {
-                String name = Objects.requireNonNull(entity.getCustomName()).getString().toLowerCase();
+    public Identifier getTextureResource(GeoRenderState renderState) {
+        if (renderState instanceof LivingEntityRenderState livingEntityRenderState) {
+
+            if (livingEntityRenderState.baby) {
+                return ModelIdentifiers.GOSLING_TEXTURE;
+            } else if (livingEntityRenderState.customName != null) {
+                String name = Objects.requireNonNull(livingEntityRenderState.customName).getString().toLowerCase();
                 switch (name) {
                     case "ping" -> {
                         return ModelIdentifiers.PING_GOOSE_TEXTURE;
@@ -40,23 +37,8 @@ public class GooseModel extends GeoModel<GooseEntity> {
             }
         }
 
-        return entity.getVariant() == 0 ? ModelIdentifiers.GOOSE_TEXTURE : ModelIdentifiers.CANADIAN_GOOSE_TEXTURE;
-    }
-
-    @Override
-    public Identifier getAnimationResource(GooseEntity animatable) {
-        return ModelIdentifiers.GOOSE_ANIMATION_FILE_LOCATION;
-    }
-
-    @Override
-    public void setCustomAnimations(GooseEntity animatable, long instanceId, AnimationState<GooseEntity> animationState) {
-        super.setCustomAnimations(animatable, instanceId, animationState);
-
-        GeoBone head = this.getAnimationProcessor().getBone("head");
-        if (animatable.lookingAround() && head != null) {
-            EntityModelData extraData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-            head.setRotX(extraData.headPitch() * MathHelper.RADIANS_PER_DEGREE);
-            head.setRotY(extraData.netHeadYaw() * MathHelper.RADIANS_PER_DEGREE);
-        }
+        var variant = renderState.hasGeckolibData(WaterfowlEntity.VARIANT_TICKET) ? renderState.getGeckolibData(WaterfowlEntity.VARIANT_TICKET) : 0;
+        //noinspection DataFlowIssue
+        return variant == 0 ? ModelIdentifiers.GOOSE_TEXTURE : ModelIdentifiers.CANADIAN_GOOSE_TEXTURE;
     }
 }

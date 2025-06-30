@@ -1,7 +1,7 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "item/template_spawn_egg",
+    "model": "item/chicken_spawn_egg",
     "tints": [
       {
         "type": "minecraft:constant",

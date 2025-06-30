@@ -1,6 +1,5 @@
 package net.untitledduckmod.common.neoforge;
 
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -30,7 +29,7 @@ public class DuckModForge {
         RegistryHelperImpl.POTIONS.register(bus);
     }
 
-    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber
     public static class ModSetup {
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event) {

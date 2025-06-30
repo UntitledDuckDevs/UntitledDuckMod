@@ -29,10 +29,9 @@ SOFTWARE.
 package net.untitledduckmod.common.config.fabric;
 
 import com.google.common.collect.Lists;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -63,6 +62,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -128,9 +128,11 @@ public abstract class TinyConfig {
 
     private static final Gson gson = new GsonBuilder()
             .excludeFieldsWithModifiers(Modifier.TRANSIENT).excludeFieldsWithModifiers(Modifier.PRIVATE)
-            .addSerializationExclusionStrategy(new HiddenAnnotationExclusionStrategy())
-            .registerTypeAdapter(Identifier.class, new Identifier.Serializer())
-            .setPrettyPrinting().create();
+            .addSerializationExclusionStrategy(new NonEntryExclusionStrategy())
+            .registerTypeAdapter(Identifier.class, new TypeAdapter<Identifier>() {
+                public void write(JsonWriter out, Identifier id) throws IOException { out.value(id.toString()); }
+                public Identifier read(JsonReader in) throws IOException { return Identifier.of(in.nextString()); }
+            }).setPrettyPrinting().create();
 
     public static @Nullable Object getDefaultValue(String modid, String entry) {
         for (EntryInfo e : entries) {
@@ -473,9 +475,8 @@ public abstract class TinyConfig {
         @Override
         protected void drawHeaderAndFooterSeparators(DrawContext context) {
             if (renderHeaderSeparator) super.drawHeaderAndFooterSeparators(context);
-            else { RenderSystem.enableBlend();
-                context.drawTexture(RenderLayer::getGuiTextured, this.client.world == null ? Screen.FOOTER_SEPARATOR_TEXTURE : Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE, this.getX(), this.getBottom(), 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
-                RenderSystem.disableBlend(); }
+            else {
+                context.drawTexture(RenderLayer::getGuiTextured, this.client.world == null ? Screen.FOOTER_SEPARATOR_TEXTURE : Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE, this.getX(), this.getBottom(), 0.0F, 0.0F, this.getWidth(), 2, 32, 2);}
         }
         public void addButton(List<ClickableWidget> buttons, Text text, EntryInfo info) { this.addEntry(new ButtonEntry(buttons, text, info)); }
         public void clear() { this.clearEntries(); }
@@ -520,6 +521,11 @@ public abstract class TinyConfig {
             else if (info.field.getType() == double.class) info.setValue(Math.round((e.min() + value * (e.max() - e.min())) * (double) e.precision()) / (double) e.precision());
             else if (info.field.getType() == float.class) info.setValue(Math.round((e.min() + value * (e.max() - e.min())) * (float) e.precision()) / (float) e.precision());
         }
+    }
+
+    public static class NonEntryExclusionStrategy implements ExclusionStrategy {
+        public boolean shouldSkipClass(Class<?> clazz) { return false; }
+        public boolean shouldSkipField(FieldAttributes fieldAttributes) { return fieldAttributes.getAnnotation(Entry.class) == null; }
     }
 
     /**

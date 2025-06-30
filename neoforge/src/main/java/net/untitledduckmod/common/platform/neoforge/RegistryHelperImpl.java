@@ -1,7 +1,6 @@
 package net.untitledduckmod.common.platform.neoforge;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.component.ComponentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.effect.StatusEffect;
@@ -10,8 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.neoforged.neoforge.common.world.BiomeModifier;
