@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
 
+import java.util.UUID;
+
 public class WaterfowlEggEntity extends ThrownItemEntity {
     private final EntityType<? extends WaterfowlEntity> mobEntityType;
 
@@ -48,7 +50,7 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
     public void handleStatus(byte status) {
         if (status == 3) {
             for (int i = 0; i < 8; ++i) {
-                this.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, this.getStack()), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
+                this.getWorld().addParticleClient(new ItemStackParticleEffect(ParticleTypes.ITEM, this.getStack()), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
             }
         }
     }
@@ -74,8 +76,9 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
                     WaterfowlEntity waterfowl = mobEntityType.create(this.getWorld(), SpawnReason.TRIGGERED);
                     if (waterfowl != null) {
                         waterfowl.setBreedingAge(-24000);
+                        waterfowl.setUuid(UUID.randomUUID());
                         waterfowl.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
-                        waterfowl.setVariant((byte) this.getWorld().getRandom().nextInt(2)); // Randomly choose between the two variants
+                        waterfowl.setVariant(waterfowl.getRandomVariant()); // Randomly choose between the two variants
                         world.spawnEntity(waterfowl);
                     }
                 }

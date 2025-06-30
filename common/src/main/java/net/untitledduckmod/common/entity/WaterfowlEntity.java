@@ -1,5 +1,6 @@
 package net.untitledduckmod.common.entity;
 
+import com.mojang.logging.LogUtils;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.EntityData;
@@ -17,12 +18,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
@@ -31,15 +34,23 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.untitledduckmod.common.config.UntitledConfig;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
+import org.slf4j.Logger;
+import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.constant.dataticket.DataTicket;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
 import java.util.Objects;
+import java.util.UUID;
 
-public abstract class WaterfowlEntity extends TameableEntity implements GeoAnimatable {
+public abstract class WaterfowlEntity extends TameableEntity implements GeoEntity {
+    protected ErrorReporter errorReporter;
+    public static final Logger LOGGER = LogUtils.getLogger();
+
     public static final String EGG_LAY_TIME_TAG = "EggLayTime";
     public static final String VARIANT_TAG = "Variant";
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
+    public static final DataTicket<Byte> VARIANT_TICKET = DataTicket.create("waterfowl_variant", Byte.class);
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(WaterfowlEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(WaterfowlEntity.class, TrackedDataHandlerRegistry.BYTE);
     public static final byte ANIMATION_IDLE = 0;
@@ -66,13 +77,24 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     protected boolean panicked = false;
     protected WaterfowlEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
-        eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+        eggLayTime = this.getEggLayTime();
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
+
+        errorReporter = new ErrorReporter.Logging(() -> entityType.getName().toString(), LOGGER);
     }
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-        this.setVariant((byte) this.getRandom().nextInt(2)); // Randomly choose between the two variants
+        var variant = getRandomVariant();
+
+        this.setUuid(UUID.randomUUID());
+
+        if (entityData instanceof GeoRenderState geoRenderState) {
+            geoRenderState.addGeckolibData(WaterfowlEntity.VARIANT_TICKET, variant);
+        }
+
+        this.setVariant(variant); // Randomly choose between the two variants
+
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
@@ -84,19 +106,17 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
-        tag.putByte(VARIANT_TAG, getVariant());
-        tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
+    public void writeCustomData(WriteView view) {
+        super.writeCustomData(view);
+        view.putByte(VARIANT_TAG, getVariant());
+        view.putInt(EGG_LAY_TIME_TAG, eggLayTime);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
-        setVariant(tag.getByte(VARIANT_TAG));
-        if (tag.contains(EGG_LAY_TIME_TAG)) {
-            this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
-        }
+    public void readCustomData(ReadView view) {
+        super.readCustomData(view);
+        setVariant(view.getByte(VARIANT_TAG, getRandomVariant()));
+        this.eggLayTime = view.getInt(EGG_LAY_TIME_TAG, getRandomLayTime());
     }
 
     @Override
@@ -111,7 +131,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     }
 
     @Override
-    public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
+    public boolean handleFallDamage(double fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
 
@@ -121,6 +141,14 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
 
     public void setVariant(byte variant) {
         dataTracker.set(VARIANT, variant);
+    }
+
+    public byte getRandomVariant() {
+        return (byte) this.getWorld().getRandom().nextInt(2);
+    }
+
+    public int getRandomLayTime() {
+        return random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
     }
 
     public byte getAnimation() {
@@ -167,7 +195,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
             if (isAlive() && !isBaby() && --eggLayTime <= 0) {
                 this.playSound(this.getLayEggSound(), 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 this.dropItem(world, this.getEggItem());
-                this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+                this.eggLayTime = this.getRandomLayTime();
             }
 
             // Slow fall speed when flapping
@@ -272,8 +300,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         return this.eggLayTime;
     }
 
-    public boolean tamedNotFollowOwner() {
-        return false;
+    public boolean tamedFollowOwner() {
+        return true;
     }
-
 }

@@ -3,6 +3,7 @@ package net.untitledduckmod.common.entity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.*;
@@ -18,7 +19,6 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -27,6 +27,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -46,18 +48,19 @@ import net.untitledduckmod.common.init.ModTags;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationTest;
 import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.keyframe.event.ParticleKeyframeEvent;
+import software.bernie.geckolib.animation.keyframe.event.KeyFrameEvent;
+import software.bernie.geckolib.animation.keyframe.event.data.ParticleKeyframeData;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
-public class GooseEntity extends WaterfowlEntity implements Angerable, AnimationController.ParticleKeyframeHandler<GooseEntity> {
+public class GooseEntity extends WaterfowlEntity implements Angerable, AnimationController.KeyframeEventHandler<GooseEntity, ParticleKeyframeData> {
+
     private static final TrackedData<Integer> ANGER_TIME = DataTracker.registerData(GooseEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final UniformIntProvider ANGER_TIME_RANGE = UniformIntProvider.create(20, 39);
     private UUID targetUuid;
@@ -104,15 +107,15 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
-        this.writeAngerToNbt(tag);
+    public void writeCustomData(WriteView view) {
+        super.writeCustomData(view);
+        this.writeAngerToData(view);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
-        this.readAngerFromNbt(this.getWorld(), tag);
+    public void readCustomData(ReadView view) {
+        super.readCustomData(view);
+        this.readAngerFromData(this.getWorld(), view);
     }
 
     @Override
@@ -135,22 +138,22 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
                 double d = this.random.nextGaussian() * 0.02D;
                 double e = this.random.nextGaussian() * 0.02D;
                 double f = this.random.nextGaussian() * 0.02D;
-                this.getWorld().addParticle(particleEffect, this.getParticleX(1.0D), this.getRandomBodyY() + 0.5D, this.getParticleZ(1.0D), d, e, f);
+                this.getWorld().addParticleClient(particleEffect, this.getParticleX(1.0D), this.getRandomBodyY() + 0.5D, this.getParticleZ(1.0D), d, e, f);
             }
         }
         super.handleStatus(status);
     }
 
     public static Ingredient getFoodIngredient() {
-        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_FOOD));
+        return Ingredient.ofTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_FOOD));
     }
 
     public static Ingredient getBreedingIngredient() {
-        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_BREEDING_FOOD));
+        return Ingredient.ofTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_BREEDING_FOOD));
     }
 
     public static Ingredient getTamingIngredient() {
-        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_TAMING_FOOD));
+        return Ingredient.ofTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_TAMING_FOOD));
     }
 
     @Override
@@ -205,19 +208,11 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         }
         Entity holder = newStack.getHolder();
         if (holder != null && isAngry() && holder instanceof ItemEntity ie) {
-            UUID thrower = this.getThrower(ie);
-            if (thrower != null) {
+            if (ie.getOwner() != null) {
                 stopAnger();
             }
         }
         super.onEquipStack(slot, oldStack, newStack);
-    }
-
-    private UUID getThrower(ItemEntity ie) {
-        NbtCompound nbt = new NbtCompound();
-        ie.writeCustomDataToNbt(nbt);
-        if (nbt.containsUuid("Thrower")) return nbt.getUuid("Thrower");
-        else return null;
     }
 
     @Override
@@ -307,7 +302,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     @Override
     protected void loot(ServerWorld world, ItemEntity item) {
         // Don't pick up threw/spat items
-        if (this.getThrower(item) == this.getUuid()) {
+        if (item.getOwner() == this.getOwner()) {
             return;
         }
         super.loot(world, item);
@@ -346,7 +341,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
                 gooseEntity.setVariant(goose.getVariant());
             }
             if (this.isTamed()) {
-                gooseEntity.setOwnerUuid(this.getOwnerUuid());
+                gooseEntity.dataTracker.set(OWNER_UUID, Optional.ofNullable(this.getOwnerReference()));
                 gooseEntity.setTamed(true, true);
             }
         }
@@ -355,7 +350,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        AnimationController<GooseEntity> controller = new AnimationController<>(this, "controller", 2, this::predicate);
+        AnimationController<GooseEntity> controller = new AnimationController<>("controller", 2, this::predicate);
         controller.setParticleKeyframeHandler(this);
         controllerRegistrar.add(controller);
     }
@@ -370,12 +365,13 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         return ModItems.GOOSE_EGG.get();
     }
 
-    @SuppressWarnings("rawtypes")
-    private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
-        float limbSwingAmount = event.getLimbSwingAmount();
+    @SuppressWarnings("SameReturnValue")
+    private <P extends GeoAnimatable> PlayState predicate(AnimationTest<P> event) {
+        var livingRenderState = (LivingEntityRenderState)event.renderState();
+        float limbSwingAmount = livingRenderState.limbSwingAmplitude;
         boolean isMoving = !(limbSwingAmount > -0.05F && limbSwingAmount < 0.05F);
         boolean inWater = isTouchingWater();
-        AnimationController controller = event.getController();
+        AnimationController<P> controller = event.controller();
         if (isFlapping) {
             controller.setAnimation(FLY_ANIM);
             return PlayState.CONTINUE;
@@ -489,7 +485,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     @Override
-    public void handle(ParticleKeyframeEvent particleKeyframeEvent) {
+    public void handle(KeyFrameEvent<GooseEntity, ParticleKeyframeData> event) {
         ItemStack stack = getMainHandStack();
         if (stack == ItemStack.EMPTY) {
             return;
@@ -501,7 +497,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
             Vec3d rotationVec = Vec3d.fromPolar(0, bodyYaw);
             Vec3d pos = new Vec3d(this.getX() + rotationVec.x / 2.0D, getEyeY() - 0.2D, this.getZ() + rotationVec.z / 2.0D);
-            this.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z,
+            this.getWorld().addParticleClient(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), pos.x, pos.y, pos.z,
                     vel.x, vel.y + 0.05D, vel.z);
         }
     }
@@ -515,8 +511,8 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     @Override
-    public boolean tamedNotFollowOwner() {
-        return UntitledConfig.gooseTamedNotFollow();
+    public boolean tamedFollowOwner() {
+        return !UntitledConfig.gooseTamedNotFollow();
     }
 
     static class CleanGoal extends Goal {

@@ -1,11 +1,10 @@
 {
   "type": "minecraft:campfire_cooking",
-  "ingredient": {
-    "item": "untitledduckmod:raw_goose"
-  },
+  "category": "food",
+  "cookingtime": 600,
+  "experience": 0.55,
+  "ingredient": "untitledduckmod:raw_goose",
   "result": {
     "id": "untitledduckmod:cooked_goose"
-  },
-  "experience": 0.55,
-  "cookingtime": 600
+  }
 }
