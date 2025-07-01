@@ -27,9 +27,9 @@ public class ModEntityTypes {
 
     static {
         DUCK = RegistryHelper.registerEntity("duck", () -> EntityType.Builder.create(DuckEntity::new, SpawnGroup.CREATURE).dimensions(0.6f, 0.6f).maxTrackingRange(10).build(duckKey));
-        DUCK_EGG = RegistryHelper.registerEntity("duck_egg", () -> EntityType.Builder.<WaterfowlEggEntity>create(WaterfowlEggEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).build(duckEggKey));
+        DUCK_EGG = RegistryHelper.registerEntity("duck_egg", () -> EntityType.Builder.<WaterfowlEggEntity>create(WaterfowlEggEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).dropsNothing().build(duckEggKey));
         GOOSE = RegistryHelper.registerEntity("goose", () -> EntityType.Builder.create(GooseEntity::new, SpawnGroup.CREATURE).dimensions(0.7f, 1.2f).maxTrackingRange(10).build(gooseKey));
-        GOOSE_EGG = RegistryHelper.registerEntity("goose_egg", () -> EntityType.Builder.<WaterfowlEggEntity>create(WaterfowlEggEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).build(gooseEggKey));
+        GOOSE_EGG = RegistryHelper.registerEntity("goose_egg", () -> EntityType.Builder.<WaterfowlEggEntity>create(WaterfowlEggEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).dropsNothing().build(gooseEggKey));
     }
 
     // Call during mod initialization to ensure registration

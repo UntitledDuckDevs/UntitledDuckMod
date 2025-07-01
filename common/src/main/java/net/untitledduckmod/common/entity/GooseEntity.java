@@ -19,7 +19,6 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -28,6 +27,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -105,15 +106,15 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
-        this.writeAngerToNbt(tag);
+    public void writeCustomData(WriteView view) {
+        super.writeCustomData(view);
+        this.writeAngerToData(view);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
-        this.readAngerFromNbt(this.getWorld(), tag);
+    public void readCustomData(ReadView view) {
+        super.readCustomData(view);
+        this.readAngerFromData(this.getWorld(), view);
     }
 
     @Override
@@ -143,15 +144,15 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     public static Ingredient getFoodIngredient() {
-        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_FOOD));
+        return Ingredient.ofTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_FOOD));
     }
 
     public static Ingredient getBreedingIngredient() {
-        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_BREEDING_FOOD));
+        return Ingredient.ofTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_BREEDING_FOOD));
     }
 
     public static Ingredient getTamingIngredient() {
-        return Ingredient.fromTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_TAMING_FOOD));
+        return Ingredient.ofTag(Registries.ITEM.getOrThrow(ModTags.ItemTags.GOOSE_TAMING_FOOD));
     }
 
     @Override

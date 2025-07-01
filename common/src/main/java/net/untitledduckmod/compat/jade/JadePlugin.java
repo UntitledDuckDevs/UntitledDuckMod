@@ -20,8 +20,8 @@ public class JadePlugin implements IWailaPlugin {
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
-        registration.registerEntityComponent(LayEggProvider.INSTANCE, DuckEntity.class);
-        registration.registerEntityComponent(LayEggProvider.INSTANCE, GooseEntity.class);
+        registration.registerEntityComponent(LayEggProvider.Client.INSTANCE, DuckEntity.class);
+        registration.registerEntityComponent(LayEggProvider.Client.INSTANCE, GooseEntity.class);
     }
 
 }

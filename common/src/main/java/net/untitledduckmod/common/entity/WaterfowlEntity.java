@@ -1,5 +1,6 @@
 package net.untitledduckmod.common.entity;
 
+import com.mojang.logging.LogUtils;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.EntityData;
@@ -17,12 +18,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
@@ -31,6 +34,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.untitledduckmod.common.config.UntitledConfig;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.constant.dataticket.DataTicket;
@@ -39,6 +43,8 @@ import software.bernie.geckolib.renderer.base.GeoRenderState;
 import java.util.Objects;
 
 public abstract class WaterfowlEntity extends TameableEntity implements GeoAnimatable {
+    protected ErrorReporter errorReporter;
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static final String EGG_LAY_TIME_TAG = "EggLayTime";
     public static final String VARIANT_TAG = "Variant";
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
@@ -72,6 +78,8 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         super(entityType, world);
         eggLayTime = getRandomLayTime();
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
+
+        errorReporter = new ErrorReporter.Logging(() -> entityType.getName().toString(), LOGGER);
     }
 
     @Override
@@ -94,19 +102,17 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
-        tag.putByte(VARIANT_TAG, getVariant());
-        tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
+    public void writeCustomData(WriteView view) {
+        super.writeCustomData(view);
+        view.putByte(VARIANT_TAG, getVariant());
+        view.putInt(EGG_LAY_TIME_TAG, eggLayTime);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
-        setVariant(tag.getByte(VARIANT_TAG, getRandomVariant()));
-        if (tag.contains(EGG_LAY_TIME_TAG)) {
-            this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG, getRandomLayTime());
-        }
+    public void readCustomData(ReadView view) {
+        super.readCustomData(view);
+        setVariant(view.getByte(VARIANT_TAG, getRandomVariant()));
+        this.eggLayTime = view.getInt(EGG_LAY_TIME_TAG, getRandomLayTime());
     }
 
     @Override
@@ -235,7 +241,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
                     stack.decrement(1);
                 }
                 if (this.random.nextInt(3) == 0) {
-                    this.setOwner(player);
+                    this.setTamedBy(player);
                     this.navigation.stop();
                     this.setTarget(null);
                     this.setSitting(true);
