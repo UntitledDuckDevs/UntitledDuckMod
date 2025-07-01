@@ -15,8 +15,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.stat.Stats;
+import net.minecraft.storage.NbtReadView;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -135,15 +137,22 @@ public class DuckSackItem extends Item {
             entityData.putString(Entity.ID_KEY, entityType);
         }
 
-        return EntityType.getEntityFromNbt(entityData, world, SpawnReason.BUCKET).map((newDuck) -> {
+        var errorReporter = new ErrorReporter.Logging(() -> entityType, DuckEntity.LOGGER);
+        var nbtReadView = NbtReadView.create(errorReporter, world.getRegistryManager(), entityData);
+        var optional = EntityType.getEntityFromData(nbtReadView, world, SpawnReason.BUCKET);
+
+        if (optional.isPresent()) {
+            var newDuck = optional.get();
             if (newDuck instanceof DuckEntity duck) {
-                duck.readNbt(entityData);
+                duck.readData(nbtReadView);
                 duck.setFromSack(true);
                 duck.refreshPositionAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.4D, (double) pos.getZ() + 0.5D, MathHelper.wrapDegrees(world.random.nextFloat() * 360.0F), 0.0F);
                 world.spawnEntity(duck);
+                return true;
             }
-            return newDuck;
-        }).isPresent();
+        }
+
+       return false;
     }
 
     @Override
