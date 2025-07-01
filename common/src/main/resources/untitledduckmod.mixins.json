@@ -7,7 +7,6 @@
     "IllagerIntimidationMixin"
   ],
   "client": [
-    "DuckEggSpawnMixin"
   ],
   "injectors": {
     "defaultRequire": 1
