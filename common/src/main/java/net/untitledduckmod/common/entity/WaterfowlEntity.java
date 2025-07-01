@@ -235,7 +235,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
                     stack.decrement(1);
                 }
                 if (this.random.nextInt(3) == 0) {
-                    this.setOwner(player);
+                    this.setTamedBy(player);
                     this.navigation.stop();
                     this.setTarget(null);
                     this.setSitting(true);
