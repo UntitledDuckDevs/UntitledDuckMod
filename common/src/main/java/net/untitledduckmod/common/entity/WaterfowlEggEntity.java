@@ -2,10 +2,7 @@ package net.untitledduckmod.common.entity;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.EntityStatuses;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,6 +17,7 @@ import net.untitledduckmod.common.init.ModItems;
 
 public class WaterfowlEggEntity extends ThrownItemEntity {
     private final EntityType<? extends WaterfowlEntity> mobEntityType;
+    private static final EntityDimensions EMPTY_DIMENSIONS = EntityDimensions.fixed(0.0F, 0.0F);
 
     public WaterfowlEggEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType, world);
@@ -53,6 +51,7 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
         }
     }
 
+    @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
         if (this.getWorld() instanceof ServerWorld serverWorld) {
@@ -60,6 +59,7 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
         }
     }
 
+    @Override
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
         World world = this.getWorld();
@@ -76,6 +76,9 @@ public class WaterfowlEggEntity extends ThrownItemEntity {
                         waterfowl.setBreedingAge(-24000);
                         waterfowl.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
                         waterfowl.setVariant((byte) this.getWorld().getRandom().nextInt(2)); // Randomly choose between the two variants
+                        if (!waterfowl.recalculateDimensions(EMPTY_DIMENSIONS)) {
+                            break;
+                        }
                         world.spawnEntity(waterfowl);
                     }
                 }
