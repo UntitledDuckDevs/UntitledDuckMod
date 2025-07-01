@@ -12,19 +12,11 @@ import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.theme.IThemeHelper;
 
-public enum LayEggProvider implements IEntityComponentProvider, IServerDataProvider<EntityAccessor> {
+public class LayEggProvider implements IServerDataProvider<EntityAccessor> {
 
-    INSTANCE;
+    public static final LayEggProvider INSTANCE = new LayEggProvider();
 
-    @Override
-    public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-        if (!accessor.getServerData().contains("NextEggIn")) {
-            return;
-        }
-        var nextEggIn = accessor.getServerData().getInt("NextEggIn").orElse(12000);
-
-        tooltip.add(Text.translatable("jade.nextEgg", IThemeHelper.get().seconds(nextEggIn, accessor.tickRate())));
-    }
+    static final Identifier UID = DuckMod.id("lay_egg");
 
     @Override
     public void appendServerData(NbtCompound tag, EntityAccessor accessor) {
@@ -38,6 +30,25 @@ public enum LayEggProvider implements IEntityComponentProvider, IServerDataProvi
 
     @Override
     public Identifier getUid() {
-        return DuckMod.id("lay_egg");
+        return UID;
+    }
+
+    public static class Client implements IEntityComponentProvider {
+        public static final Client INSTANCE = new Client();
+
+        @Override
+        public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
+            if (!accessor.getServerData().contains("NextEggIn")) {
+                return;
+            }
+            var nextEggIn = accessor.getServerData().getInt("NextEggIn").orElse(12000);
+
+            tooltip.add(Text.translatable("jade.nextEgg", IThemeHelper.get().seconds(nextEggIn, accessor.tickRate())));
+        }
+
+        @Override
+        public Identifier getUid() {
+            return UID;
+        }
     }
 }
