@@ -2,7 +2,6 @@ package net.untitledduckmod.common.platform.neoforge;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
@@ -15,6 +14,7 @@ import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.common.entity.CustomSpawnGroup;
 import net.untitledduckmod.common.entity.neoforge.DuckEntityForge;
 import net.untitledduckmod.common.entity.neoforge.GooseEntityForge;
 import net.untitledduckmod.common.init.ModEntityTypes;
@@ -42,9 +42,9 @@ public class RegistryHelperImpl {
 
     public static  <T extends EntityType<?>> Supplier<T> registerEntity(String name, Supplier<T> entityType) {
         if (name.equals("duck")) {
-            entityType = () -> (T) EntityType.Builder.create(DuckEntityForge::new, SpawnGroup.CREATURE).dimensions(0.6f, 0.6f).maxTrackingRange(10).build(ModEntityTypes.duckKey);
+            entityType = () -> (T) EntityType.Builder.create(DuckEntityForge::new, CustomSpawnGroup.WATERFOWL.spawnGroup).dimensions(0.6f, 0.6f).maxTrackingRange(10).build(ModEntityTypes.duckKey);
         } else if (name.equals("goose")) {
-            entityType = () -> (T) EntityType.Builder.create(GooseEntityForge::new, SpawnGroup.CREATURE).dimensions(0.7f, 1.2f).maxTrackingRange(10).build(ModEntityTypes.gooseKey);
+            entityType = () -> (T) EntityType.Builder.create(GooseEntityForge::new, CustomSpawnGroup.WATERFOWL.spawnGroup).dimensions(0.7f, 1.2f).maxTrackingRange(10).build(ModEntityTypes.gooseKey);
         }
         return ENTITY_TYPES.register(name, entityType);
     }
