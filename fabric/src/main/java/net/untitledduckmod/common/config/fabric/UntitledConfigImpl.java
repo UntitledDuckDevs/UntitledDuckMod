@@ -18,6 +18,8 @@ public class UntitledConfigImpl extends TinyConfig {
     public static double duck_fishing_change = 0.5D;
     @Entry(category = "ducks")
     public static boolean duck_tamed_not_follow = false;
+    @Entry(category = "ducks")
+    public static boolean duck_baby_random_size = true;
 
     @Entry(category = "geese")
     public static int goose_spawn_weight = 4;
@@ -27,6 +29,8 @@ public class UntitledConfigImpl extends TinyConfig {
     public static int goose_max_group_size = 4;
     @Entry(category = "geese")
     public static boolean goose_tamed_not_follow = false;
+    @Entry(category = "geese")
+    public static boolean goose_baby_random_size = true;
 
     @Entry(category = "intimidation")
     public static List<String> intimidation_blacklist = Lists.newArrayList("modid:test");
@@ -51,6 +55,10 @@ public class UntitledConfigImpl extends TinyConfig {
         return duck_tamed_not_follow;
     }
 
+    public static boolean duckBabyRandomSize() {
+        return duck_baby_random_size;
+    }
+
     public static int gooseWeight() {
         return goose_spawn_weight;
     }
@@ -65,6 +73,10 @@ public class UntitledConfigImpl extends TinyConfig {
 
     public static boolean gooseTamedNotFollow() {
         return goose_tamed_not_follow;
+    }
+
+    public static boolean gooseBabyRandomSize() {
+        return goose_baby_random_size;
     }
 
     public static float foodHealingValue() {

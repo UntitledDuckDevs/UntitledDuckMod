@@ -17,6 +17,7 @@ Credits
 - Duck Sounds by [Sidearm Studios] from the [Ultimate Animal Sounds] pack
 - Duckling Sounds by [basedMedia]: [Chirp1], [Chirp2]
 - 1.17 Port by [quiqueck], many thanks!
+- 1.21.6 Port by [Xebeth], many thanks!
 
 License
 -------
@@ -34,3 +35,4 @@ The exception is the duckling sounds which are licensed under CC0.
 [Chirp1]: https://freesound.org/people/basedMedia/sounds/548099/
 [Chirp2]: https://freesound.org/people/basedMedia/sounds/548096/
 [quiqueck]: https://github.com/quiqueck
+[Xebeth]: https://github.com/Xebeth

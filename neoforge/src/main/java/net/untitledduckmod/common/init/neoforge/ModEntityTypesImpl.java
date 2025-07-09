@@ -1,6 +1,5 @@
 package net.untitledduckmod.common.init.neoforge;
 
-import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnLocationTypes;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.Heightmap;
@@ -11,6 +10,7 @@ import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.untitledduckmod.common.config.UntitledConfig;
+import net.untitledduckmod.common.entity.CustomSpawnGroup;
 import net.untitledduckmod.common.entity.DuckEntity;
 import net.untitledduckmod.common.entity.GooseEntity;
 import net.untitledduckmod.common.init.ModEntityTypes;
@@ -34,10 +34,10 @@ public class ModEntityTypesImpl {
 
     public static void addBiomeSpawns(RegistryEntry<Biome> biome, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (biome.isIn(ModTags.BiomeTags.DUCK_BIOMES)) {
-            builder.getMobSpawnSettings().getSpawner(SpawnGroup.CREATURE).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getDuck(), UntitledConfig.duckMinGroupSize(), UntitledConfig.duckMaxGroupSize()), UntitledConfig.duckWeight());
+            builder.getMobSpawnSettings().getSpawner(CustomSpawnGroup.WATERFOWL.spawnGroup).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getDuck(), UntitledConfig.duckMinGroupSize(), UntitledConfig.duckMaxGroupSize()), UntitledConfig.duckWeight());
         }
         if (biome.isIn(ModTags.BiomeTags.GOOSE_BIOMES)) {
-            builder.getMobSpawnSettings().getSpawner(SpawnGroup.CREATURE).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getGoose(), UntitledConfig.gooseMinGroupSize(), UntitledConfig.gooseMaxGroupSize()), UntitledConfig.gooseWeight());
+            builder.getMobSpawnSettings().getSpawner(CustomSpawnGroup.WATERFOWL.spawnGroup).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getGoose(), UntitledConfig.gooseMinGroupSize(), UntitledConfig.gooseMaxGroupSize()), UntitledConfig.gooseWeight());
         }
     }
 

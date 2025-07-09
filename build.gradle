@@ -49,15 +49,15 @@ allprojects {
     repositories {
         maven {
             name = "Jitpack"
-            url "https://jitpack.io"
+            url = "https://jitpack.io"
         }
         maven {
             name = "Geckolib Maven"
-            url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+            url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
         }
         maven {
             name = "Curse Maven"
-            url "https://www.cursemaven.com"
+            url = "https://www.cursemaven.com"
             content {
                 includeGroup "curse.maven"
             }

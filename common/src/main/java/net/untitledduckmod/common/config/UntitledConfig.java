@@ -32,6 +32,11 @@ public class UntitledConfig {
     }
 
     @ExpectPlatform
+    public static boolean duckBabyRandomSize() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static int gooseWeight() {
         throw new AssertionError();
     }
@@ -48,6 +53,11 @@ public class UntitledConfig {
 
     @ExpectPlatform
     public static boolean gooseTamedNotFollow() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean gooseBabyRandomSize() {
         throw new AssertionError();
     }
 

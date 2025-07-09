@@ -339,6 +339,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             } else {
                 gooseEntity.setVariant(goose.getVariant());
             }
+            gooseEntity.setBabyScale(getRandomBabyScale());
             if (this.isTamed()) {
                 gooseEntity.setOwner(this.getOwnerReference());
                 gooseEntity.setTamed(true, true);
