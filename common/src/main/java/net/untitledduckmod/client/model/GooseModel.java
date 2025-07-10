@@ -2,6 +2,7 @@ package net.untitledduckmod.client.model;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.common.entity.GooseEntity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -13,8 +14,8 @@ import java.util.Objects;
 
 
 public class GooseModel extends WaterfowlModel<GooseEntity> {
-    public GooseModel(Identifier assetSubpath) {
-        super(assetSubpath);
+    public GooseModel() {
+        super(DuckMod.id("goose"));
     }
 
     @Override

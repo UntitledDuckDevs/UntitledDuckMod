@@ -14,10 +14,14 @@ public class UntitledConfigImpl {
     public static final ForgeConfigSpec.IntValue DUCK_MIN_GROUP_SIZE;
     public static final ForgeConfigSpec.IntValue DUCK_MAX_GROUP_SIZE;
     public static final ForgeConfigSpec.DoubleValue DUCK_FISHING_CHANGE;
+    public static final ForgeConfigSpec.BooleanValue DUCK_TAMED_NOT_FOLLOW;
+    public static final ForgeConfigSpec.BooleanValue DUCK_BABY_RANDOM_SIZE;
 
     public static final ForgeConfigSpec.IntValue GOOSE_WEIGHT;
     public static final ForgeConfigSpec.IntValue GOOSE_MIN_GROUP_SIZE;
     public static final ForgeConfigSpec.IntValue GOOSE_MAX_GROUP_SIZE;
+    public static final ForgeConfigSpec.BooleanValue GOOSE_TAMED_NOT_FOLLOW;
+    public static final ForgeConfigSpec.BooleanValue GOOSE_BABY_RANDOM_SIZE;
 
     public static final ForgeConfigSpec.DoubleValue FOOD_HEALING_VALUE;
 
@@ -42,6 +46,13 @@ public class UntitledConfigImpl {
                 .comment("Chance of ducks successfully fishing.")
                 .worldRestart()
                 .defineInRange("duck_fishing_change", 0.5D, 0.0D, 1);
+        DUCK_TAMED_NOT_FOLLOW = builder.comment("No more following behavior when tamed.")
+                .worldRestart()
+                .define("duck_tamed_no_follow", false);
+        DUCK_BABY_RANDOM_SIZE = builder
+                .comment("Baby model random size (0.25-0.7).")
+                .worldRestart()
+                .define("duck_baby_random_size", true);
         builder.pop();
 
         builder.push("goose");
@@ -55,6 +66,13 @@ public class UntitledConfigImpl {
         GOOSE_MAX_GROUP_SIZE = builder.comment("The maximum number of geese that should be spawned at once in a group.")
                 .worldRestart()
                 .defineInRange("goose_max_group_size", 4, 0, Integer.MAX_VALUE);
+        GOOSE_TAMED_NOT_FOLLOW = builder.comment("No more following behavior when tamed.")
+                .worldRestart()
+                .define("goose_tamed_no_follow", false);
+        GOOSE_BABY_RANDOM_SIZE = builder
+                .comment("Baby model random size (0.25-0.7).")
+                .worldRestart()
+                .define("goose_baby_random_size", true);
         builder.pop();
 
         builder.push("common");
@@ -88,6 +106,14 @@ public class UntitledConfigImpl {
         return DUCK_FISHING_CHANGE.get();
     }
 
+    public static boolean duckTamedNotFollow() {
+        return DUCK_TAMED_NOT_FOLLOW.get();
+    }
+
+    public static boolean duckBabyRandomSize() {
+        return DUCK_BABY_RANDOM_SIZE.get();
+    }
+
     public static int gooseWeight() {
         return GOOSE_WEIGHT.get();
     }
@@ -98,6 +124,14 @@ public class UntitledConfigImpl {
 
     public static int gooseMaxGroupSize() {
         return GOOSE_MAX_GROUP_SIZE.get();
+    }
+
+    public static boolean gooseTamedNotFollow() {
+        return GOOSE_TAMED_NOT_FOLLOW.get();
+    }
+
+    public static boolean gooseBabyRandomSize() {
+        return GOOSE_BABY_RANDOM_SIZE.get();
     }
 
     public static float foodHealingValue() {

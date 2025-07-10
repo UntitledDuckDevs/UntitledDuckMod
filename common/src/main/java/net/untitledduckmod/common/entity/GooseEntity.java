@@ -34,8 +34,10 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
-import net.untitledduckmod.common.entity.ai.goal.common.FollowParentGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.WFollowOwnerGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.WFollowParentGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
@@ -164,9 +166,9 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         this.goalSelector.add(6, new GooseMeleeAttackGoal(this, 1.5D, true));
 
         this.goalSelector.add(7, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
-        this.goalSelector.add(8, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.add(8, new WFollowParentGoal(this, 1.1D));
 
-        this.goalSelector.add(9, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
+        this.goalSelector.add(9, new WFollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
 
         // Idle behaviour when there is nothing too urgent
         this.goalSelector.add(9, new CleanGoal(this));
@@ -357,12 +359,12 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         return ModItems.GOOSE_EGG.get();
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings("SameReturnValue")
     private <P extends GeoAnimatable> PlayState predicate(AnimationState<P> event) {
         float limbSwingAmount = event.getLimbSwingAmount();
         boolean isMoving = !(limbSwingAmount > -0.05F && limbSwingAmount < 0.05F);
         boolean inWater = isTouchingWater();
-        AnimationController controller = event.getController();
+        AnimationController<P> controller = event.getController();
         if (isFlapping) {
             controller.setAnimation(FLY_ANIM);
             return PlayState.CONTINUE;
@@ -499,6 +501,11 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
     public boolean isHungry() {
         return isAngry() || super.isHungry();
+    }
+
+    @Override
+    public boolean tamedFollowOwner() {
+        return !UntitledConfig.gooseTamedNotFollow();
     }
 
     static class CleanGoal extends Goal {
