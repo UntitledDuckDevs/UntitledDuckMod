@@ -1,4 +1,4 @@
-package net.untitledduckmod.mixin;
+package net.untitledduckmod.mixin.fabric;
 
 import net.minecraft.entity.SpawnGroup;
 import net.untitledduckmod.common.entity.CustomSpawnGroup;
