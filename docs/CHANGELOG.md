@@ -1,3 +1,31 @@
+## Version ["v1.1.0"] - 2025-7-9
+
+### Features
+- Make the sizes of ducks and geese random (can be disabled in the config).
+- Add CustomSpawnGroup
+
+### Bug fixes
+- Fix issues [#113](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/113), [#114](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/114) and [#115](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/115)
+
+## Version ["v0.9.5"] - 2025-7-1
+
+### Bug fixes
+- Fix entity cannot be tamed
+
+## Version ["v0.8.5"] - 2025-3-1
+
+### Features
+- Add config DuckTamedNotFollow
+- Add config GooseTamedNotFollow
+
+## Version ["v0.8.1"] - 2025-2-16
+
+### Features
+- Add Spanish translation by [@TheLegendofSaram](https://github.com/TheLegendofSaram)
+
+### Bug fixes
+- Fix [#100](https://github.com/Okabintaro/UntitledDuckMod/issues/100) and [#101](https://github.com/Okabintaro/UntitledDuckMod/issues/101)
+
 ## Version ["v0.8.0"] - 2024-12-21
 
 ### Features

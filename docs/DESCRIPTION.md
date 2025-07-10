@@ -1,5 +1,7 @@
 ![Teaser Image](https://i.imgur.com/VeKFezN.jpg "Untitled Duck Mod")
 
+![Available](https://cf.way2muchnoise.eu/versions/451789.svg)
+
 This mod adds ducks and geese to minecraft.
 It works on both fabric and forge since it is powered by [geckolib] and [architectury].
 
@@ -56,7 +58,7 @@ This is so they also spawn in modded biomes and similar to how vanilla animals s
 
 ### How can I configure the spawn rates?
 
-**Forge:** For forge the spawn rates are world/server specific and the configuration file is stored in `.minecraft/saves/YOURWORLD/serverconfig/untitledduckmod-server.toml`.
+**Forge:** For forge the spawn rates are world/server specific and the configuration file is stored in `.minecraft/config/untitledduckmod.json`.
 In there you can adjust the spawn weight for each mob which basically makes them spawn more often the higher the value is.
 
 **Fabric:** The configuration file in fabric is stored in `.minecraft/config/untitledduckmod.json`.
@@ -67,10 +69,6 @@ Alternatively, if you have the [ModMenu][modmenu-mr] installed you can use the c
 
 No, only the most recent minecraft versions will receive updates.
 
-### Will you port to 1.19?
-
-Yes! But I want to wait until Mojang considers it done and released 1.19.1 or 1.19.2.
-
 Credits
 -------
 
@@ -78,6 +76,7 @@ Credits
 - Duck Sounds by [Sidearm Studios] from the [Ultimate Animal Sounds] pack
 - Duckling Sounds by [basedMedia]: [Chirp1], [Chirp2]
 - 1.17 Port by [quiqueck], many thanks!
+- 1.21.6 Port by [Xebeth], many thanks!
 
 [basedMedia]: https://freesound.org/people/basedMedia/
 [geckolib]: https://geckolib.com
@@ -89,5 +88,6 @@ Credits
 [fabric-api-cf]: https://www.curseforge.com/minecraft/mc-mods/fabric-api
 [fabric-api-mr]: https://modrinth.com/mod/fabric-api
 [quiqueck]: https://github.com/quiqueck
+[Xebeth]: https://github.com/Xebeth
 [modmenu-mr]: https://modrinth.com/mod/modmenu
 [modmenu-cf]: https://www.curseforge.com/minecraft/mc-mods/modmenu
