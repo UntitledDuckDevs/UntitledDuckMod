@@ -12,7 +12,11 @@ import software.bernie.geckolib.model.data.EntityModelData;
 import java.util.Objects;
 
 
-public class GooseModel extends GeoModel<GooseEntity> {
+public class GooseModel extends WaterfowlModel<GooseEntity> {
+    public GooseModel(Identifier assetSubpath) {
+        super(assetSubpath);
+    }
+
     @Override
     public Identifier getModelResource(GooseEntity object) {
         return ModelIdentifiers.GOOSE_MODEL_LOCATION;
@@ -45,17 +49,5 @@ public class GooseModel extends GeoModel<GooseEntity> {
     @Override
     public Identifier getAnimationResource(GooseEntity animatable) {
         return ModelIdentifiers.GOOSE_ANIMATION_FILE_LOCATION;
-    }
-
-    @Override
-    public void setCustomAnimations(GooseEntity animatable, long instanceId, AnimationState<GooseEntity> animationState) {
-        super.setCustomAnimations(animatable, instanceId, animationState);
-
-        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
-        if (animatable.lookingAround() && head != null) {
-            EntityModelData extraData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-            head.setRotX(extraData.headPitch() * MathHelper.RADIANS_PER_DEGREE);
-            head.setRotY(extraData.netHeadYaw() * MathHelper.RADIANS_PER_DEGREE);
-        }
     }
 }

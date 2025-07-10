@@ -9,7 +9,11 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
-public class DuckModel extends GeoModel<DuckEntity> {
+public class DuckModel extends WaterfowlModel<DuckEntity> {
+
+    public DuckModel(Identifier assetSubpath) {
+        super(assetSubpath);
+    }
 
     @Override
     public Identifier getModelResource(DuckEntity object) {
@@ -30,15 +34,4 @@ public class DuckModel extends GeoModel<DuckEntity> {
         return ModelIdentifiers.DUCK_ANIMATION_FILE_LOCATION;
     }
 
-    @Override
-    public void setCustomAnimations(DuckEntity animatable, long instanceId, AnimationState<DuckEntity> animationState) {
-        super.setCustomAnimations(animatable, instanceId, animationState);
-
-        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
-        if (animatable.lookingAround() && head != null) {
-            EntityModelData extraData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-            head.setRotX(extraData.headPitch() * MathHelper.RADIANS_PER_DEGREE);
-            head.setRotY(extraData.netHeadYaw() * MathHelper.RADIANS_PER_DEGREE);
-        }
-    }
 }
