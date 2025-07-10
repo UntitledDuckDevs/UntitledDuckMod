@@ -13,13 +13,19 @@ You will need to install [geckolib] for this mod to work.
 Additionally, on fabric, make sure you have [fabric-api][fabric-api-mr] installed.
 
 ## Features
+Starting from v2.1.0, their model sizes will be random, meaning they will come in different sizes.
+It can be turned off via the config "*_baby_random_size".
 
 ### Duck
-
-- Can be bred with seeds.
+- Spawn in rivers and swamps (tag:#untitledduckmod:duck_spawn).
+- Have three variants.
+- Can be bred with seeds (tag:#untitledduckmod:duck_breeding_food).
+- They love fishes even more, which you can use to tame them (tag:#untitledduckmod:duck_taming_food).
 - They lay eggs and drop feathers similar to chickens.
 - Unlike chickens, they also like to swim in the water, groom themselves and dip their head into the water.
+- After being tamed, they can sometimes catch fish or other things such as treasures.
 - Also, they dance when there is a music disc playing nearby!
+- When they are named a specific name, they will have a special texture.
 
 #### Duck Sack
 
@@ -27,20 +33,38 @@ Additionally, on fabric, make sure you have [fabric-api][fabric-api-mr] installe
 
 ### Goose
 
-- They can be bred with all kinds of seeds similar to ducks.
-- But they love kelp and seagrass even more, which you can use to tame them.
+- Spawn in rivers (tag:#untitledduckmod:goose_spawn).
+- Have two variants.
+- They can be bred with all kinds of seeds similar to ducks (tag:#untitledduckmod:goose_breeding_food).
+- But they love kelp and seagrass even more, which you can use to tame them (tag:#untitledduckmod:goose_taming_food).
 - Similar to dogs they will try to attack with you and defend you from attacking monsters.
 - Once tamed you can sit them down and give them weapons.
 - Geese know how to defend themselves. Once attacked they will remember and fight you in groups.
-  - They will forgive you though when you give them food by right-clicking or throwing it to them.
+- They will forgive you though when you give them food by right-clicking or throwing it to them.
 - They will scare away illagers similar to how cats scare away creepers.
 - Occasionally, they will try to steal the item in your hand.
-  - They will happily exchange that for food though, so you don't have to kill them.
+- They will happily exchange that for food though, so you don't have to kill them.
+- When they are named a specific name, they will have a special texture.
 
 ####  Goose Foot
 
 - Item dropped from geese.
 - Can be used to brew a potion of intimidation that scares illagers away(**this only works in survival mode!**).
+
+## Config
+- duck_spawn_weight - Spawn weight of ducks
+- duck_min_group_size - Minimum group size for duck spawns
+- duck_max_group_size - Maximum group size for duck spawns
+- duck_fishing_change - Probability of ducks successfully catching fish
+- duck_tamed_not_follow - No more following behavior when tamed (wander)
+- duck_baby_random_size - Duckling model size will be randomised and will affect adult size
+- goose_spawn_weight - Spawn weight of geese
+- goose_min_group_size - Minimum group size for goose spawns
+- goose_max_group_size - Maximum group size for goose spawns
+- goose_tamed_not_follow - No more following behavior when tamed (wander)
+- goose_baby_random_size - Gosling model size will be randomised and will affect adult size
+- intimidation_blacklist - Intimidation potion blacklist
+- food_healing_value - Food can heal the health value of duck & goose
 
 Known Issues
 ------------
