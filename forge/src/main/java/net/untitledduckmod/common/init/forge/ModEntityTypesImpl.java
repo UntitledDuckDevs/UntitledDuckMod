@@ -11,6 +11,7 @@ import net.minecraftforge.common.world.ModifiableBiomeInfo;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.untitledduckmod.common.config.UntitledConfig;
+import net.untitledduckmod.common.entity.CustomSpawnGroup;
 import net.untitledduckmod.common.entity.DuckEntity;
 import net.untitledduckmod.common.entity.GooseEntity;
 import net.untitledduckmod.common.init.ModEntityTypes;
@@ -34,10 +35,10 @@ public class ModEntityTypesImpl {
 
     public static void addBiomeSpawns(RegistryEntry<Biome> biome, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
         if (biome.isIn(ModTags.BiomeTags.DUCK_BIOMES)) {
-            builder.getMobSpawnSettings().getSpawner(SpawnGroup.CREATURE).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getDuck(), UntitledConfig.duckWeight(), UntitledConfig.duckMinGroupSize(), UntitledConfig.duckMaxGroupSize()));
+            builder.getMobSpawnSettings().getSpawner(CustomSpawnGroup.WATERFOWL.spawnGroup).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getDuck(), UntitledConfig.duckWeight(), UntitledConfig.duckMinGroupSize(), UntitledConfig.duckMaxGroupSize()));
         }
         if (biome.isIn(ModTags.BiomeTags.GOOSE_BIOMES)) {
-            builder.getMobSpawnSettings().getSpawner(SpawnGroup.CREATURE).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getGoose(), UntitledConfig.gooseWeight(), UntitledConfig.gooseMinGroupSize(), UntitledConfig.gooseMaxGroupSize()));
+            builder.getMobSpawnSettings().getSpawner(CustomSpawnGroup.WATERFOWL.spawnGroup).add(new SpawnSettings.SpawnEntry(ModEntityTypes.getGoose(), UntitledConfig.gooseWeight(), UntitledConfig.gooseMinGroupSize(), UntitledConfig.gooseMaxGroupSize()));
         }
     }
 

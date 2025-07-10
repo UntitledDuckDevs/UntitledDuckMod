@@ -6,6 +6,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.world.Heightmap;
 import net.untitledduckmod.common.config.UntitledConfig;
+import net.untitledduckmod.common.entity.CustomSpawnGroup;
 import net.untitledduckmod.common.entity.DuckEntity;
 import net.untitledduckmod.common.entity.GooseEntity;
 import net.untitledduckmod.common.init.ModEntityTypes;
@@ -22,11 +23,11 @@ public class ModEntityTypesImpl {
         SpawnRestriction.register(ModEntityTypes.getDuck(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, DuckEntity::checkDuckSpawnRules);
         SpawnRestriction.register(ModEntityTypes.getGoose(), SpawnRestriction.Location.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GooseEntity::checkGooseSpawnRules);
         // BiomeModifications is experimental but approved
-        BiomeModifications.addSpawn(context -> context.hasTag(ModTags.BiomeTags.DUCK_BIOMES), SpawnGroup.CREATURE, ModEntityTypes.getDuck(),
+        BiomeModifications.addSpawn(context -> context.hasTag(ModTags.BiomeTags.DUCK_BIOMES), CustomSpawnGroup.WATERFOWL.spawnGroup, ModEntityTypes.getDuck(),
                 UntitledConfig.duckWeight(),
                 UntitledConfig.duckMinGroupSize(),
                 UntitledConfig.duckMaxGroupSize());
-        BiomeModifications.addSpawn(context -> context.hasTag(ModTags.BiomeTags.GOOSE_BIOMES), SpawnGroup.CREATURE, ModEntityTypes.getGoose(),
+        BiomeModifications.addSpawn(context -> context.hasTag(ModTags.BiomeTags.GOOSE_BIOMES), CustomSpawnGroup.WATERFOWL.spawnGroup, ModEntityTypes.getGoose(),
                 UntitledConfig.gooseWeight(),
                 UntitledConfig.gooseMinGroupSize(),
                 UntitledConfig.gooseMaxGroupSize());
