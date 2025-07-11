@@ -59,18 +59,21 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
 
+    protected int maxVariant = 2;
     protected int eggLayTime;
     protected boolean isFlapping;
     protected boolean panicked = false;
     protected WaterfowlEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
-        eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+        eggLayTime = getRandomLayTime();
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
     }
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-        this.setVariant((byte) this.getRandom().nextInt(2)); // Randomly choose between the two variants
+        var variant = getRandomVariant();
+
+        this.setVariant(variant); // Randomly choose between the two variants
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
@@ -121,6 +124,14 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         dataTracker.set(VARIANT, variant);
     }
 
+    public byte getRandomVariant() {
+        return (byte) random.nextInt(maxVariant);
+    }
+
+    public int getRandomLayTime() {
+        return random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+    }
+
     public byte getAnimation() {
         return dataTracker.get(ANIMATION);
     }
@@ -165,7 +176,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
             if (isAlive() && !isBaby() && --eggLayTime <= 0) {
                 this.playSound(this.getLayEggSound(), 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 this.dropItem(this.getEggItem());
-                this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+                this.eggLayTime = getRandomLayTime();
             }
 
             // Slow fall speed when flapping

@@ -4,6 +4,8 @@ import net.minecraft.util.Identifier;
 import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.common.entity.DuckEntity;
 
+import java.util.Objects;
+
 public class DuckModel extends WaterfowlModel<DuckEntity> {
 
     public DuckModel() {
@@ -20,8 +22,22 @@ public class DuckModel extends WaterfowlModel<DuckEntity> {
         if (animatable.isBaby()) {
             return ModelIdentifiers.DUCKLING_TEXTURE;
         } else {
-            return animatable.getVariant() == 0 ? ModelIdentifiers.NORMAL_TEXTURE : ModelIdentifiers.FEMALE_TEXTURE;
+            if (animatable.hasCustomName()) {
+                String name = Objects.requireNonNull(animatable.getCustomName()).getString().toLowerCase();
+                switch (name) {
+                    case "pekin" -> {
+                        return ModelIdentifiers.PEKIN_TEXTURE;
+                    }
+                }
+            }
         }
+        var variant = animatable.getVariant();
+
+        return switch (variant) {
+            case 1 -> ModelIdentifiers.FEMALE_TEXTURE;
+            case 2 -> ModelIdentifiers.CAMPBELL_TEXTURE;
+            default -> ModelIdentifiers.NORMAL_TEXTURE;
+        };
     }
 
     @Override
