@@ -54,7 +54,7 @@ import net.minecraft.world.event.listener.EntityGameEventHandler;
 import net.minecraft.world.event.listener.GameEventListener;
 import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
-import net.untitledduckmod.common.entity.ai.goal.common.FollowParentGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.WFollowParentGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
@@ -213,7 +213,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
         this.goalSelector.add(2, new EatGoal(this));
         this.goalSelector.add(3, new SitGoal(this));
         this.goalSelector.add(4, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
-        this.goalSelector.add(5, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.add(5, new WFollowParentGoal(this, 1.1D));
         this.goalSelector.add(6, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F));
         this.goalSelector.add(6, new CleanGoal(this));
         this.goalSelector.add(6, new DiveGoal(this));
@@ -498,6 +498,21 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
                 }
             }
         }
+    }
+
+    @Override
+    public float getScaleFactor() {
+        if (UntitledConfig.duckBabyRandomSize()) {
+            float babyScale = getBabyScale();
+            float modelScale;
+            if (isBaby()) {
+                modelScale = babyScale;
+            } else {
+                modelScale = 0.8f + babyScale * 0.5f;
+            }
+            return modelScale;
+        }
+        return super.getScaleFactor();
     }
 
     private class VibrationCallback implements Vibrations.Callback {

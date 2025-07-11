@@ -34,8 +34,9 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.ai.goal.common.EatGoal;
-import net.untitledduckmod.common.entity.ai.goal.common.FollowParentGoal;
+import net.untitledduckmod.common.entity.ai.goal.common.WFollowParentGoal;
 import net.untitledduckmod.common.entity.ai.goal.common.SwimGoal;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
@@ -161,7 +162,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         this.goalSelector.add(6, new GooseMeleeAttackGoal(this, 1.5D, true));
 
         this.goalSelector.add(7, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
-        this.goalSelector.add(8, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.add(8, new WFollowParentGoal(this, 1.1D));
 
         this.goalSelector.add(9, new FollowOwnerGoal(this, 1.6D, 10.0F, 2.0F));
 
@@ -502,6 +503,21 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
     public boolean isHungry() {
         return isAngry() || super.isHungry();
+    }
+
+    @Override
+    public float getScaleFactor() {
+        if (UntitledConfig.gooseBabyRandomSize()) {
+            float babyScale = getBabyScale();
+            float modelScale;
+            if (isBaby()) {
+                modelScale = babyScale;
+            } else {
+                modelScale = 0.8f + babyScale * 0.5f;
+            }
+            return modelScale;
+        }
+        return super.getScaleFactor();
     }
 
     static class CleanGoal extends Goal {
