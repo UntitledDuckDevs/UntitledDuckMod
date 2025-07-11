@@ -1,14 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.untitledduckmod.mixin.fabric",
+  "package": "net.untitledduckmod.mixin.forge",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "SpawnGroupMixin",
-    "SwimSpeedMixin"
+    "SpawnGroupMixin"
   ],
-  "client": [
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }

@@ -10,6 +10,7 @@ architectury {
 loom {
     forge {
         mixinConfig "${mod_id}.mixins.json"
+        mixinConfig "${mod_id}_forge.mixins.json"
     }
 }
 

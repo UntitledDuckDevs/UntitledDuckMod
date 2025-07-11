@@ -30,10 +30,14 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import java.util.Objects;
 
 public abstract class WaterfowlEntity extends TameableEntity implements GeoAnimatable {
+    public static final float BABY_MIN_SCALE = 0.25f;
+    public static final float BABY_MAX_SCALE = 0.7f;
     public static final String EGG_LAY_TIME_TAG = "EggLayTime";
     public static final String VARIANT_TAG = "Variant";
+    public static final String BABY_SCALE_TAG = "BabyScale";
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(WaterfowlEntity.class, TrackedDataHandlerRegistry.BYTE);
+    protected static final TrackedData<Float> BABY_SCALE = DataTracker.registerData(WaterfowlEntity.class, TrackedDataHandlerRegistry.FLOAT);
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(WaterfowlEntity.class, TrackedDataHandlerRegistry.BYTE);
     public static final byte ANIMATION_IDLE = 0;
     public static final byte ANIMATION_CLEAN = 1;
@@ -54,18 +58,23 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     private static final int MIN_EGG_LAY_TIME = 6000;
     private static final int MAX_EGG_LAY_TIME = 12000;
 
+    protected int maxVariant = 2;
     protected int eggLayTime;
     protected boolean isFlapping;
     protected boolean panicked = false;
     protected WaterfowlEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
-        eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+        eggLayTime = getRandomLayTime();
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
     }
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        this.setVariant((byte) this.getRandom().nextInt(2)); // Randomly choose between the two variants
+        var variant = getRandomVariant();
+        var babyScale = getRandomBabyScale();
+
+        this.setVariant(variant); // Randomly choose between the two variants
+        this.setBabyScale(babyScale);
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
@@ -74,6 +83,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         super.initDataTracker();
         this.dataTracker.startTracking(VARIANT, (byte) 0);
         this.dataTracker.startTracking(ANIMATION, ANIMATION_IDLE);
+        this.dataTracker.startTracking(BABY_SCALE, getRandomBabyScale());
     }
 
     @Override
@@ -81,6 +91,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         super.writeCustomDataToNbt(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
+        tag.putFloat(BABY_SCALE_TAG, getBabyScale());
     }
 
     @Override
@@ -90,6 +101,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         if (tag.contains(EGG_LAY_TIME_TAG)) {
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
         }
+        setBabyScale(tag.getFloat(BABY_SCALE_TAG));
     }
 
     @Override
@@ -114,6 +126,26 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
 
     public void setVariant(byte variant) {
         dataTracker.set(VARIANT, variant);
+    }
+
+    public float getRandomBabyScale() {
+        return random.nextFloat() * (BABY_MAX_SCALE - BABY_MIN_SCALE) + BABY_MIN_SCALE;
+    }
+
+    public float getBabyScale() {
+        return dataTracker.get(BABY_SCALE);
+    }
+
+    public void setBabyScale(float scale) {
+        dataTracker.set(BABY_SCALE, scale);
+    }
+
+    public byte getRandomVariant() {
+        return (byte) random.nextInt(maxVariant);
+    }
+
+    public int getRandomLayTime() {
+        return random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
     }
 
     public byte getAnimation() {
@@ -160,7 +192,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
             if (isAlive() && !isBaby() && --eggLayTime <= 0) {
                 this.playSound(this.getLayEggSound(), 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
                 this.dropItem(this.getEggItem());
-                this.eggLayTime = random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+                this.eggLayTime = getRandomLayTime();
             }
 
             // Slow fall speed when flapping
@@ -269,6 +301,10 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
 
     public int getEggLayTime() {
         return this.eggLayTime;
+    }
+
+    public boolean tamedFollowOwner() {
+        return true;
     }
 
 }

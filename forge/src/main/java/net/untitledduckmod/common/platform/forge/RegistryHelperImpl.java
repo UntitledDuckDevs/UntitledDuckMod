@@ -13,6 +13,7 @@ import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.common.entity.CustomSpawnGroup;
 import net.untitledduckmod.common.entity.forge.DuckEntityForge;
 import net.untitledduckmod.common.entity.forge.GooseEntityForge;
 
@@ -39,9 +40,9 @@ public class RegistryHelperImpl {
 
     public static  <T extends EntityType<?>> Supplier<T> registerEntity(String name, Supplier<T> entityType) {
         if (name.equals("duck")) {
-            entityType = () -> (T) EntityType.Builder.create(DuckEntityForge::new, SpawnGroup.CREATURE).setDimensions(0.6f, 0.6f).maxTrackingRange(10).build(DuckMod.stringID("duck"));
+            entityType = () -> (T) EntityType.Builder.create(DuckEntityForge::new, CustomSpawnGroup.WATERFOWL.spawnGroup).setDimensions(0.6f, 0.6f).maxTrackingRange(10).build(DuckMod.stringID("duck"));
         } else if (name.equals("goose")) {
-            entityType = () -> (T) EntityType.Builder.create(GooseEntityForge::new, SpawnGroup.CREATURE).setDimensions(0.7f, 1.2f).maxTrackingRange(10).build(DuckMod.stringID("goose"));
+            entityType = () -> (T) EntityType.Builder.create(GooseEntityForge::new, CustomSpawnGroup.WATERFOWL.spawnGroup).setDimensions(0.7f, 1.2f).maxTrackingRange(10).build(DuckMod.stringID("goose"));
         }
         return ENTITY_TYPES.register(name, entityType);
     }
