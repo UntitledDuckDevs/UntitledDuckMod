@@ -30,7 +30,7 @@ public class DuckModForge {
         RegistryHelperImpl.POTIONS.register(bus);
     }
 
-    @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber
     public static class ModSetup {
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event) {
