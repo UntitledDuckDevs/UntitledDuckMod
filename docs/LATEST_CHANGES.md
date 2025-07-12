@@ -2,4 +2,4 @@
 
 ### Bug fixes
 #### Forge
-Fix the crash caused by ducksack
+- Fix the crash caused by ducksack
