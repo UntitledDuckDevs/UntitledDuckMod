@@ -513,7 +513,7 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
     @Override
     public boolean tamedFollowOwner() {
-        return !UntitledConfig.gooseTamedNotFollow();
+        return !UntitledConfig.duckTamedNotFollow();
     }
 
     private class VibrationCallback implements Vibrations.Callback {
