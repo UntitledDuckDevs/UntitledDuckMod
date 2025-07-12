@@ -98,6 +98,8 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
     public DuckEntity(EntityType<? extends WaterfowlEntity> entityType, World world) {
         super(entityType, world);
+
+        this.maxVariant = 3;
         this.vibrationCallback = new VibrationCallback();
         this.vibrationListenerData = new Vibrations.ListenerData();
         this.jukeboxEventHandler = new EntityGameEventHandler<>(new DuckEntity.JukeboxEventListener(this.vibrationCallback.getPositionSource(), GameEvent.JUKEBOX_PLAY.value().notificationRadius()));
@@ -513,7 +515,22 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
     @Override
     public boolean tamedFollowOwner() {
-        return !UntitledConfig.gooseTamedNotFollow();
+        return !UntitledConfig.duckTamedNotFollow();
+    }
+
+    @Override
+    public float getScaleFactor() {
+        if (UntitledConfig.duckBabyRandomSize()) {
+            float babyScale = getBabyScale();
+            float modelScale;
+            if (isBaby()) {
+                modelScale = babyScale;
+            } else {
+                modelScale = 0.8f + babyScale * 0.5f;
+            }
+            return modelScale;
+        }
+        return super.getScaleFactor();
     }
 
     private class VibrationCallback implements Vibrations.Callback {

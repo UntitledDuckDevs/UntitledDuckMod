@@ -6,6 +6,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.common.entity.CustomSpawnGroup;
 import net.untitledduckmod.common.entity.DuckEntity;
 import net.untitledduckmod.common.entity.GooseEntity;
 import net.untitledduckmod.common.entity.WaterfowlEggEntity;
@@ -26,9 +27,9 @@ public class ModEntityTypes {
     public final static RegistryKey<EntityType<?>> gooseEggKey = RegistryKey.of(RegistryKeys.ENTITY_TYPE, DuckMod.id("goose_egg"));
 
     static {
-        DUCK = RegistryHelper.registerEntity("duck", () -> EntityType.Builder.create(DuckEntity::new, SpawnGroup.CREATURE).dimensions(0.6f, 0.6f).maxTrackingRange(10).build(duckKey));
+        DUCK = RegistryHelper.registerEntity("duck", () -> EntityType.Builder.create(DuckEntity::new, CustomSpawnGroup.WATERFOWL.spawnGroup).dimensions(0.6f, 0.6f).maxTrackingRange(10).build(duckKey));
         DUCK_EGG = RegistryHelper.registerEntity("duck_egg", () -> EntityType.Builder.<WaterfowlEggEntity>create(WaterfowlEggEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).build(duckEggKey));
-        GOOSE = RegistryHelper.registerEntity("goose", () -> EntityType.Builder.create(GooseEntity::new, SpawnGroup.CREATURE).dimensions(0.7f, 1.2f).maxTrackingRange(10).build(gooseKey));
+        GOOSE = RegistryHelper.registerEntity("goose", () -> EntityType.Builder.create(GooseEntity::new, CustomSpawnGroup.WATERFOWL.spawnGroup).dimensions(0.7f, 1.2f).maxTrackingRange(10).build(gooseKey));
         GOOSE_EGG = RegistryHelper.registerEntity("goose_egg", () -> EntityType.Builder.<WaterfowlEggEntity>create(WaterfowlEggEntity::new, SpawnGroup.MISC).dimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10).build(gooseEggKey));
     }
 
