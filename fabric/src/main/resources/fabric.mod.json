@@ -39,7 +39,7 @@
   },
   "depends": {
     "fabric": "*",
-    "fabricloader": ">=0.16.9",
+    "fabricloader": ">=0.16.14",
     "minecraft": ">=1.21",
     "geckolib": "*"
   },

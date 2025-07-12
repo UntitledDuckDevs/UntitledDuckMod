@@ -29,7 +29,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.untitledduckmod.common.entity.DuckEntity;
-import net.untitledduckmod.common.helper.NbtUuidHelper;
+import net.untitledduckmod.common.helper.NbtHelper;
 import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
 import net.untitledduckmod.common.init.ModSoundEvents;
@@ -123,8 +123,8 @@ public class DuckSackItem extends Item {
         NbtCompound entityData = itemData.copyNbt();
         // Remove uuid when there already is a creature with same uuid.
         // This makes it possible to use the duck sack in creative, cloning every tag except the uuid.
-        if (NbtUuidHelper.containsUuid(entityData, Entity.UUID_KEY)) {
-            UUID uuid = NbtUuidHelper.getUuid(entityData, Entity.UUID_KEY);
+        if (NbtHelper.containsUuid(entityData, Entity.UUID_KEY)) {
+            UUID uuid = NbtHelper.getUuid(entityData, Entity.UUID_KEY);
             if (world.getEntity(uuid) != null) {
                 entityData.remove(Entity.UUID_KEY);
             }
@@ -157,8 +157,8 @@ public class DuckSackItem extends Item {
 
     @Override
     public Text getName(ItemStack stack) {
-        if (stack.contains(DataComponentTypes.ENTITY_DATA)) {
-            NbtComponent itemData = stack.getComponents().get(DataComponentTypes.ENTITY_DATA);
+        if (NbtHelper.contains(stack, DataComponentTypes.ENTITY_DATA)) {
+            NbtComponent itemData = NbtHelper.get(stack, DataComponentTypes.ENTITY_DATA);
             if (itemData != null) {
                 NbtCompound duckData = itemData.copyNbt();
                 if (duckData.contains("CustomName")) {

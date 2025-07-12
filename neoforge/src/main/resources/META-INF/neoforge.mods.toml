@@ -17,7 +17,7 @@ Ducks and Geese for Forge and Fabric! Powered by geckolib and architectury.
 [[dependencies.untitledduckmod]]
 modId = "neoforge"
 mandatory = true
-versionRange = "[21.4.0-beta,)"
+versionRange = "[21.6.20-beta,)"
 ordering = "NONE"
 side = "BOTH"
 
