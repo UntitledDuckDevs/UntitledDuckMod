@@ -513,6 +513,21 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
         return !UntitledConfig.duckTamedNotFollow();
     }
 
+    @Override
+    public float getScaleFactor() {
+        if (UntitledConfig.duckBabyRandomSize()) {
+            float babyScale = getBabyScale();
+            float modelScale;
+            if (isBaby()) {
+                modelScale = babyScale;
+            } else {
+                modelScale = 0.8f + babyScale * 0.5f;
+            }
+            return modelScale;
+        }
+        return super.getScaleFactor();
+    }
+
     private class VibrationCallback implements Vibrations.Callback {
 
         private final PositionSource positionSource = new EntityPositionSource(DuckEntity.this, DuckEntity.this.getStandingEyeHeight());

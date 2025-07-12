@@ -52,7 +52,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public static final String VARIANT_TAG = "Variant";
     public static final String BABY_SCALE_TAG = "BabyScale";
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
-    public static final DataTicket<Boolean> LOOKING_AROUND = DataTicket.create("look_around", Boolean.class);
+    public static final DataTicket<Boolean> LOOKING_AROUND_TICKET = DataTicket.create("look_around", Boolean.class);
     public static final DataTicket<Byte> VARIANT_TICKET = DataTicket.create("waterfowl_variant", Byte.class);
     public static final DataTicket<Float> BABY_SCALE_TICKET = DataTicket.create("waterfowl_baby_scale", Float.class);
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(WaterfowlEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -97,7 +97,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         if (entityData instanceof GeoRenderState geoRenderState) {
             geoRenderState.addGeckolibData(WaterfowlEntity.BABY_SCALE_TICKET, babyScale);
             geoRenderState.addGeckolibData(WaterfowlEntity.VARIANT_TICKET, variant);
-            geoRenderState.addGeckolibData(WaterfowlEntity.LOOKING_AROUND, lookingAround());
+            geoRenderState.addGeckolibData(WaterfowlEntity.LOOKING_AROUND_TICKET, lookingAround());
         }
         this.setVariant(variant); // Randomly choose between the two variants
         this.setBabyScale(babyScale);

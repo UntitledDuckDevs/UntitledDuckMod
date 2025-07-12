@@ -14,14 +14,14 @@ public abstract class WaterfowlModel<T extends WaterfowlEntity>  extends Default
 
     @Override
     public void addAdditionalStateData(WaterfowlEntity animatable, GeoRenderState renderState) {
-        renderState.addGeckolibData(WaterfowlEntity.LOOKING_AROUND, animatable.lookingAround());
+        renderState.addGeckolibData(WaterfowlEntity.LOOKING_AROUND_TICKET, animatable.lookingAround());
     }
 
     @Override
     public void setCustomAnimations(AnimationState<T> animationState) {
         super.setCustomAnimations(animationState);
         GeoBone head = getAnimationProcessor().getBone("head");
-        boolean lookingAround = animationState.getData(WaterfowlEntity.LOOKING_AROUND);
+        boolean lookingAround = animationState.getData(WaterfowlEntity.LOOKING_AROUND_TICKET);
 
         if (lookingAround && head != null) {
             float pitch = animationState.getData(DataTickets.ENTITY_PITCH);
