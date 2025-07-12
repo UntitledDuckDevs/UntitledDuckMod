@@ -1,3 +1,28 @@
+## Version ["v1.1.6"] - 2025-7-12
+
+### Bug fixes
+#### Forge
+Fix the crash caused by ducksack
+
+## Version ["v1.1.5"] - 2025-7-11
+
+### Features
+- Better handling of random model sizes
+
+## Version ["v1.1.0"] - 2025-7-9
+
+### Features
+- Make the sizes of ducks and geese random (can be disabled in the config).
+- Add CustomSpawnGroup
+
+### Bug fixes
+- Fix issues [#113](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/113), [#114](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/114) and [#115](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/115)
+
+## Version ["v0.9.5"] - 2025-7-1
+
+### Bug fixes
+- Fix entity cannot be tamed
+
 ## Version ["v0.8.5"] - 2025-3-1
 
 ### Features
