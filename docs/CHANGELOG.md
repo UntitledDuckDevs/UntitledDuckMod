@@ -2,7 +2,7 @@
 
 ### Bug fixes
 #### Forge
-Fix the crash caused by ducksack
+- Fix the crash caused by ducksack
 
 ## Version ["v1.1.5"] - 2025-7-11
 
