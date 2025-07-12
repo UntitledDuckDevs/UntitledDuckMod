@@ -98,6 +98,8 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
 
     public DuckEntity(EntityType<? extends WaterfowlEntity> entityType, World world) {
         super(entityType, world);
+
+        this.maxVariant = 3;
         this.vibrationCallback = new VibrationCallback();
         this.vibrationListenerData = new Vibrations.ListenerData();
         this.jukeboxEventHandler = new EntityGameEventHandler<>(new DuckEntity.JukeboxEventListener(this.vibrationCallback.getPositionSource(), GameEvent.JUKEBOX_PLAY.value().notificationRadius()));
