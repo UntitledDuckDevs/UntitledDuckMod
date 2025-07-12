@@ -513,6 +513,21 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         return !UntitledConfig.gooseTamedNotFollow();
     }
 
+    @Override
+    public float getScaleFactor() {
+        if (UntitledConfig.gooseBabyRandomSize()) {
+            float babyScale = getBabyScale();
+            float modelScale;
+            if (isBaby()) {
+                modelScale = babyScale;
+            } else {
+                modelScale = 0.8f + babyScale * 0.5f;
+            }
+            return modelScale;
+        }
+        return super.getScaleFactor();
+    }
+
     static class CleanGoal extends Goal {
         private static final int ANIMATION_LENGTH = 32;
         private final GooseEntity goose;

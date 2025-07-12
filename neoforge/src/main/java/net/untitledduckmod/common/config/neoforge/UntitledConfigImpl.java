@@ -15,11 +15,13 @@ public class UntitledConfigImpl {
     public static final ModConfigSpec.IntValue DUCK_MAX_GROUP_SIZE;
     public static final ModConfigSpec.DoubleValue DUCK_FISHING_CHANGE;
     public static final ModConfigSpec.BooleanValue DUCK_TAMED_NOT_FOLLOW;
+    public static final ModConfigSpec.BooleanValue DUCK_BABY_RANDOM_SIZE;
 
     public static final ModConfigSpec.IntValue GOOSE_WEIGHT;
     public static final ModConfigSpec.IntValue GOOSE_MIN_GROUP_SIZE;
     public static final ModConfigSpec.IntValue GOOSE_MAX_GROUP_SIZE;
     public static final ModConfigSpec.BooleanValue GOOSE_TAMED_NOT_FOLLOW;
+    public static final ModConfigSpec.BooleanValue GOOSE_BABY_RANDOM_SIZE;
 
     public static final ModConfigSpec.DoubleValue FOOD_HEALING_VALUE;
 
@@ -48,6 +50,10 @@ public class UntitledConfigImpl {
                 .comment("No more following behavior when tamed.")
                 .worldRestart()
                 .define("duck_tamed_no_follow", false);
+        DUCK_BABY_RANDOM_SIZE = builder
+                .comment("Baby model random size (0.25-0.7).")
+                .worldRestart()
+                .define("duck_baby_random_size", true);
         builder.pop();
 
         builder.push("goose");
@@ -65,6 +71,10 @@ public class UntitledConfigImpl {
                 .comment("No more following behavior when tamed.")
                 .worldRestart()
                 .define("goose_tamed_no_follow", false);
+        GOOSE_BABY_RANDOM_SIZE = builder
+                .comment("Baby model random size (0.25-0.7).")
+                .worldRestart()
+                .define("goose_baby_random_size", true);
         builder.pop();
 
         builder.push("common");
@@ -76,7 +86,7 @@ public class UntitledConfigImpl {
         builder.push("intimidation");
         INTIMIDATION_BLACKLIST = builder.comment("Intimidate effects don't work on mobs in the list")
                 .worldRestart()
-                .defineList("intimidation_blacklist", Lists.newArrayList("modid:test"), s -> s instanceof String);
+                .defineList("intimidation_blacklist", Lists.newArrayList("modid:test"), () -> "modid:new", s -> s instanceof String);
         builder.pop();
 
         SERVER_SPEC = builder.build();
@@ -102,6 +112,10 @@ public class UntitledConfigImpl {
         return DUCK_TAMED_NOT_FOLLOW.get();
     }
 
+    public static boolean duckBabyRandomSize() {
+        return DUCK_BABY_RANDOM_SIZE.get();
+    }
+
     public static int gooseWeight() {
         return GOOSE_WEIGHT.get();
     }
@@ -116,6 +130,10 @@ public class UntitledConfigImpl {
 
     public static boolean gooseTamedNotFollow() {
         return GOOSE_TAMED_NOT_FOLLOW.get();
+    }
+
+    public static boolean gooseBabyRandomSize() {
+        return GOOSE_BABY_RANDOM_SIZE.get();
     }
 
     public static float foodHealingValue() {

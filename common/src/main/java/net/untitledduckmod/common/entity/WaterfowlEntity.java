@@ -39,12 +39,16 @@ import software.bernie.geckolib.renderer.base.GeoRenderState;
 import java.util.Objects;
 
 public abstract class WaterfowlEntity extends TameableEntity implements GeoAnimatable {
+    public static final float BABY_MIN_SCALE = 0.25f;
+    public static final float BABY_MAX_SCALE = 0.7f;
     public static final String EGG_LAY_TIME_TAG = "EggLayTime";
     public static final String VARIANT_TAG = "Variant";
+    public static final String BABY_SCALE_TAG = "BabyScale";
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
     public static final DataTicket<Byte> VARIANT_TICKET = DataTicket.create("waterfowl_variant", Byte.class);
     public static final DataTicket<Boolean> LOOKING_AROUND = DataTicket.create("look_around", Boolean.class);
     protected static final TrackedData<Byte> VARIANT = DataTracker.registerData(WaterfowlEntity.class, TrackedDataHandlerRegistry.BYTE);
+    protected static final TrackedData<Float> BABY_SCALE = DataTracker.registerData(WaterfowlEntity.class, TrackedDataHandlerRegistry.FLOAT);
     protected static final TrackedData<Byte> ANIMATION = DataTracker.registerData(WaterfowlEntity.class, TrackedDataHandlerRegistry.BYTE);
     public static final byte ANIMATION_IDLE = 0;
     public static final byte ANIMATION_CLEAN = 1;
@@ -78,12 +82,14 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         var variant = getRandomVariant();
+        var babyScale = getRandomBabyScale();
 
         if (entityData instanceof GeoRenderState geoRenderState) {
             geoRenderState.addGeckolibData(WaterfowlEntity.VARIANT_TICKET, variant);
             geoRenderState.addGeckolibData(WaterfowlEntity.LOOKING_AROUND, lookingAround());
         }
         this.setVariant(variant); // Randomly choose between the two variants
+        this.setBabyScale(babyScale);
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
@@ -92,6 +98,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         super.initDataTracker(builder);
         builder.add(VARIANT, (byte) 0);
         builder.add(ANIMATION, ANIMATION_IDLE);
+        builder.add(BABY_SCALE, getRandomBabyScale());
     }
 
     @Override
@@ -99,6 +106,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         super.writeCustomDataToNbt(tag);
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
+        tag.putFloat(BABY_SCALE_TAG, getBabyScale());
     }
 
     @Override
@@ -108,6 +116,7 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         if (tag.contains(EGG_LAY_TIME_TAG)) {
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG, getRandomLayTime());
         }
+        tag.putFloat(BABY_SCALE_TAG, getBabyScale());
     }
 
     @Override
@@ -124,6 +133,18 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     @Override
     public boolean handleFallDamage(double fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;
+    }
+
+    public float getRandomBabyScale() {
+        return random.nextFloat() * (BABY_MAX_SCALE - BABY_MIN_SCALE) + BABY_MIN_SCALE;
+    }
+
+    public float getBabyScale() {
+        return dataTracker.get(BABY_SCALE);
+    }
+
+    public void setBabyScale(float scale) {
+        dataTracker.set(BABY_SCALE, scale);
     }
 
     public byte getVariant() {
