@@ -13,7 +13,7 @@ You will need to install [geckolib] for this mod to work.
 Additionally, on fabric, make sure you have [fabric-api][fabric-api-mr] installed.
 
 ## Features
-Starting from v2.1.0, their model sizes will be random, meaning they will come in different sizes.
+Starting from v1.1.0, their model sizes will be random, meaning they will come in different sizes.
 It can be turned off via the config "*_baby_random_size".
 
 ### Duck
