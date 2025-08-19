@@ -1,8 +1,9 @@
-## Version ["v1.1.0"] - 2025-7-9
+## Version ["v1.2.0"] - 2025-8-19
 
 ### Features
-- Make the sizes of ducks and geese random (can be disabled in the config).
-- Add CustomSpawnGroup
+Update the goose's pickup logic: once tamed, it only picks up items given by its owner.
 
 ### Bug fixes
-- Fix issues [#113](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/113), [#114](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/114) and [#115](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/115)
+- Fix [#123](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/123)
+#### Forge
+- Fix [#124](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/124)
