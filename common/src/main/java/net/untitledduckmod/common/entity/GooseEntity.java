@@ -3,6 +3,7 @@ package net.untitledduckmod.common.entity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.*;
@@ -88,8 +89,24 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     public static boolean checkGooseSpawnRules(EntityType<GooseEntity> goose, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBlockState(pos.down()).isIn(ModTags.BlockTags.GEESE_SPAWNABLE_ON) || world.getBlockState(pos.down()).getFluidState().isIn(FluidTags.WATER);
+        BlockState downState = world.getBlockState(pos.down());
+
+        boolean isValidSurface = downState.isIn(ModTags.BlockTags.GEESE_SPAWNABLE_ON)
+                || downState.getFluidState().isIn(FluidTags.WATER)
+                || downState.isOf(Blocks.ICE)
+                || downState.isOf(Blocks.FROSTED_ICE);
+
+        boolean hasEnoughSpace;
+        if (downState.isOf(Blocks.ICE) || downState.isOf(Blocks.FROSTED_ICE)) {
+            hasEnoughSpace = world.getBlockState(pos).isAir()
+                    && world.getBlockState(pos.up()).isAir();
+        } else {
+            hasEnoughSpace = world.getBlockState(pos).isAir();
+        }
+
+        return isValidSurface && hasEnoughSpace;
     }
+
 
     public static DefaultAttributeContainer.Builder getDefaultAttributes() {
         return MobEntity.createMobAttributes()
@@ -261,7 +278,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         return super.isTamable(player, stack) && !this.hasAngerTime();
     }
 
-    private boolean isAngry() {
+    public boolean isAngry() {
         return getTarget() != null;
     }
 
