@@ -2,17 +2,17 @@ package net.untitledduckmod;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.entity.EntityType;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.untitledduckmod.duck.DuckEntity;
 import net.untitledduckmod.goose.GooseEntity;
 import net.untitledduckmod.items.DuckEggEntity;
 
 public class ModEntityTypes {
-    public static TagKey<Biome> DUCK_BIOMES = TagKey.of(Registry.BIOME_KEY, new Identifier(DuckMod.MOD_ID, "duck_spawn"));
-    public static TagKey<Biome> GOOSE_BIOMES = TagKey.of(Registry.BIOME_KEY, new Identifier(DuckMod.MOD_ID, "goose_spawn"));
+    public static TagKey<Biome> DUCK_BIOMES = TagKey.of(RegistryKeys.BIOME, new Identifier(DuckMod.MOD_ID, "duck_spawn"));
+    public static TagKey<Biome> GOOSE_BIOMES = TagKey.of(RegistryKeys.BIOME, new Identifier(DuckMod.MOD_ID, "goose_spawn"));
 
     @ExpectPlatform
     public static void register(Object optionalEvent) {
@@ -20,12 +20,12 @@ public class ModEntityTypes {
     }
 
     @ExpectPlatform
-    public static void registerAttributes() {
+    public static void registerAttributes(Object optionalEvent) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void setupSpawning() {
+    public static void setupSpawning(Object optionalEvent) {
         throw new AssertionError();
     }
 

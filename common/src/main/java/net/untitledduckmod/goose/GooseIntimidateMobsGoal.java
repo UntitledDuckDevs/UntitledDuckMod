@@ -58,7 +58,7 @@ public class GooseIntimidateMobsGoal extends Goal {
 
     @Override
     public boolean shouldContinue() {
-        return targetEntity.isAlive() && goose.squaredDistanceTo(originalLocation) <= INTIMIDATE_DISTANCE*INTIMIDATE_DISTANCE && animationTime >= 0;
+        return targetEntity.isAlive() && goose.squaredDistanceTo(originalLocation) <= INTIMIDATE_DISTANCE * INTIMIDATE_DISTANCE && animationTime >= 0;
     }
 
     @Override

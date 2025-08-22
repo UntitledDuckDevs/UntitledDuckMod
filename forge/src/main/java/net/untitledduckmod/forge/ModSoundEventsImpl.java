@@ -2,28 +2,27 @@ package net.untitledduckmod.forge;
 
 import net.minecraft.sound.SoundEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegisterEvent;
 import net.untitledduckmod.registration.SoundIdentifier;
 
 
 public class ModSoundEventsImpl {
-    public static final SoundEvent DUCK_AMBIENT = new SoundEvent(SoundIdentifier.DUCK_AMBIENT);
-    public static final SoundEvent DUCKLING_AMBIENT = new SoundEvent(SoundIdentifier.DUCKLING_AMBIENT);
-    public static final SoundEvent DUCK_HURT = new SoundEvent(SoundIdentifier.DUCK_HURT);
-    public static final SoundEvent DUCKLING_HURT = new SoundEvent(SoundIdentifier.DUCKLING_HURT);
-    public static final SoundEvent DUCK_DEATH = new SoundEvent(SoundIdentifier.DUCK_DEATH);
-    public static final SoundEvent DUCKLING_DEATH = new SoundEvent(SoundIdentifier.DUCKLING_DEATH);
-    public static final SoundEvent DUCK_STEP = new SoundEvent(SoundIdentifier.DUCK_STEP);
-    public static final SoundEvent DUCK_LAY_EGG = new SoundEvent(SoundIdentifier.DUCK_LAY_EGG);
-    public static final SoundEvent DUCK_SACK_USE = new SoundEvent(SoundIdentifier.DUCK_SACK_USE);
+    public static final SoundEvent DUCK_AMBIENT = SoundEvent.of(SoundIdentifier.DUCK_AMBIENT);
+    public static final SoundEvent DUCKLING_AMBIENT = SoundEvent.of(SoundIdentifier.DUCKLING_AMBIENT);
+    public static final SoundEvent DUCK_HURT = SoundEvent.of(SoundIdentifier.DUCK_HURT);
+    public static final SoundEvent DUCKLING_HURT = SoundEvent.of(SoundIdentifier.DUCKLING_HURT);
+    public static final SoundEvent DUCK_DEATH = SoundEvent.of(SoundIdentifier.DUCK_DEATH);
+    public static final SoundEvent DUCKLING_DEATH = SoundEvent.of(SoundIdentifier.DUCKLING_DEATH);
+    public static final SoundEvent DUCK_STEP = SoundEvent.of(SoundIdentifier.DUCK_STEP);
+    public static final SoundEvent DUCK_LAY_EGG = SoundEvent.of(SoundIdentifier.DUCK_LAY_EGG);
+    public static final SoundEvent DUCK_SACK_USE = SoundEvent.of(SoundIdentifier.DUCK_SACK_USE);
 
-    public static final SoundEvent GOOSE_HONK = new SoundEvent(SoundIdentifier.GOOSE_HONK);
-    public static final SoundEvent GOOSE_LAY_EGG = new SoundEvent(SoundIdentifier.GOOSE_LAY_EGG);
-    public static final SoundEvent GOOSE_DEATH = new SoundEvent(SoundIdentifier.GOOSE_DEATH);
-    public static final SoundEvent GOSLING_AMBIENT = new SoundEvent(SoundIdentifier.GOSLING_AMBIENT);
-    public static final SoundEvent GOSLING_DEATH = new SoundEvent(SoundIdentifier.GOSLING_DEATH);
-    public static final SoundEvent GOSLING_HURT = new SoundEvent(SoundIdentifier.GOSLING_HURT);
+    public static final SoundEvent GOOSE_HONK = SoundEvent.of(SoundIdentifier.GOOSE_HONK);
+    public static final SoundEvent GOOSE_LAY_EGG = SoundEvent.of(SoundIdentifier.GOOSE_LAY_EGG);
+    public static final SoundEvent GOOSE_DEATH = SoundEvent.of(SoundIdentifier.GOOSE_DEATH);
+    public static final SoundEvent GOSLING_AMBIENT = SoundEvent.of(SoundIdentifier.GOSLING_AMBIENT);
+    public static final SoundEvent GOSLING_DEATH = SoundEvent.of(SoundIdentifier.GOSLING_DEATH);
+    public static final SoundEvent GOSLING_HURT = SoundEvent.of(SoundIdentifier.GOSLING_HURT);
 
     public static void register(Object optionalEvent) {
         assert optionalEvent != null;
@@ -46,7 +45,7 @@ public class ModSoundEventsImpl {
             registry.register(SoundIdentifier.GOSLING_DEATH, GOSLING_DEATH);
             registry.register(SoundIdentifier.GOSLING_HURT, GOSLING_HURT);
         });
-   }
+    }
 
     public static SoundEvent getDuckAmbientSound() {
         return DUCK_AMBIENT;

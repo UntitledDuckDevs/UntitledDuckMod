@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
+
 import static net.untitledduckmod.mixin.BrewingRecipeRegistryInvoker.registerPotionRecipe;
 
 public class ModPotions {

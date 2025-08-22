@@ -15,7 +15,7 @@ public class ModItems {
     }
 
     @ExpectPlatform
-    public static void setup(Object optionalEvent) {
+    public static void setupItemGroups(Object optionalEvent) {
         throw new AssertionError();
     }
 

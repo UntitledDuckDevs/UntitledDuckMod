@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[43,)"
+loaderVersion = "[45,)"
 issueTrackerURL = "https://github.com/Okabintaro/UntitledDuckMod/issues"
 license = "MIT"
 
@@ -17,21 +17,21 @@ Ducks and Geese for Forge and Fabric! Powered by geckolib and architectury.
 [[dependencies.untitledduckmod]]
 modId = "forge"
 mandatory = true
-versionRange = "[43,)"
+versionRange = "[45,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.untitledduckmod]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.2,)"
+versionRange = "[1.19.4,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.untitledduckmod]]
-modId="geckolib3"
+modId="geckolib"
 mandatory=true
-versionRange="[3.1.18,)"
+versionRange="[4.2,)"
 ordering="NONE"
 side="BOTH"
 

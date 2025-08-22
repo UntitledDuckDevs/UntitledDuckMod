@@ -6,7 +6,7 @@ public class GooseRevengeGoal extends RevengeGoal {
     private final GooseEntity goose;
 
     public GooseRevengeGoal(GooseEntity goose) {
-        super(goose, new Class[0]);
+        super(goose);
         this.goose = goose;
     }
 

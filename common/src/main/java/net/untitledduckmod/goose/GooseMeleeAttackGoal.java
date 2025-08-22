@@ -11,6 +11,7 @@ public class GooseMeleeAttackGoal extends MeleeAttackGoal {
         super(gooseEntity, speed, pauseWhenIdle);
         this.goose = gooseEntity;
     }
+
     private static final int ANIMATION_LEN = GooseEntity.ANIMATION_BITE_LEN;
     private static final int ANIMATION_ATTACK = 5; // Point in animation where to attack, counted from back
     private int animationTimer = 0;
