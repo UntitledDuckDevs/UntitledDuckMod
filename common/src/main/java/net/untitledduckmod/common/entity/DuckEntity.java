@@ -115,7 +115,22 @@ public class DuckEntity extends WaterfowlEntity implements Vibrations, Animation
     }
 
     public static boolean checkDuckSpawnRules(EntityType<DuckEntity> duck, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return world.getBlockState(pos.down()).isIn(ModTags.BlockTags.DUCKS_SPAWNABLE_ON) || world.getBlockState(pos.down()).getFluidState().isIn(FluidTags.WATER);
+                BlockState downState = world.getBlockState(pos.down());
+
+        boolean isValidSurface = downState.isIn(ModTags.BlockTags.DUCKS_SPAWNABLE_ON)
+                || downState.getFluidState().isIn(FluidTags.WATER)
+                || downState.isOf(Blocks.ICE)
+                || downState.isOf(Blocks.FROSTED_ICE);
+
+        boolean hasEnoughSpace;
+        if (downState.isOf(Blocks.ICE) || downState.isOf(Blocks.FROSTED_ICE)) {
+            hasEnoughSpace = world.getBlockState(pos).isAir()
+                    && world.getBlockState(pos.up()).isAir();
+        } else {
+            hasEnoughSpace = world.getBlockState(pos).isAir();
+        }
+
+        return isValidSurface && hasEnoughSpace;
     }
 
     @Override
