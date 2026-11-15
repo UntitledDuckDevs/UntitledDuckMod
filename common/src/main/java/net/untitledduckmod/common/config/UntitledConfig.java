@@ -62,6 +62,31 @@ public class UntitledConfig {
     }
 
     @ExpectPlatform
+    public static boolean enableForceEat() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static int forceEatRandomMinTick() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static int forceEatRandomMaxTick() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static int minEggLayTime() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static int maxEggLayTime() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static float foodHealingValue() {
         throw new AssertionError();
     }

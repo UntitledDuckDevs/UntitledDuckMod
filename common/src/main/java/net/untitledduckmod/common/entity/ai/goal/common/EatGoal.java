@@ -2,6 +2,7 @@ package net.untitledduckmod.common.entity.ai.goal.common;
 
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
+import net.untitledduckmod.common.config.UntitledConfig;
 import net.untitledduckmod.common.entity.DuckEntity;
 import net.untitledduckmod.common.entity.GooseEntity;
 import net.untitledduckmod.common.entity.WaterfowlEntity;
@@ -24,17 +25,15 @@ public class EatGoal extends Goal {
     @Override
     public boolean canStart() {
         // TODO: Should throttle this?
-        if (!entity.isHungry()) {
-            return false;
-        }
         ItemStack stack = entity.getMainHandStack();
         if (stack == null || stack.isEmpty()) {
             return false;
         }
-        if (entity instanceof DuckEntity) {
-            return DuckEntity.TAMING_INGREDIENT.test(stack) || DuckEntity.BREEDING_INGREDIENT.test(stack);
+        boolean isEdible = entity.isEdibleFood(stack);
+        if (!isEdible) {
+            return false;
         }
-        return GooseEntity.FOOD.test(stack);
+        return entity.isHungry() || (UntitledConfig.enableForceEat() && entity.getHeldFoodTick() >= entity.getRandomForceEatTick());
     }
 
     @Override

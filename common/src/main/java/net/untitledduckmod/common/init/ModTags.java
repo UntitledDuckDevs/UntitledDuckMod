@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.untitledduckmod.DuckMod;
 
@@ -36,6 +37,12 @@ public class ModTags {
         public static final TagKey<Item> GOOSE_FOOD = create("goose_food");
         public static final TagKey<Item> GOOSE_BREEDING_FOOD = create("goose_breeding_food");
         public static final TagKey<Item> GOOSE_TAMING_FOOD = create("goose_taming_food");
+        public static final TagKey<Item> RAW_MEAT = createC("foods/raw_meat");
+        public static final TagKey<Item> COOKED_MEAT = createC("foods/cooked_meat");
+
+        private static TagKey<Item> createC(String name) {
+            return TagKey.of(RegistryKeys.ITEM, Identifier.of("c", name));
+        }
 
         private static TagKey<Item> create(String name) {
             return TagKey.of(RegistryKeys.ITEM, DuckMod.id(name));

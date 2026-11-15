@@ -18,12 +18,12 @@ public class GooseModel extends WaterfowlModel<GooseEntity> {
     }
 
     @Override
-    public Identifier getTextureResource(GooseEntity entity) {
-        if (entity.isBaby()) {
+    public Identifier getTextureResource(GooseEntity animatable) {
+        if (animatable.isBaby()) {
             return ModelIdentifiers.GOSLING_TEXTURE;
         } else {
-            if (entity.hasCustomName()) {
-                String name = Objects.requireNonNull(entity.getCustomName()).getString().toLowerCase();
+            if (animatable.hasCustomName()) {
+                String name = Objects.requireNonNull(animatable.getCustomName()).getString().toLowerCase();
                 switch (name) {
                     case "ping" -> {
                         return ModelIdentifiers.PING_GOOSE_TEXTURE;
@@ -37,8 +37,13 @@ public class GooseModel extends WaterfowlModel<GooseEntity> {
                 }
             }
         }
+        var variant = animatable.getVariant();
 
-        return entity.getVariant() == 0 ? ModelIdentifiers.GOOSE_TEXTURE : ModelIdentifiers.CANADIAN_GOOSE_TEXTURE;
+        return switch (variant) {
+            case 1 -> ModelIdentifiers.CANADIAN_GOOSE_TEXTURE;
+            case 2 -> ModelIdentifiers.GREYLAG_GOOSE_TEXTURE;
+            default -> ModelIdentifiers.GOOSE_TEXTURE;
+        };
     }
 
     @Override

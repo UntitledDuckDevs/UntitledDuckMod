@@ -4,9 +4,11 @@
   "package": "net.untitledduckmod.mixin.forge",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "SpawnGroupMixin"
+    "SpawnGroupMixin",
+    "compat.incubation.WaterfowlEggLayerMixin"
   ],
   "client": [],
+  "plugin": "net.untitledduckmod.forge.ForgeMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }

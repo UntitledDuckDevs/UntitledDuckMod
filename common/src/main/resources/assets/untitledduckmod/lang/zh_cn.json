@@ -34,6 +34,7 @@
   "item.minecraft.potion.effect.intimidation": "恐吓药水",
   "item.minecraft.lingering_potion.effect.intimidation": "滞留型恐吓药水",
   "item.minecraft.splash_potion.effect.intimidation": "喷溅型恐吓药水",
+  "item.minecraft.tipped_arrow.effect.intimidation": "恐吓之箭",
 
   "modmenu.nameTranslation.untitledduckmod": "无题鸭",
   "modmenu.descriptionTranslation.untitledduckmod": "添加了鸭和鹅",
@@ -64,7 +65,17 @@
   "untitledduckmod.config.goose_tamed_not_follow": "鹅驯服后不跟随",
   "untitledduckmod.config.goose_baby_random_size": "小鹅随机大小",
   "untitledduckmod.config.intimidation_blacklist": "恐吓黑名单",
+  "untitledduckmod.config.enable_force_eat": "自动进食",
+  "untitledduckmod.config.force_eat_random_min_tick": "自动进食最小游戏刻",
+  "untitledduckmod.config.force_eat_random_max_tick": "自动进食最大游戏刻",
+  "untitledduckmod.config.min_egg_lay_time": "最小下蛋时间",
+  "untitledduckmod.config.max_egg_lay_time": "最大下蛋时间",
   "untitledduckmod.config.food_healing_value": "食物治疗值",
+  "untitledduckmod.config.enable_force_eat.tooltip": "是否为鸭/鹅开启自动进食",
+  "untitledduckmod.config.force_eat_random_min_tick.tooltip": "鸭/鹅自动进食食物的最小游戏刻",
+  "untitledduckmod.config.force_eat_random_max_tick.tooltip": "鸭/鹅自动进食食物的最大游戏刻",
+  "untitledduckmod.config.min_egg_lay_time.tooltip": "下蛋所需的最小游戏刻",
+  "untitledduckmod.config.max_egg_lay_time.tooltip": "下蛋所需的最大游戏刻",
   "untitledduckmod.config.duck_spawn_weight.tooltip": "鸭生成频率（越高，越频繁）",
   "untitledduckmod.config.goose_spawn_weight.tooltip": "鹅生成频率（越高，越频繁）",
   "untitledduckmod.config.duck_min_group_size.tooltip": "每次生成的最少鸭数量",
@@ -78,5 +89,12 @@
   "untitledduckmod.config.goose_tamed_not_follow.tooltip": "鹅驯服后不跟随而是游荡",
   "untitledduckmod.config.intimidation_blacklist.tooltip": "恐吓效果对列表中的生物无效",
 
-  "config.jade.plugin_untitledduckmod.lay_egg": "产卵时间"
+  "untitledduckmod.jade.nextEat": "下次进食: %s",
+  "config.jade.plugin_untitledduckmod.lay_egg": "产卵时间",
+  "config.jade.plugin_untitledduckmod.next_eat": "进食时间",
+
+  "block.untitledduckmod.twig_duck_nest": "树枝鸭窝",
+  "block.untitledduckmod.hay_duck_nest": "干草鸭窝",
+  "block.untitledduckmod.twig_goose_nest": "树枝鹅窝",
+  "block.untitledduckmod.hay_goose_nest": "干草鹅窝"
 }

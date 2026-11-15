@@ -25,9 +25,12 @@ configurations {
 dependencies {
     forge "net.minecraftforge:forge:${forge_version}"
 
-    modApi "curse.maven:jade-324717:${jade_id_forge}"
+    modApi "maven.modrinth:jade:${jade_version}+forge"
 
     modImplementation "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}"
+
+    modCompileOnly "maven.modrinth:incubation:${incubation_version}"
+    modCompileOnly "maven.modrinth:blueprint:${blueprint_version}"
 
     forgeRuntimeLibrary("com.eliotlash.mclib:mclib:20")
 

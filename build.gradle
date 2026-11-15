@@ -23,11 +23,8 @@ subprojects {
             url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
         }
         maven {
-            name = "Curse Maven"
-            url "https://www.cursemaven.com"
-            content {
-                includeGroup "curse.maven"
-            }
+            name = "Modrinth Maven"
+            url = "https://api.modrinth.com/maven"
         }
     }
 

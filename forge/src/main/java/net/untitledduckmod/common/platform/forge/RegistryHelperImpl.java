@@ -2,13 +2,15 @@ package net.untitledduckmod.common.platform.forge;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -16,6 +18,7 @@ import net.untitledduckmod.DuckMod;
 import net.untitledduckmod.common.entity.CustomSpawnGroup;
 import net.untitledduckmod.common.entity.forge.DuckEntityForge;
 import net.untitledduckmod.common.entity.forge.GooseEntityForge;
+import net.untitledduckmod.common.screen.ExtendedFactory;
 
 import java.util.function.Supplier;
 
@@ -26,6 +29,7 @@ public class RegistryHelperImpl {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, DuckMod.MOD_ID);
     public static final DeferredRegister<StatusEffect> STATUS_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, DuckMod.MOD_ID);
     public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, DuckMod.MOD_ID);
+    public static final DeferredRegister<ScreenHandlerType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, DuckMod.MOD_ID);
 
     public static <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {
         return ITEMS.register(name, item);
@@ -61,5 +65,13 @@ public class RegistryHelperImpl {
 
     public static <T extends Codec<? extends BiomeModifier>> void registerBiomeModifier(String name, Supplier<T> biomeModifier) {
         BIOME_MODIFIERS.register(name, biomeModifier);
+    }
+
+    public static <T extends ScreenHandler> ScreenHandlerType<T> createExtendedScreenHandler(ExtendedFactory<T> factory) {
+        return IForgeMenuType.create(factory::create);
+    }
+
+    public static <T extends ScreenHandlerType<?>> Supplier<T> registerScreenHandler(String name, Supplier<T> screenHandler) {
+        return MENU_TYPES.register(name, screenHandler);
     }
 }

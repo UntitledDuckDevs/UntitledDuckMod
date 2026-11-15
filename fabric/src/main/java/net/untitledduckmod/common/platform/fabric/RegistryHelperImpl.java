@@ -1,5 +1,6 @@
 package net.untitledduckmod.common.platform.fabric;
 
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
@@ -8,8 +9,11 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
 import net.untitledduckmod.DuckMod;
+import net.untitledduckmod.common.screen.ExtendedFactory;
 
 import java.util.function.Supplier;
 
@@ -44,6 +48,15 @@ public class RegistryHelperImpl {
 
     public static <T extends StatusEffect> Supplier<T> registerStatusEffect(String name, Supplier<T> statusEffect) {
         var registry = Registry.register(Registries.STATUS_EFFECT, DuckMod.id(name), statusEffect.get());
+        return () -> registry;
+    }
+
+    public static <T extends ScreenHandler> ScreenHandlerType<T> createExtendedScreenHandler(ExtendedFactory<T> factory) {
+        return new ExtendedScreenHandlerType<>(factory::create);
+    }
+
+    public static <T extends ScreenHandlerType<?>> Supplier<T> registerScreenHandler(String name, Supplier<T> screenHandler) {
+        var registry = Registry.register(Registries.SCREEN_HANDLER, DuckMod.id(name), screenHandler.get());
         return () -> registry;
     }
 }

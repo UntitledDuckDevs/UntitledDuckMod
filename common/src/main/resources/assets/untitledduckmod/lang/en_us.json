@@ -34,6 +34,7 @@
   "item.minecraft.potion.effect.intimidation": "Potion of Intimidation",
   "item.minecraft.lingering_potion.effect.intimidation": "Lingering Potion of Intimidation",
   "item.minecraft.splash_potion.effect.intimidation": "Splash Potion of Intimidation",
+  "item.minecraft.tipped_arrow.effect.intimidation": "Arrow of Intimidation",
 
   "tag.item.untitledduckmod.goose_food": "Goose Food",
   "tag.item.untitledduckmod.goose_breeding_food": "Goose Breeding Food",
@@ -61,7 +62,17 @@
   "untitledduckmod.config.goose_tamed_not_follow": "Goose Tamed Not Follow",
   "untitledduckmod.config.goose_baby_random_size": "Goose Baby Random Size",
   "untitledduckmod.config.intimidation_blacklist": "Intimidate Blacklist",
+  "untitledduckmod.config.enable_force_eat": "Enable Force Eat",
+  "untitledduckmod.config.force_eat_random_min_tick": "Force Eat Random Min Tick",
+  "untitledduckmod.config.force_eat_random_max_tick": "Force Eat Random Max Tick",
+  "untitledduckmod.config.min_egg_lay_time": "Min Egg Lay Time",
+  "untitledduckmod.config.max_egg_lay_time": "Max Egg Lay Time",
   "untitledduckmod.config.food_healing_value": "Food Healing value",
+  "untitledduckmod.config.enable_force_eat.tooltip": "Enable/disable automatic force-eating for duck/goose",
+  "untitledduckmod.config.force_eat_random_min_tick.tooltip": "Min tick before duck/goose auto-eat held food",
+  "untitledduckmod.config.force_eat_random_max_tick.tooltip": "Max tick before duck/goose auto-eat held food",
+  "untitledduckmod.config.min_egg_lay_time.tooltip": "Min egg lay time (Ticks)",
+  "untitledduckmod.config.max_egg_lay_time.tooltip": "Max egg lay time (Ticks)",
   "untitledduckmod.config.food_healing_value.tooltip": "Food can heal the health value of duck & goose",
   "untitledduckmod.config.duck_spawn_weight.tooltip": "How often ducks spawn (the higher, the more often)",
   "untitledduckmod.config.goose_spawn_weight.tooltip": "How often geese spawn (the higher, the more often)",
@@ -76,5 +87,12 @@
   "untitledduckmod.config.goose_tamed_not_follow.tooltip": "No more following behavior when tamed (wander)",
   "untitledduckmod.config.intimidation_blacklist.tooltip": "Intimidate effects don't work on mobs in the list",
 
-  "config.jade.plugin_untitledduckmod.lay_egg": "Egg laying time"
+  "untitledduckmod.jade.nextEat": "Next auto-eat: %s",
+  "config.jade.plugin_untitledduckmod.lay_egg": "Egg laying time",
+  "config.jade.plugin_untitledduckmod.next_eat": "Next auto-eat time",
+
+  "block.untitledduckmod.twig_duck_nest": "Twig Duck Nest",
+  "block.untitledduckmod.hay_duck_nest": "Hay Duck Nest",
+  "block.untitledduckmod.twig_goose_nest": "Twig Goose Nest",
+  "block.untitledduckmod.hay_goose_nest": "Hay Goose Nest"
 }

@@ -21,21 +21,13 @@ public class DuckModel extends WaterfowlModel<DuckEntity> {
     public Identifier getTextureResource(DuckEntity animatable) {
         if (animatable.isBaby()) {
             return ModelIdentifiers.DUCKLING_TEXTURE;
-        } else {
-            if (animatable.hasCustomName()) {
-                String name = Objects.requireNonNull(animatable.getCustomName()).getString().toLowerCase();
-                switch (name) {
-                    case "pekin" -> {
-                        return ModelIdentifiers.PEKIN_TEXTURE;
-                    }
-                }
-            }
         }
         var variant = animatable.getVariant();
 
         return switch (variant) {
             case 1 -> ModelIdentifiers.FEMALE_TEXTURE;
             case 2 -> ModelIdentifiers.CAMPBELL_TEXTURE;
+            case 3 -> ModelIdentifiers.PEKIN_TEXTURE;
             default -> ModelIdentifiers.NORMAL_TEXTURE;
         };
     }

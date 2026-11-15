@@ -7,6 +7,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
 import net.untitledduckmod.common.entity.DuckEntity;
@@ -67,18 +68,22 @@ public class WaterfowlRenderer<T extends WaterfowlEntity> extends GeoEntityRende
         if (bone.getName().equals("beak") && !mainHand.isEmpty()) {
             poseStack.push();
             if (animatable instanceof DuckEntity) {
-                poseStack.translate(0.0, 0.50, -0.40);
+                poseStack.translate(-0.05, 0.50, -0.30);
             } else if (animatable instanceof GooseEntity) {
-                poseStack.translate(0.0, 1.15, -0.45);
+                poseStack.translate(0.15, 1.15, -0.40);
+                if (mainHand.getItem() instanceof BlockItem) {
+                    poseStack.translate(-0.15, 0, 0.0);
+                }
             }
 
             poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+            poseStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-45f));
             poseStack.scale(0.7f, 0.7f, 0.7f);
 
             heldItemRenderer.renderItem(animatable, mainHand, ModelTransformationMode.GROUND, false, poseStack, bufferSource, packedLight);
             poseStack.pop();
 
-            buffer = bufferSource.getBuffer(RenderLayer.getEntityCutout(this.getTexture(animatable)));
+            buffer = bufferSource.getBuffer(renderType);
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }

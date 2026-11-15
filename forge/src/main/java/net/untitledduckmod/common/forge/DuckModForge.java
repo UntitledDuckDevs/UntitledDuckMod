@@ -14,6 +14,7 @@ import net.untitledduckmod.common.init.ModEntityTypes;
 import net.untitledduckmod.common.init.ModItems;
 import net.untitledduckmod.common.init.forge.ModBiomeModifier;
 import net.untitledduckmod.common.platform.forge.RegistryHelperImpl;
+import net.untitledduckmod.compat.forge.incubation.IncubationCompat;
 
 @Mod(DuckMod.MOD_ID)
 public class DuckModForge {
@@ -27,6 +28,8 @@ public class DuckModForge {
         RegistryHelperImpl.BIOME_MODIFIERS.register(bus);
         RegistryHelperImpl.STATUS_EFFECTS.register(bus);
         RegistryHelperImpl.POTIONS.register(bus);
+        RegistryHelperImpl.MENU_TYPES.register(bus);
+        new IncubationCompat(bus);
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)

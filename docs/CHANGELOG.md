@@ -1,3 +1,53 @@
+## Version ["v1.7.0"] - 2026-08-30
+
+### Features
+- Geese and ducks cannot pick up their own meat
+#### Forge
+- Incubation compat
+
+## Version ["v1.5.2"] - 2026-2-3
+
+### Bug fixes
+- Incorrect translation of tipped_arrow
+
+## Version ["v1.5.1"] - 2026-2-3
+
+### Bug fixes
+- [#139](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/#139)
+
+
+## Version ["v1.5.0"] - 2026-2-3
+
+### Credits
+Special thanks to:
+[Practise40hrs](https://github.com/Practise40hrs) - For providing the beautiful new textures for the **Pekin Duck** and **Greylag Goose** variants.
+
+### Features
+- Tamed geese now only pick up items from their owners
+- Added a new Pekin Duck variant.
+  ![Pekin Duck](images/pekin_duck.png)
+- Added a new Greylag Goose variant.
+  ![Greylag Goose](images/greylag_goose.png)
+
+### Bug fixes
+- Missing the name of intimidation arrow [#138](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/138)
+
+## Version ["v1.3.5"] - 2026-1-22
+
+### Bug fixes
+- Supplement config translation
+#### Forge
+- Fix the initial value of force_eat_random_min_tick
+
+## Version ["v1.3.0"] - 2026-1-22
+
+### Features
+Ducks and geese will auto-eat their held food within a configured tick.
+
+### Bug fixes
+- Fix [#131](https://github.com/UntitledDuckDevs/UntitledDuckMod/issues/131)
+
+
 ## Version ["v1.2.0"] - 2025-8-19
 
 ### Features

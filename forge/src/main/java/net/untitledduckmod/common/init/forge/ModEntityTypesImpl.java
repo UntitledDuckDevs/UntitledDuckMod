@@ -1,6 +1,5 @@
 package net.untitledduckmod.common.init.forge;
 
-import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.Heightmap;

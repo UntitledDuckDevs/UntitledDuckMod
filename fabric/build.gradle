@@ -32,7 +32,7 @@ dependencies {
 
     modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
     modApi "com.terraformersmc:modmenu:${modmenu_version}"
-    modApi "curse.maven:jade-324717:${jade_id_fabric}"
+    modApi "maven.modrinth:jade:${jade_version}+fabric"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

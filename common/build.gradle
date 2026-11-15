@@ -5,7 +5,6 @@ architectury {
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
-
-    modApi "curse.maven:jade-324717:${jade_id_fabric}"
+    modApi "maven.modrinth:jade:${jade_version}+fabric"
 }
 

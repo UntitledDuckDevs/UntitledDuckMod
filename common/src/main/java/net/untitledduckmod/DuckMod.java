@@ -15,6 +15,7 @@ public class DuckMod {
         ModSoundEvents.init();
         ModStatusEffects.init();
         ModPotions.init();
+        ModScreenHandlers.init();
     }
 
     public static void postInit() {

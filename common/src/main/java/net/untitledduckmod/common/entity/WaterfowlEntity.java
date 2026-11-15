@@ -1,9 +1,6 @@
 package net.untitledduckmod.common.entity;
 
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityStatuses;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -13,26 +10,32 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.*;
 import net.untitledduckmod.common.config.UntitledConfig;
+import net.untitledduckmod.common.helper.MouthGuiHelper;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.Objects;
 
-public abstract class WaterfowlEntity extends TameableEntity implements GeoAnimatable {
+public abstract class WaterfowlEntity extends TameableEntity implements GeoAnimatable, MouthHoldable {
     public static final float BABY_MIN_SCALE = 0.25f;
     public static final float BABY_MAX_SCALE = 0.7f;
     public static final String EGG_LAY_TIME_TAG = "EggLayTime";
+    public static final String HELD_FOOD_TICK_TAG = "HeldFoodTick";
+    public static final String RANDOM_FORCE_EAT_TICK_TAG = "RandomForceEatTick";
+    public static final String MOUTH_ITEM_TAG = "MouthItem";
     public static final String VARIANT_TAG = "Variant";
     public static final String BABY_SCALE_TAG = "BabyScale";
     public static final float SWIM_SPEED_MULTIPLIER = 3.0f;
@@ -55,17 +58,23 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     protected static final RawAnimation EAT_ANIM = RawAnimation.begin().thenPlay("eat");
     protected static final RawAnimation SIT_ANIM = RawAnimation.begin().thenPlay("sit");
 
-    private static final int MIN_EGG_LAY_TIME = 6000;
-    private static final int MAX_EGG_LAY_TIME = 12000;
+    public final SimpleInventory mouthInventory = new SimpleInventory(1);
 
-    protected int maxVariant = 2;
+    protected int maxVariant = 3;
     protected int eggLayTime;
+    private int heldFoodTick = 0;
+    private int randomForceEatTick = 0;
     protected boolean isFlapping;
     protected boolean panicked = false;
     protected WaterfowlEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
         eggLayTime = getRandomLayTime();
         this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
+
+        this.mouthInventory.addListener(inventory -> {
+            ItemStack stackInGui = inventory.getStack(0);
+            this.equipStack(EquipmentSlot.MAINHAND, stackInGui);
+        });
     }
 
     @Override
@@ -92,6 +101,9 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
         tag.putByte(VARIANT_TAG, getVariant());
         tag.putInt(EGG_LAY_TIME_TAG, eggLayTime);
         tag.putFloat(BABY_SCALE_TAG, getBabyScale());
+        tag.putInt(HELD_FOOD_TICK_TAG, heldFoodTick);
+        tag.putInt(RANDOM_FORCE_EAT_TICK_TAG, randomForceEatTick);
+        tag.put(MOUTH_ITEM_TAG, this.mouthInventory.getStack(0).writeNbt(new NbtCompound()));
     }
 
     @Override
@@ -102,6 +114,29 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
             this.eggLayTime = tag.getInt(EGG_LAY_TIME_TAG);
         }
         setBabyScale(tag.getFloat(BABY_SCALE_TAG));
+        this.heldFoodTick = tag.getInt(HELD_FOOD_TICK_TAG);
+        this.randomForceEatTick = tag.getInt(RANDOM_FORCE_EAT_TICK_TAG);
+        if (tag.contains(MOUTH_ITEM_TAG, NbtCompound.COMPOUND_TYPE)) {
+            this.mouthInventory.setStack(0, ItemStack.fromNbt(tag.getCompound(MOUTH_ITEM_TAG)));
+        }
+    }
+
+    @Override
+    public SimpleInventory getMouthInventory() {
+        return this.mouthInventory;
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return super.getDisplayName();
+    }
+
+    @Override
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+        super.equipStack(slot, stack);
+        if (slot == EquipmentSlot.MAINHAND && this.mouthInventory.getStack(0) != stack) {
+            this.mouthInventory.setStack(0, stack);
+        }
     }
 
     @Override
@@ -119,6 +154,30 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (isEdibleFood(getMainHandStack())) {
+            heldFoodTick++;
+            if (randomForceEatTick == 0) {
+                randomForceEatTick = generateRandomForceEatTick();
+            }
+        } else {
+            heldFoodTick = 0;
+            randomForceEatTick = 0;
+        }
+    }
+
+    private int generateRandomForceEatTick() {
+        int min = UntitledConfig.forceEatRandomMinTick();
+        int max = UntitledConfig.forceEatRandomMaxTick();
+        int actualMin = Math.min(min, max);
+        int actualMax = Math.max(min, max);
+        return random.nextBetweenExclusive(actualMin, actualMax);
+    }
+
+    public abstract boolean isEdibleFood(ItemStack stack);
 
     public byte getVariant() {
         return dataTracker.get(VARIANT);
@@ -145,7 +204,9 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     }
 
     public int getRandomLayTime() {
-        return random.nextInt(MIN_EGG_LAY_TIME) + (MAX_EGG_LAY_TIME - MIN_EGG_LAY_TIME);
+        int min = UntitledConfig.minEggLayTime();
+        int max = UntitledConfig.maxEggLayTime();
+        return this.random.nextInt(min) + (max - min);
     }
 
     public byte getAnimation() {
@@ -214,6 +275,13 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
         // TODO: Cleanup
+        if (player.isSneaking() && this.isTamed() && this.isOwner(player)) {
+            if (!this.getWorld().isClient) {
+                MouthGuiHelper.openMouthGui(player, this);
+            }
+            return ActionResult.success(this.getWorld().isClient);
+        }
+
         ItemStack stack = player.getStackInHand(hand);
         Item item = stack.getItem();
         if (this.getWorld().isClient && (!this.isBaby() || !this.isBreedingItem(stack))) {
@@ -301,6 +369,14 @@ public abstract class WaterfowlEntity extends TameableEntity implements GeoAnima
 
     public int getEggLayTime() {
         return this.eggLayTime;
+    }
+
+    public int getHeldFoodTick() {
+        return this.heldFoodTick;
+    }
+
+    public int getRandomForceEatTick() {
+        return randomForceEatTick;
     }
 
     public boolean tamedFollowOwner() {

@@ -12,9 +12,20 @@ import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.theme.IThemeHelper;
 
-public enum LayEggProvider implements IEntityComponentProvider, IServerDataProvider<EntityAccessor> {
+public class LayEggProvider implements IEntityComponentProvider, IServerDataProvider<EntityAccessor> {
 
-    INSTANCE;
+    public static final LayEggProvider INSTANCE = new LayEggProvider();
+
+    static final  Identifier UID = DuckMod.id("lay_egg");
+
+    @Override
+    public void appendServerData(NbtCompound tag, EntityAccessor accessor) {
+        if (accessor.getEntity() instanceof WaterfowlEntity entity) {
+            if (!entity.isBaby() && entity.getEggLayTime() > 0) {
+                tag.putInt("NextEggIn", entity.getEggLayTime());
+            }
+        }
+    }
 
     @Override
     public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
@@ -25,17 +36,7 @@ public enum LayEggProvider implements IEntityComponentProvider, IServerDataProvi
     }
 
     @Override
-    public void appendServerData(NbtCompound tag, EntityAccessor accessor) {
-        int max = 24000 * 2;
-        if (accessor.getEntity() instanceof WaterfowlEntity entity) {
-            if (!entity.isBaby() && entity.getEggLayTime() < max) {
-                tag.putInt("NextEggIn", entity.getEggLayTime());
-            }
-        }
-    }
-
-    @Override
     public Identifier getUid() {
-        return DuckMod.id("lay_egg");
+        return UID;
     }
 }

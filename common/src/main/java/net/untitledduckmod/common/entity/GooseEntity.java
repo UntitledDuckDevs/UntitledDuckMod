@@ -26,6 +26,7 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Hand;
@@ -75,7 +76,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     private static final RawAnimation BITE_ANIM = RawAnimation.begin().thenPlay("bite");
     private static final RawAnimation CHARGE_ANIM = RawAnimation.begin().thenPlay("charge");
 
-    public static final Ingredient FOOD = Ingredient.fromTag(ModTags.ItemTags.GOOSE_FOOD);
+    public static final Ingredient FOOD_INGREDIENT = Ingredient.fromTag(ModTags.ItemTags.GOOSE_FOOD);
     private static final Ingredient BREEDING_INGREDIENT = Ingredient.fromTag(ModTags.ItemTags.GOOSE_BREEDING_FOOD);
     private static final Ingredient TAMING_INGREDIENT = Ingredient.fromTag(ModTags.ItemTags.GOOSE_TAMING_FOOD);
 
@@ -106,7 +107,6 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
         return isValidSurface && hasEnoughSpace;
     }
-
 
     public static DefaultAttributeContainer.Builder getDefaultAttributes() {
         return MobEntity.createMobAttributes()
@@ -182,7 +182,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         this.goalSelector.add(5, new PickupFoodGoal(this));
         this.goalSelector.add(6, new GooseMeleeAttackGoal(this, 1.5D, true));
 
-        this.goalSelector.add(7, new TemptGoal(this, 1.0D, BREEDING_INGREDIENT, false));
+        this.goalSelector.add(7, new TemptGoal(this, 1.0D, FOOD_INGREDIENT, false));
         this.goalSelector.add(8, new WFollowParentGoal(this, 1.1D));
 
         this.goalSelector.add(9, new WFollowOwnerGoal(this, 1.6D, 10.0F, 2.0F, false));
@@ -197,6 +197,11 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(2, new AttackWithOwnerGoal(this));
         this.targetSelector.add(3, new GooseRevengeGoal(this).setGroupRevenge());
+    }
+
+    @Override
+    public boolean isEdibleFood(ItemStack stack) {
+        return !stack.isEmpty() && FOOD_INGREDIENT.test(stack);
     }
 
     @Override
@@ -219,6 +224,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
         super.onEquipStack(slot, oldStack, newStack);
     }
 
+    @Nullable
     private UUID getThrower(ItemEntity ie) {
         NbtCompound nbt = new NbtCompound();
         ie.writeCustomDataToNbt(nbt);
@@ -255,7 +261,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     protected boolean tryTaming(PlayerEntity player, ItemStack stack) {
         if (isAngry()) {
             // Peace goose when angry with food
-            if (FOOD.test(stack)) {
+            if (TAMING_INGREDIENT.test(stack)) {
                 ItemStack newStack = stack.copy();
                 newStack.setCount(1);
                 if (!player.getAbilities().creativeMode) {
@@ -292,10 +298,15 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
     }
 
     @Override
+    public int getMouthHolderType() {
+        return 1;
+    }
+
+    @Override
     public ItemStack tryEquip(ItemStack equipment) {
         EquipmentSlot equipmentSlot = EquipmentSlot.MAINHAND;
         ItemStack itemStack = getMainHandStack();
-        if (FOOD.test(equipment) || this.canPickupItem(equipment)) {
+        if (FOOD_INGREDIENT.test(equipment) || this.canPickupItem(equipment)) {
             if (!itemStack.isEmpty()) {
                 ItemEntity itemEntity = this.dropStack(itemStack);
                 if (itemEntity != null) {
@@ -312,18 +323,37 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
 
     @Override
     protected void loot(ItemEntity item) {
-        // Don't pick up threw/spat items
-        if (this.getThrower(item) == this.getUuid()) {
+        UUID entityUuid = this.getUuid();
+        UUID throwerId = this.getThrower(item);
+
+        if (Objects.equals(entityUuid,throwerId)) {
             return;
         }
+
+        if (this.isTamed()) {
+            UUID ownerId = this.getOwnerUuid();
+            if (!Objects.equals(ownerId, throwerId)) {
+                return;
+            }
+        }
+
         super.loot(item);
+    }
+
+    private boolean isWeapon(ItemStack stack) {
+        return stack.isIn(ItemTags.SWORDS) || stack.isIn(ItemTags.AXES);
     }
 
     @Override
     public boolean canPickupItem(ItemStack stack) {
         ItemStack mainHandStack = getMainHandStack();
-
-        if ((!FOOD.test(mainHandStack) && FOOD.test(stack))) {
+        if (stack.isIn(ModTags.ItemTags.COOKED_MEAT) || stack.isIn(ModTags.ItemTags.RAW_MEAT)) {
+            return false;
+        }
+        if (isWeapon(stack) && isTamed()) {
+            return getOwner() != null && this.getHealth() == this.getMaxHealth();
+        }
+        if ((!FOOD_INGREDIENT.test(mainHandStack) && FOOD_INGREDIENT.test(stack))) {
             return true;
         }
         if (mainHandStack.isEmpty()) {
@@ -704,7 +734,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             this.setControls(EnumSet.of(Goal.Control.MOVE));
         }
 
-        private static final Predicate<ItemEntity> PICKABLE_DROP_FILTER = (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && GooseEntity.FOOD.test(itemEntity.getStack());
+        private static final Predicate<ItemEntity> PICKABLE_DROP_FILTER = (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && GooseEntity.FOOD_INGREDIENT.test(itemEntity.getStack());
 
         public boolean canStart() {
             if (goose.isBaby() || !goose.getEquippedStack(EquipmentSlot.MAINHAND).isEmpty()) {
@@ -784,7 +814,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             }
 
             playerHandStack = targetPlayer.getMainHandStack();
-            return GooseEntity.FOOD.test(playerHandStack);
+            return GooseEntity.FOOD_INGREDIENT.test(playerHandStack);
         }
 
         @Override
@@ -794,7 +824,7 @@ public class GooseEntity extends WaterfowlEntity implements Angerable, Animation
             }
 
             playerHandStack = targetPlayer.getMainHandStack();
-            return GooseEntity.FOOD.test(playerHandStack);
+            return GooseEntity.FOOD_INGREDIENT.test(playerHandStack);
         }
 
         @Override

@@ -35,3 +35,10 @@ versionRange = "[4.4.4,)"
 ordering = "AFTER"
 side = "BOTH"
 
+[[dependencies.untitledduckmod]]
+modId = "incubation"
+mandatory = false
+versionRange = "[4.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
